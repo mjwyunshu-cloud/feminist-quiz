@@ -5,12 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>女性主义流派倾向测试 | 探索与觉醒</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- 引入截图插件 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;700&family=Inter:wght@300;400&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg-color: #FDFBF7;
             --text-main: #1A1A1A;
-            --accent: #6B4FBB; /* 柔和的紫色，代表女性主义的力量 */
+            --accent: #6B4FBB; 
             --card-bg: rgba(255, 255, 255, 0.8);
         }
 
@@ -24,13 +26,9 @@
 
         .serif { font-family: 'Noto Serif SC', serif; }
 
-        /* 渐变背景装饰 */
         .bg-glow {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
+            top: 0; left: 0; width: 100vw; height: 100vh;
             background: 
                 radial-gradient(circle at 10% 20%, rgba(107, 79, 187, 0.05) 0%, transparent 40%),
                 radial-gradient(circle at 90% 80%, rgba(187, 79, 107, 0.05) 0%, transparent 40%);
@@ -41,12 +39,6 @@
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
-        }
-
-        .quiz-card {
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(0,0,0,0.05);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .option-btn {
@@ -64,9 +56,38 @@
             transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        /* 自定义滚动条 */
+        /* 网页端的二维码展示区域 */
+        .qr-section {
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(0,0,0,0.03);
+            text-align: center;
+        }
+
+        .qr-box {
+            display: inline-block;
+            padding: 5px;
+            background: white;
+            border: 1px solid rgba(0,0,0,0.06);
+            transition: all 0.5s ease;
+        }
+
+        .qr-box img {
+            width: 90px;
+            height: 90px;
+            filter: grayscale(100%);
+            opacity: 0.5;
+            transition: all 0.5s ease;
+            display: block;
+            object-fit: cover;
+        }
+
+        .qr-box:hover img {
+            filter: grayscale(0%);
+            opacity: 1;
+        }
+
         ::-webkit-scrollbar { width: 4px; }
-        ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: #ddd; border-radius: 10px; }
     </style>
 </head>
@@ -74,99 +95,119 @@
 
     <div class="bg-glow"></div>
 
-    <!-- 顶部导航 -->
-    <nav class="p-6 flex justify-between items-center">
-        <span class="text-xs tracking-widest uppercase opacity-60">Theory & Reflection</span>
-        <div class="w-8 h-px bg-black opacity-20"></div>
+    <nav class="p-6">
+        <span class="text-[10px] tracking-widest uppercase opacity-40 font-light">Theory & Reflection</span>
     </nav>
 
-    <main class="flex-grow flex flex-col items-center justify-center px-6 py-12">
+    <main class="flex-grow flex flex-col items-center justify-center px-6 py-10">
         
         <!-- 欢迎页面 -->
         <div id="welcome-screen" class="max-w-md w-full text-center space-y-8 fade-in">
             <h1 class="text-4xl md:text-5xl serif leading-tight">
-                性别、权力<br><span class="italic text-gray-500 text-3xl md:text-4xl">与自我的重构</span>
+                性别、权力<br><span class="italic text-gray-500 text-3xl md:text-4xl font-light">与自我的重构</span>
             </h1>
             <p class="text-sm leading-relaxed text-gray-600 font-light">
-                基于《女性主义思潮导论》理论模型，通过 15 组哲学思辨，探索你潜意识中的女性主义流派倾向。
+                基于《女性主义思潮导论》理论模型，通过 18 组哲学思辨，探索你潜意识中的女性主义流派倾向。
             </p>
-            <button onclick="startQuiz()" class="mt-8 px-10 py-4 bg-black text-white text-xs tracking-widest uppercase hover:bg-gray-800 transition-all">
-                开始探索
-            </button>
-            <p class="text-[10px] text-gray-400 mt-12 uppercase tracking-tighter">Based on Feminist Thought Introduction</p>
+            <div class="flex flex-col items-center gap-6">
+                <button onclick="startQuiz()" class="px-10 py-4 bg-black text-white text-xs tracking-widest uppercase shadow-sm active:scale-95 transition-transform">
+                    开始探索
+                </button>
+                <div class="text-[10px] text-gray-400 tracking-[0.2em]">
+                    Curated by @云树cloudtree
+                </div>
+            </div>
+            <p class="text-[9px] text-gray-300 mt-12 uppercase tracking-tighter opacity-40">Based on Feminist Thought Introduction</p>
         </div>
 
         <!-- 测试页面 -->
         <div id="quiz-screen" class="hidden max-w-md w-full space-y-8 fade-in">
-            <!-- 进度条 -->
-            <div class="w-full h-[2px] bg-gray-100 relative">
+            <div class="w-full h-[1px] bg-gray-100 relative">
                 <div id="progress" class="progress-bar absolute top-0 left-0 h-full bg-black w-0"></div>
             </div>
-            
-            <div class="space-y-2">
+            <div class="space-y-2 text-center">
                 <span id="question-number" class="text-[10px] uppercase tracking-widest text-gray-400">Question 01</span>
-                <h2 id="question-text" class="text-xl md:text-2xl serif leading-snug">你认为女性受压迫的最根本原因是什么？</h2>
+                <h2 id="question-text" class="text-xl serif leading-snug font-medium"></h2>
             </div>
-
-            <div id="options-container" class="space-y-3">
-                <!-- 选项将通过 JS 动态渲染 -->
-            </div>
+            <div id="options-container" class="space-y-3"></div>
         </div>
 
         <!-- 结果页面 -->
-        <div id="result-screen" class="hidden max-w-md w-full space-y-8 fade-in">
-            <div class="text-center space-y-2">
-                <span class="text-[10px] uppercase tracking-widest text-gray-400">你的倾向组合</span>
-                <h2 class="text-2xl md:text-3xl serif text-purple-900">你的女性主义倾向</h2>
+        <div id="result-screen" class="hidden max-w-md w-full space-y-6 fade-in pb-12">
+            
+            <!-- 【截图区域：不包含二维码】 -->
+            <div id="capture-area" class="bg-[#FDFBF7] p-6 rounded-3xl border border-gray-100 shadow-sm">
+                <div class="text-center space-y-1 mb-8 pt-4">
+                    <span class="text-[9px] uppercase tracking-widest text-gray-400">Result Analysis</span>
+                    <h2 class="text-2xl serif text-purple-900 italic font-bold text-center">女性主义倾向探索报告</h2>
+                </div>
+
+                <div class="p-6 bg-white rounded-2xl border border-purple-50 text-left mb-6 shadow-sm">
+                    <h4 class="text-[9px] uppercase font-bold mb-2 text-purple-700 tracking-wider">综合解读</h4>
+                    <p id="result-combined" class="text-sm leading-relaxed text-gray-700 font-light"></p>
+                </div>
+
+                <!-- 倾向展示区 -->
+                <div class="space-y-4">
+                    <!-- 主倾向 -->
+                    <div class="p-5 bg-white/80 rounded-2xl text-left border border-gray-50 shadow-sm">
+                        <h4 class="text-[9px] uppercase text-purple-600 tracking-widest font-bold mb-1">主倾向 / Primary</h4>
+                        <h3 id="result-primary-title" class="text-lg serif text-purple-900 mb-2"></h3>
+                        <p id="result-primary-desc" class="text-xs leading-relaxed text-gray-600 font-light"></p>
+                        <p id="result-primary-figures" class="text-[9px] text-gray-400 mt-2 italic border-t border-gray-50 pt-2"></p>
+                    </div>
+
+                    <!-- 次倾向 -->
+                    <div class="p-5 bg-white/60 rounded-2xl text-left border border-gray-50">
+                        <h4 class="text-[9px] uppercase text-gray-400 tracking-widest font-bold mb-1">次倾向 / Secondary</h4>
+                        <h3 id="result-secondary-title" class="text-md serif text-gray-800 mb-2"></h3>
+                        <p id="result-secondary-desc" class="text-xs leading-relaxed text-gray-500 font-light"></p>
+                    </div>
+
+                    <!-- 第三倾向 -->
+                    <div id="result-tertiary-block" class="hidden p-5 bg-white/40 rounded-2xl text-left border border-gray-50">
+                        <h4 class="text-[9px] uppercase text-gray-400 tracking-widest font-bold mb-1">第三倾向 / Tertiary</h4>
+                        <h3 id="result-tertiary-title" class="text-md serif text-gray-700 mb-2"></h3>
+                        <p id="result-tertiary-desc" class="text-xs leading-relaxed text-gray-500 font-light"></p>
+                    </div>
+                </div>
+
+                <!-- 导出图片时的底部水印 -->
+                <div class="text-center pt-10 pb-2 opacity-20">
+                    <p class="text-[8px] tracking-[0.2em] uppercase">© 2026 Curated by @云树cloudtree</p>
+                </div>
             </div>
 
-            <!-- 综合解读 -->
-            <div class="p-5 bg-white/60 rounded-2xl border border-purple-100 text-left">
-                <h4 class="text-[10px] uppercase font-bold mb-2 text-purple-700">综合解读</h4>
-                <p id="result-combined" class="text-sm leading-relaxed text-gray-700">你既相信制度与权利，也警惕父权在身体与家庭中的扎根，在改良与激进之间寻求平衡。</p>
+            <!-- 【二维码区域：位于 capture-area 之外，网页端可见，生成的图里没有】 -->
+            <div class="qr-section">
+                <div class="qr-box shadow-sm mb-3">
+                    <img src="微信二维码.JPG" alt="QR" onerror="this.parentElement.style.display='none'">
+                </div>
+                <div class="space-y-1 text-center">
+                    <p class="text-[9px] text-gray-400 tracking-[0.1em] uppercase">Connect with Creator</p>
+                    <p class="text-[8px] text-gray-300 italic font-light">扫码联系 @云树cloudtree，延续思考</p>
+                </div>
             </div>
 
-            <!-- 主倾向 -->
-            <div class="p-5 bg-white/50 rounded-2xl text-left space-y-3">
-                <h4 class="text-[10px] uppercase font-bold text-gray-500">主倾向</h4>
-                <h3 id="result-primary-title" class="text-xl serif text-purple-900">自由主义女性主义</h3>
-                <p id="result-primary-desc" class="text-sm leading-relaxed text-gray-700">你主张理性和个人主义。认为性别平等的关键在于消除法律障碍、打破职场天花板以及实现教育公平。</p>
-                <p id="result-primary-figures" class="text-xs text-gray-500 pt-2 border-t border-gray-100">代表人物：玛丽·沃斯通克拉夫特、贝蒂·弗里丹</p>
-            </div>
-
-            <!-- 次倾向 -->
-            <div class="p-5 bg-white/50 rounded-2xl text-left space-y-3">
-                <h4 class="text-[10px] uppercase font-bold text-gray-500">次倾向</h4>
-                <h3 id="result-secondary-title" class="text-xl serif text-purple-900">激进女性主义</h3>
-                <p id="result-secondary-desc" class="text-sm leading-relaxed text-gray-700">你直击问题的核心：父权制。你认为压迫不仅存在于法律中，更深植于身体、生育和性关系中。</p>
-                <p id="result-secondary-figures" class="text-xs text-gray-500 pt-2 border-t border-gray-100">代表人物：舒拉姆斯·费尔斯通、凯特·米利特</p>
-            </div>
-
-            <!-- 第三倾向（满足条件时显示） -->
-            <div id="result-tertiary-block" class="hidden p-5 bg-white/40 rounded-2xl text-left space-y-3">
-                <h4 class="text-[10px] uppercase font-bold text-gray-500">第三倾向</h4>
-                <h3 id="result-tertiary-title" class="text-lg serif text-purple-800"></h3>
-                <p id="result-tertiary-desc" class="text-sm leading-relaxed text-gray-600"></p>
-                <p id="result-tertiary-figures" class="text-xs text-gray-500 pt-2 border-t border-gray-100"></p>
-            </div>
-
-            <div class="grid grid-cols-2 gap-4 pt-2">
-                <button onclick="location.reload()" class="px-6 py-4 border border-black text-[10px] uppercase tracking-widest">
+            <!-- 操作按钮 -->
+            <div class="flex gap-3 pt-4 px-2">
+                <button onclick="location.reload()" class="flex-1 py-4 border border-black text-[10px] uppercase tracking-widest active:bg-gray-100">
                     重新测试
                 </button>
-                <button onclick="alert('感谢分享你的思想火花。')" class="px-6 py-4 bg-black text-white text-[10px] uppercase tracking-widest">
-                    分享观点
+                <button id="save-btn" onclick="saveAsImage()" class="flex-1 py-4 bg-black text-white text-[10px] uppercase tracking-widest active:bg-gray-800">
+                    保存结果图片
                 </button>
             </div>
         </div>
 
     </main>
 
-    <footer class="p-8 text-center">
-        <p class="text-[10px] text-gray-400 opacity-50">© 2024 Feminist Thought Theory Quiz</p>
+    <footer class="p-8 text-center mt-auto">
+        <p class="text-[9px] text-gray-400 opacity-40 tracking-[0.1em]">© 2026 Curated by @云树cloudtree</p>
     </footer>
 
     <script>
+        // 题目数据保持原样
         const questions = [
             {
                 text: "你认为女性受压迫的最根本原因在于：",
@@ -333,65 +374,22 @@
         ];
 
         const results = {
-            liberal: {
-                title: "自由主义女性主义",
-                desc: "你主张理性和个人主义。认为性别平等的关键在于消除法律障碍、打破职场天花板以及实现教育公平。你相信在现有民主框架内，通过制度改良可以达成正义。你的视角如同明亮的灯塔，照亮权利的疆界。",
-                figures: "玛丽·沃斯通克拉夫特 (Mary Wollstonecraft), 贝蒂·弗里丹 (Betty Friedan)"
-            },
-            radical: {
-                title: "激进女性主义",
-                desc: "你直击问题的核心：父权制。你认为压迫不仅存在于法律中，更深植于身体、生育和性关系中。你主张女性应夺回对自己身体的控制权，并挑战最深层的性别等级制度。你的思想如同炽热的火焰，试图重塑社会根基。",
-                figures: "舒拉姆斯·费尔斯通 (Shulamith Firestone), 凯特·米利特 (Kate Millett)"
-            },
-            socialist: {
-                title: "社会主义女性主义",
-                desc: "你敏锐地察觉到资本主义与父权制的联手。你认为女性的压迫既源于阶级剥削，也源于性别剥削。你关注家务劳动的价值，主张通过改变社会经济结构来实现全面的解放。你的视角宏大且深邃，关怀着每一个劳动的灵魂。",
-                figures: "朱丽叶·米切尔 (Juliet Mitchell), 艾丽斯·杨 (Iris Young)"
-            },
-            postmodern: {
-                title: "后现代女性主义",
-                desc: "你厌恶标签和统一的定义。你认为“女性”是一个被语言和权力不断构建的范畴。你主张拆解二元对立（男/女），追求差异的流动性和认知的多元性。你的思想如同流动的星云，在解构中寻找自由。",
-                figures: "朱迪斯·巴特勒 (Judith Butler), 埃莱娜·西苏 (Hélène Cixous)"
-            },
-            existential: {
-                title: "存在主义女性主义",
-                desc: "你深受波伏娃的影响，关注女性作为“他者”的处境。你认为女性必须通过超越生理限制、参与创造性劳动和公共生活，来确立自己的“主体性”。你相信每个人都必须为自己的自由负责。你的思想是关于存在的独立宣言。",
-                figures: "西蒙娜·德·波伏娃 (Simone de Beauvoir)"
-            }
+            liberal: { title: "自由主义女性主义", desc: "你主张理性和个人主义。认为性别平等的关键在于消除法律障碍、实现教育公平。你相信通过制度改良可以达成正义。", figures: "玛丽·沃斯通克拉夫特, 贝蒂·弗里丹" },
+            radical: { title: "激进女性主义", desc: "你直击父权制这一核心。认为压迫不仅存在于法律中，更深植于身体、生育和性关系中。你主张女性应夺回对自己身体的控制权。", figures: "舒拉姆斯·费尔斯通, 凯特·米利特" },
+            socialist: { title: "社会主义女性主义", desc: "你敏锐地察觉到资本主义与父权制的联手。认为压迫既源于阶级剥削，也源于性别剥削。你关注家务劳动的社会价值。", figures: "朱丽叶·米切尔, 艾丽斯·杨" },
+            postmodern: { title: "后现代女性主义", desc: "你厌恶标签和统一的定义。认为“女性”是一个被语言和权力不断构建的范畴。你主张拆解二元对立，追求差异的流动性。", figures: "朱迪斯·巴特勒, 埃莱娜·西苏" },
+            existential: { title: "存在主义女性主义", desc: "你关注女性作为“他者”的处境。认为女性必须通过超越生理限制、参与创造性劳动和公共生活来确立自己的“主体性”。", figures: "西蒙娜·德·波伏娃" }
         };
 
-        // 主+次 组合的综合解读（主_次 为 key）
         const combinedInterpretations = {
             liberal_radical: "你既相信制度与权利，也警惕父权在身体与家庭中的扎根，在改良与激进之间寻求平衡。",
             liberal_socialist: "你一面争取法律与机会的平等，一面关注经济结构与劳动价值，在权利与分配之间寻找交汇。",
-            liberal_postmodern: "你在制度改良的同时，对「女性」等固定身份保持警惕，兼顾权利与对话语、差异的敏感。",
-            liberal_existential: "你在争取平等制度的同时，强调每个人在既有处境中对自己自由的担当，权利与主体性并重。",
-            radical_liberal: "你直指父权根基，同时不放弃通过立法与权利争取空间，在颠覆与改良之间并进。",
             radical_socialist: "你认为父权与阶级交织，解放既关乎身体与家庭，也关乎劳动与分配，需双重变革。",
-            radical_postmodern: "你既挑战父权结构，也解构「女性」等固定范畴，在批判与流动之间保持张力。",
-            radical_existential: "你强调夺回身体与主体性，同时相信个人在处境中的选择与承担，革命与存在并重。",
-            socialist_liberal: "你关注阶级与性别交织的剥削，同时重视法律与教育公平，结构变革与制度改良并重。",
-            socialist_radical: "你认为资本主义与父权制联手，解放需同时触及经济结构与身体、家庭领域。",
-            socialist_postmodern: "你既分析经济与阶级结构，也关注身份、话语与差异，不做单一归因。",
-            socialist_existential: "你在结构性批判之外，强调个体在处境中的能动与抉择，集体解放与个人自由并进。",
-            postmodern_liberal: "你解构固定身份与二元话语，同时不否定权利与机会平等的价值，流动与制度并存。",
-            postmodern_radical: "你拆解「女性」等范畴，同时直面父权与身体的权力关系，解构与抗争并重。",
-            postmodern_socialist: "你关注话语与身份的建构，同时将阶级、劳动纳入分析，差异与结构兼顾。",
-            postmodern_existential: "你重视身份与话语的流动，同时强调个人在具体处境中的选择与主体性，解构与存在交织。",
-            existential_liberal: "你强调在处境中争取主体性，同时重视法律与教育带来的可能，自由与权利并重。",
-            existential_radical: "你关注从客体到主体的转变，同时认同对父权与身体控制的挑战，存在与革命共振。",
-            existential_socialist: "你在结构性处境中强调个人选择，同时将阶级与性别纳入视野，存在与集体解放并进。",
-            existential_postmodern: "你重视在处境中的主体性，同时怀疑固定身份与本质，存在与解构交织。"
+            postmodern_existential: "你重视在处境中的主体性，同时怀疑固定身份与本质，存在与解构交织。"
         };
 
         let currentQuestion = 0;
-        let scores = {
-            liberal: 0,
-            radical: 0,
-            socialist: 0,
-            postmodern: 0,
-            existential: 0
-        };
+        let scores = { liberal: 0, radical: 0, socialist: 0, postmodern: 0, existential: 0 };
 
         function startQuiz() {
             document.getElementById('welcome-screen').classList.add('hidden');
@@ -404,24 +402,20 @@
             document.getElementById('question-number').innerText = `Question ${String(currentQuestion + 1).padStart(2, '0')}`;
             document.getElementById('question-text').innerText = q.text;
             document.getElementById('progress').style.width = `${((currentQuestion) / questions.length) * 100}%`;
-
             const container = document.getElementById('options-container');
             container.innerHTML = '';
-            
-            q.options.forEach((opt, index) => {
+            q.options.forEach((opt) => {
                 const btn = document.createElement('button');
-                btn.className = "option-btn w-full p-5 text-left text-sm bg-white hover:border-black rounded-sm focus:outline-none";
+                btn.className = "option-btn w-full p-4 md:p-5 text-left text-sm bg-white hover:border-black rounded-sm focus:outline-none";
                 btn.innerText = opt.text;
                 btn.onclick = () => selectOption(opt.score);
                 container.appendChild(btn);
             });
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         function selectOption(score) {
-            for (let key in score) {
-                scores[key] += score[key];
-            }
-
+            for (let key in score) scores[key] += score[key];
             if (currentQuestion < questions.length - 1) {
                 currentQuestion++;
                 showQuestion();
@@ -435,45 +429,55 @@
             document.getElementById('result-screen').classList.remove('hidden');
             document.getElementById('progress').style.width = `100%`;
 
-            // 按分数排序，得到 主、次、第三
-            const ranked = Object.keys(scores)
-                .map(key => ({ key, score: scores[key] }))
-                .sort((a, b) => b.score - a.score);
-
+            const ranked = Object.keys(scores).map(key => ({ key, score: scores[key] })).sort((a, b) => b.score - a.score);
             const primary = ranked[0].key;
             const secondary = ranked[1].key;
-            const score2 = ranked[1].score;
-            const score3 = ranked[2] ? ranked[2].score : 0;
-            const showTertiary = ranked[2] && (score2 - score3) <= 3;
-            const tertiary = showTertiary ? ranked[2].key : null;
+            const tertiary = ranked[2].key;
 
-            // 综合解读
-            const combinedKey = primary + '_' + secondary;
-            const combinedText = combinedInterpretations[combinedKey] || "你的倾向融合了制度、身体、阶级与话语等多重关切，在多元视角中寻找自己的位置。";
-            document.getElementById('result-combined').innerText = combinedText;
+            document.getElementById('result-combined').innerText = combinedInterpretations[primary + '_' + secondary] || "你的倾向融合了多重关切，在权利、身体、阶级与解构的视角中寻找属于自己的位置。";
 
-            // 主倾向
             const r1 = results[primary];
             document.getElementById('result-primary-title').innerText = r1.title;
             document.getElementById('result-primary-desc').innerText = r1.desc;
             document.getElementById('result-primary-figures').innerText = "代表人物：" + r1.figures;
 
-            // 次倾向
             const r2 = results[secondary];
             document.getElementById('result-secondary-title').innerText = r2.title;
             document.getElementById('result-secondary-desc').innerText = r2.desc;
-            document.getElementById('result-secondary-figures').innerText = "代表人物：" + r2.figures;
 
-            // 第三倾向（仅当与次倾向分差 ≤3 时显示）
+            const r3 = results[tertiary];
             const tertiaryBlock = document.getElementById('result-tertiary-block');
-            if (showTertiary && tertiary) {
-                const r3 = results[tertiary];
-                document.getElementById('result-tertiary-title').innerText = r3.title;
-                document.getElementById('result-tertiary-desc').innerText = r3.desc;
-                document.getElementById('result-tertiary-figures').innerText = "代表人物：" + r3.figures;
-                tertiaryBlock.classList.remove('hidden');
-            } else {
-                tertiaryBlock.classList.add('hidden');
+            document.getElementById('result-tertiary-title').innerText = r3.title;
+            document.getElementById('result-tertiary-desc').innerText = r3.desc;
+            tertiaryBlock.classList.remove('hidden');
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        async function saveAsImage() {
+            const btn = document.getElementById('save-btn');
+            const originalText = btn.innerText;
+            btn.innerText = "生成中...";
+            btn.disabled = true;
+
+            const element = document.getElementById('capture-area');
+            try {
+                const canvas = await html2canvas(element, {
+                    backgroundColor: "#FDFBF7",
+                    scale: 3, 
+                    useCORS: true,
+                    logging: false,
+                    letterRendering: true
+                });
+                const link = document.createElement('a');
+                link.download = '女性主义倾向报告_cloudtree.png';
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+            } catch (e) {
+                console.error("保存失败", e);
+            } finally {
+                btn.innerText = originalText;
+                btn.disabled = false;
             }
         }
     </script>
