@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>女性主义流派倾向测试 | 探索与觉醒</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- 引入截图插件 -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;700&family=Inter:wght@300;400&display=swap" rel="stylesheet">
     <style>
@@ -45,7 +46,30 @@
         ::-webkit-scrollbar { width: 4px; }
         ::-webkit-scrollbar-thumb { background: #ddd; border-radius: 10px; }
         
-        .quote-icon { font-size: 4rem; line-height: 1; opacity: 0.1; font-family: serif; pointer-events: none; }
+        .mentor-card {
+            border: 1px solid rgba(107, 79, 187, 0.1);
+            background: linear-gradient(135deg, #ffffff 0%, #fafaff 100%);
+        }
+        .quote-mark { font-family: serif; font-size: 3.5rem; line-height: 1; opacity: 0.08; }
+
+        .access-input {
+            background: transparent;
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+            transition: border-color 0.3s ease;
+        }
+        .access-input:focus {
+            outline: none;
+            border-bottom-color: var(--accent);
+        }
+
+        /* 极简返回按钮样式 */
+        .back-btn {
+            opacity: 0.3;
+            transition: opacity 0.3s ease;
+        }
+        .back-btn:hover {
+            opacity: 1;
+        }
     </style>
 </head>
 <body class="min-h-screen flex flex-col">
@@ -53,23 +77,49 @@
     <nav class="p-6"><span class="text-[10px] tracking-widest uppercase opacity-40 font-light">Theory & Reflection</span></nav>
 
     <main class="flex-grow flex flex-col items-center justify-center px-6 py-10">
+        
+        <!-- 兑换码锁定页面 -->
+        <div id="access-screen" class="max-w-md w-full space-y-12 fade-in text-center">
+            <div class="space-y-4">
+                <span class="text-[9px] font-bold uppercase tracking-[0.6em] text-purple-400">Restricted Access</span>
+                <h2 class="text-3xl serif leading-tight">请输入激活码以开启探索</h2>
+                <p class="text-[10px] text-gray-400 uppercase tracking-widest">Enter redemption code to unlock</p>
+            </div>
+            
+            <div class="space-y-6">
+                <div class="relative max-w-[200px] mx-auto">
+                    <input type="text" id="access-code" class="access-input w-full py-2 text-center text-lg tracking-[0.2em] font-light" placeholder="••••••••" maxlength="15">
+                </div>
+                <div id="error-msg" class="text-[9px] text-red-400 font-bold opacity-0 transition-opacity">兑换码无效，请检查重试</div>
+                
+                <button onclick="verifyAccess()" class="px-12 py-3 bg-black text-white text-[10px] tracking-widest uppercase active:scale-95 transition-transform">验证 / Unlock</button>
+            </div>
+            
+            <div class="pt-20 opacity-20">
+                <p class="text-[8px] tracking-[0.2em] uppercase">© 2026 Curated by @云树cloudtree</p>
+            </div>
+        </div>
+
         <!-- 欢迎页面 -->
-        <div id="welcome-screen" class="max-w-md w-full text-center space-y-8 fade-in">
+        <div id="welcome-screen" class="hidden max-w-md w-full text-center space-y-8 fade-in">
             <h1 class="text-4xl md:text-5xl serif leading-tight">性别、权力<br><span class="italic text-gray-500 text-3xl md:text-4xl font-light">与自我的重构</span></h1>
-            <p class="text-sm leading-relaxed text-gray-600 font-light">基于《女性主义思潮导论》，通过 22 组直觉式思辨题目，解锁属于你的精神领袖与思想坐标。</p>
+            <p class="text-sm leading-relaxed text-gray-600 font-light">基于《女性主义思潮导论》，通过 22 组直觉式思辨题，解锁你的精神导师与思想底色。</p>
             <div class="flex flex-col items-center gap-6">
                 <button onclick="startQuiz()" class="px-10 py-4 bg-black text-white text-xs tracking-widest uppercase shadow-sm active:scale-95 transition-transform">开始探索</button>
                 <div class="text-[10px] text-gray-400 tracking-[0.2em]">Curated by @云树cloudtree</div>
             </div>
-            <p class="text-[9px] text-gray-300 mt-12 uppercase tracking-tighter opacity-40">22 Questions | Full Schools Edition</p>
+            <p class="text-[9px] text-gray-300 mt-12 uppercase tracking-tighter opacity-40">22 Priority-Based Questions</p>
         </div>
 
         <!-- 测试页面 -->
         <div id="quiz-screen" class="hidden max-w-md w-full space-y-8 fade-in">
             <div class="w-full h-[1px] bg-gray-100 relative"><div id="progress" class="progress-bar absolute top-0 left-0 h-full bg-black w-0"></div></div>
+            <div class="flex justify-between items-center px-1">
+                <button id="back-btn" onclick="prevQuestion()" class="back-btn text-[9px] uppercase tracking-[0.2em] text-gray-400 hidden">← Back</button>
+                <span id="question-number" class="text-[10px] uppercase tracking-widest text-gray-400 mx-auto">Question 01</span>
+            </div>
             <div class="space-y-2 text-center">
-                <span id="question-number" class="text-[10px] uppercase tracking-widest text-gray-400">Question 01</span>
-                <h2 id="question-text" class="text-xl serif leading-snug font-medium"></h2>
+                <h2 id="question-text" class="text-xl serif leading-snug font-medium text-center"></h2>
             </div>
             <div id="options-container" class="space-y-3"></div>
         </div>
@@ -82,27 +132,26 @@
                     <h2 class="text-2xl serif text-purple-900 italic font-bold text-center">女性主义倾向探索报告</h2>
                 </div>
 
-                <!-- 精神导师卡片 (文字版) -->
-                <div class="mb-10 p-8 bg-white rounded-2xl border border-gray-100 text-center space-y-4 relative overflow-hidden shadow-sm">
-                    <div class="quote-icon absolute -top-2 -left-2">“</div>
-                    <h4 class="text-[9px] uppercase text-gray-400 tracking-widest relative z-10">精神领袖 / Spiritual Icon</h4>
+                <!-- 精神导师卡片 -->
+                <div class="mb-10 p-8 mentor-card rounded-2xl text-center space-y-4 relative overflow-hidden shadow-sm">
+                    <div class="quote-mark absolute -top-1 -left-1">“</div>
+                    <h4 class="text-[9px] uppercase text-purple-400 tracking-widest relative z-10 font-bold">解锁精神导师 / Spiritual Mentor</h4>
                     <div class="space-y-4 relative z-10">
                         <h3 id="icon-name" class="text-2xl serif text-purple-900 border-b border-purple-50 pb-2 inline-block"></h3>
                         <p id="icon-quote" class="text-sm italic text-gray-700 px-2 leading-relaxed font-light"></p>
                         <div class="pt-2">
-                            <p class="text-[9px] text-gray-400 uppercase tracking-widest mb-1">代表作 / Major Work</p>
-                            <p id="icon-work" class="text-xs text-purple-800 font-medium"></p>
+                            <p class="text-[8px] text-gray-400 uppercase tracking-widest mb-1">代表作 / Major Work</p>
+                            <p id="icon-work" class="text-[11px] text-purple-800 font-medium"></p>
                         </div>
                     </div>
-                    <div class="quote-icon absolute -bottom-8 -right-2 rotate-180">“</div>
+                    <div class="quote-mark absolute -bottom-10 -right-1 rotate-180">“</div>
                 </div>
 
-                <div class="p-6 bg-white rounded-2xl border border-purple-50 text-left mb-8">
+                <div class="p-6 bg-white rounded-2xl border border-purple-50 text-left mb-8 shadow-sm">
                     <h4 class="text-[9px] uppercase font-bold mb-2 text-purple-700 tracking-wider">综合解读</h4>
                     <p id="result-combined" class="text-sm leading-relaxed text-gray-700 font-light"></p>
                 </div>
 
-                <!-- 三级倾向展示 -->
                 <div class="space-y-4">
                     <div class="p-5 bg-white/80 rounded-2xl text-left border border-gray-50 shadow-sm">
                         <h4 class="text-[9px] uppercase text-purple-600 tracking-widest font-bold mb-1">核心倾向 / Primary</h4>
@@ -124,7 +173,7 @@
                 <div class="text-center pt-12 pb-2 opacity-20"><p class="text-[8px] tracking-[0.2em] uppercase">© 2026 Curated by @云树cloudtree</p></div>
             </div>
 
-            <!-- 二维码区：网页可见，导出的图中没有 -->
+            <!-- 二维码区 -->
             <div class="qr-section">
                 <div class="qr-box shadow-sm mb-3"><img src="微信二维码.JPG" alt="QR" onerror="this.parentElement.style.display='none'"></div>
                 <div class="space-y-1 text-center">
@@ -145,142 +194,154 @@
     </footer>
 
     <script>
+        function verifyAccess() {
+            const input = document.getElementById('access-code').value.trim();
+            const errorMsg = document.getElementById('error-msg');
+            if (input.toLowerCase() === 'cloudtree') {
+                document.getElementById('access-screen').classList.add('hidden');
+                document.getElementById('welcome-screen').classList.remove('hidden');
+            } else {
+                errorMsg.style.opacity = '1';
+                setTimeout(() => { errorMsg.style.opacity = '0'; }, 2000);
+            }
+        }
+
         const questions = [
-            { text: "当你听到“平等”时，你内心最本能的诉求是：", options: [
-                { text: "规则的公平：法律不因性别而设置门槛或隐形障碍", score: { liberal: 5 } },
-                { text: "权力的倒置：彻底撼动男性主导的资源与定义权模式", score: { radical: 5 } },
-                { text: "生存的保障：消除阶级剥削，让底层女性拥有生活尊严", score: { socialist: 5 } },
-                { text: "差异的承认：拒绝用男性的标杆来衡量女性的价值", score: { postmodern: 5 } }
+            { text: "当你听到“平等”时，你内心最本能的优先诉求是：", options: [
+                { text: "规则公平：法律不应因性别而设置任何门槛或特权", score: { liberal: 5 } },
+                { text: "权力洗牌：彻底撼动并改写由男性主导的资源分配模式", score: { radical: 5 } },
+                { text: "生存底线：消除阶级压迫，让所有底层女性活得有尊严", score: { socialist: 5 } },
+                { text: "承认差异：拒绝用男性的标准作为衡量所有人的尺标", score: { postmodern: 5 } }
             ]},
             { text: "波伏娃说“女人是变成的”，你认为这种“变成”最不可接受的是：", options: [
                 { text: "社会剥夺了女性作为自由主体的“自我定义权”", score: { existential: 5 } },
                 { text: "性别身份沦为一种不断被迫重复的“社会表演”", score: { postmodern: 5 } },
-                { text: "女性被驯化为满足他人需求的、无偿的“劳动者”", score: { socialist: 5 } },
+                { text: "女性被驯化为满足他人需求的无偿“再生产者”", score: { socialist: 5 } },
                 { text: "这种界定将女性永远置于相对于男性的“他者”地位", score: { existential: 5 } }
             ]},
-            { text: "关于女性的“身体”，你认为最紧迫的保卫战是：", options: [
-                { text: "身体主权：堕胎权、生育自主及免于暴力的绝对自由", score: { radical: 5 } },
-                { text: "选择权：整容与否、打扮与否，皆应是受法律保障的自由", score: { liberal: 5 } },
-                { text: "存在责任：不为他人的目光，而为自己的生命体验负责", score: { existential: 5 } },
-                { text: "审美解构：挑战由主流话语构建出来的“美”的极权", score: { postmodern: 5 } }
+            { text: "关于女性的“身体”，你认为最无法妥协的防线是：", options: [
+                { text: "身体主权：堕胎、生育及免于暴力的绝对自主控制", score: { radical: 5 } },
+                { text: "选择自由：整容或不整容、打扮或不打扮的法律权利", score: { liberal: 5 } },
+                { text: "主体意志：不为满足他人目光，而为自己的生命负责", score: { existential: 5 } },
+                { text: "解构审美：挑战由主流话语构建出来的“美学极权”", score: { postmodern: 5 } }
             ]},
-            { text: "在职场性别偏见面前，哪种逻辑最让你感到不安？", options: [
-                { text: "认为女性理性不足，以此作为排除其参与决策的借口", score: { liberal: 5 } },
-                { text: "将照顾责任默认给女性，隐形剥削其公共空间竞争力", score: { socialist: 5 } },
-                { text: "强行将职业划分为“男女适用”，固化身份标签", score: { postmodern: 5 } },
-                { text: "恐惧女性展现权力，试图用“亲和力”等词汇进行规训", score: { radical: 5 } }
+            { text: "在职场性别偏见面前，哪种逻辑最让你感到愤怒？", options: [
+                { text: "认为女性理性不足，以此排斥其参与核心决策", score: { liberal: 5 } },
+                { text: "默认女性应承担更多照顾责任，隐形剥削其公共竞争力", score: { socialist: 5 } },
+                { text: "强行将职业划分为“男女适用”，固化本质主义标签", score: { postmodern: 5 } },
+                { text: "恐惧女性展现领导力，试图用“亲和力”等词汇进行规训", score: { radical: 5 } }
             ]},
             { text: "如果你能一键删除一个制度，你会优先选择：", options: [
-                { text: "私有制：它是将女性囚禁在小家庭进行剥削的根源", score: { socialist: 5 } },
-                { text: "父权制：它是一切统治、等级与暴力逻辑的心理底座", score: { radical: 5 } },
-                { text: "法律歧视：它通过制度剥夺了女性作为理性公民的权利", score: { liberal: 5 } },
+                { text: "私有制：它是将女性囚禁在家庭进行剥削的经济根源", score: { socialist: 5 } },
+                { text: "父权制：它是一切等级压迫与暴力逻辑的心理底座", score: { radical: 5 } },
+                { text: "法律歧视：它通过制度剥夺了女性作为公民的权利", score: { liberal: 5 } },
                 { text: "性别二元论：它强行用两种模板裁剪了所有人的人性", score: { postmodern: 5 } }
             ]},
-            { text: "对于“成人工业”，你的核心立场在于：", options: [
-                { text: "尊重契约：只要是自愿且合法的，就是个人的自由", score: { liberal: 5 } },
-                { text: "拒绝物化：它是父权对女性肉体最赤裸的消费与霸凌", score: { radical: 5 } },
-                { text: "关注保障：应承认其劳动属性，保护从业女性不被压榨", score: { socialist: 5 } },
-                { text: "解构欲望：应去反思其中权力话语如何塑造了性的脚本", score: { postmodern: 5 } }
+            { text: "对于“成人工业”，你的核心评判基准在于：", options: [
+                { text: "保护自由：只要基于双方自愿的契约，就是个人的自由", score: { liberal: 5 } },
+                { text: "反对剥削：它是父权文明对女性肉体最系统性的榨取", score: { radical: 5 } },
+                { text: "关注劳动：应承认其工作属性，保护从业者不被剥削", score: { socialist: 5 } },
+                { text: "解构欲望：应反思权力关系如何通过性脚本进行表演", score: { postmodern: 5 } }
             ]},
-            { text: "当科技介入生育（如人造子宫），你的本能反应是：", options: [
-                { text: "期待：女性终于可以从生物性的压迫与疼痛中解放了", score: { radical: 5 } },
-                { text: "警惕：这是男性逻辑对自然、对女性生命力的进一步霸占", score: { ecofem: 5 } },
-                { text: "理性：关键看技术如何分配，是否会加剧阶级不平等", score: { socialist: 5 } },
-                { text: "好奇：它会如何拆解“母亲”这个被神圣化的话语概念", score: { postmodern: 5 } }
+            { text: "当科技进入生育领域（如人造子宫），你最直观的感受是：", options: [
+                { text: "期待：女性终于可以从生物性的生殖压迫中获得解放", score: { radical: 5 } },
+                { text: "忧虑：这是科技统治逻辑对自然与女性生命力的掠夺", score: { ecofem: 5 } },
+                { text: "审慎：关键看技术被谁控制，是否会加剧阶级不公", score: { socialist: 5 } },
+                { text: "好奇：它会如何拆解“母亲”这个被神圣化的话语定义", score: { postmodern: 5 } }
             ]},
-            { text: "你认为“女性写作”最重要的使命是：", options: [
-                { text: "证明女性也拥有同样的智慧与高度，进入主流评价体系", score: { liberal: 5 } },
-                { text: "诚实地书写身体经验，向男权文化的语言进行夺权", score: { radical: 5 } },
-                { text: "创造一种流动的、拒绝被定义的、属于“他者”的语言", score: { postmodern: 5 } },
-                { text: "让边缘的、底层的女性经验能够被历史听见与看见", score: { intersectional: 5 } }
+            { text: "你认为“女性写作”最重要的力量源泉应该是：", options: [
+                { text: "证明理性：女性拥有同样的智慧高度，进入评价体系", score: { liberal: 5 } },
+                { text: "夺回主权：诚实书写身体经验，向男权语言系统夺权", score: { radical: 5 } },
+                { text: "流动的差异：创造一种非线性的、拒绝被定义的新语言", score: { postmodern: 5 } },
+                { text: "边缘可见：让被多重压迫下的底层经验得以被历史看见", score: { intersectional: 5 } }
             ]},
-            { text: "你认为西方女性主义对全球女性的贡献在于：", options: [
-                { text: "确立了人权、自由等具有普世价值的法治与权利坐标", score: { liberal: 5 } },
-                { text: "存在局限：它往往用中产白人的视角代替了所有女性", score: { global: 5 } },
-                { text: "提供了工具：帮助我们去分析种族、阶级与性别的交叉压迫", score: { intersectional: 5 } },
-                { text: "需要反思：警惕它沦为第一世界对第三世界的文化傲慢", score: { global: 5 } }
+            { text: "关于“母职”，哪种表述最说中你内心深处的看法？", options: [
+                { text: "它是一种社会强加的牺牲规训，旨在消耗女性的精力", score: { radical: 5 } },
+                { text: "它蕴含着珍贵的关怀智慧，这种价值不应被社会贬低", score: { care: 5 } },
+                { text: "育儿是社会共同体的责任，不该由母亲个体背负", score: { socialist: 5 } },
+                { text: "是否承担母职，应是个体权衡后的主体性承诺", score: { existential: 5 } }
             ]},
-            { text: "关于“母职”，哪种表述最能说中你内心深处的看法？", options: [
-                { text: "它是一种社会强加的自我牺牲，旨在规训女性的时间", score: { radical: 5 } },
-                { text: "它包含着珍贵的关怀智慧，这种价值不应被社会贬低", score: { care: 5 } },
-                { text: "育儿应是社会共同体的责任，不该由母亲个体背负", score: { socialist: 5 } },
-                { text: "是否选择母职，应是主体在认清代价后的自由承诺", score: { existential: 5 } }
-            ]},
-            { text: "伴侣希望你多顾家，你最想回击的一句话是：", options: [
+            { text: "面对伴侣要求你“多顾家”，你最想回击的一句话是：", options: [
                 { text: "“我的时间价值和职业权利与你没有尊卑之分”", score: { liberal: 5 } },
-                { text: "“你只是习惯了有人在背后为你提供无偿的情绪劳动”", score: { radical: 5 } },
-                { text: "“我拒绝活在‘好女人’这个被你们设计好的剧本里”", score: { postmodern: 5 } },
+                { text: "“你习惯了有人在背后为你提供免费的情绪与家务”", score: { radical: 5 } },
+                { text: "“我拒绝活在‘好女人’这个由你们设计的剧本里”", score: { postmodern: 5 } },
                 { text: "“我如何使用我的生命，只取决于我的自由意志”", score: { existential: 5 } }
             ]},
-            { text: "看到「完美妈妈」人设，你感到这种叙事最危险的地方在于：", options: [
-                { text: "它设立了一个不可能的高标，让普通女性陷入自我攻击", score: { radical: 5 } },
-                { text: "它遮蔽了底层女性因缺乏资源而无法“优雅”的生存真相", score: { socialist: 5 } },
-                { text: "它美化了家务与育儿的繁琐，本质是父权的身份传销", score: { postmodern: 5 } },
-                { text: "它再次试图把女性定义为围绕他人转动的“他者”", score: { existential: 5 } }
-            ]},
-            { text: "如果有人说「女权太激进会没人要」，你内心的反应是：", options: [
-                { text: "“这种基于偏见的评价体现了婚恋市场的不公平”", score: { liberal: 5 } },
-                { text: "“‘被要’这个词本身就暴露了你物化女性的占有欲”", score: { radical: 5 } },
-                { text: "“我在解构你的枷锁，你却在替你的枷锁感到担忧”", score: { postmodern: 5 } },
-                { text: "“我不为他人的审判而存在，我为我的自由而存在”", score: { existential: 5 } }
-            ]},
-            { text: "关于彩礼、婚房等利益争执，你认为其底层的真相是：", options: [
-                { text: "因法律对私域分配保障不足导致的风险对冲纠纷", score: { liberal: 5 } },
-                { text: "父权制将女性视为可交换财产的一种“买卖”逻辑残留", score: { radical: 5 } },
-                { text: "阶级焦虑与生产资料不均在私生活中的必然投影", score: { socialist: 5 } },
-                { text: "在表演一套传统话语定义的“幸福生活”的昂贵代价", score: { postmodern: 5 } }
+            { text: "如果有人说“女权太激进会没人要”，你的反应是：", options: [
+                { text: "“这种评价体现了婚恋市场对独立人格的不公”", score: { liberal: 5 } },
+                { text: "“‘被要’这个词暴露了你试图占有女性的傲慢”", score: { radical: 5 } },
+                { text: "“你在用婚恋中心主义的枷锁，恐吓自由的灵魂”", score: { postmodern: 5 } },
+                { text: "“我不为他人的审判而存在，我为我的自由而活”", score: { existential: 5 } }
             ]},
             { text: "你认为女性表现出的感性、温柔主要是因为：", options: [
-                { text: "社会长期在教育资源与职业期待上的差异化引导", score: { liberal: 5 } },
-                { text: "为了生存而不得不内化的、符合父权审美的行为准则", score: { radical: 5 } },
-                { text: "这是一种流动且多元的特质，不应与生物性别挂钩", score: { postmodern: 5 } },
-                { text: "这些特质中包含着被现代社会忽视的“人类关怀内核”", score: { care: 5 } }
+                { text: "社会长期在教育与期待上的系统性引导差异", score: { liberal: 5 } },
+                { text: "为了生存而不得不内化的、符合强权审美的准则", score: { radical: 5 } },
+                { text: "这是一种表演性的特质，本应是流动的而非绑定的", score: { postmodern: 5 } },
+                { text: "这些特质中包含着被现代文明忽视的“关怀内核”", score: { care: 5 } }
             ]},
-            { text: "关于“男性参与女性主义”，你的真实直觉是：", options: [
-                { text: "欢迎，因为人权与理性的进步需要所有人的共同契约", score: { liberal: 5 } },
-                { text: "怀疑，作为既得利益者，他们很难真正反思特权根源", score: { radical: 5 } },
-                { text: "支持，阶级解放必须建立在所有劳动者的团结基础上", score: { socialist: 5 } },
-                { text: "无所谓，“男/女”身份本身就是需要被拆解的幻象", score: { postmodern: 5 } }
+            { text: "你认为对自然的掠夺与对女性的压迫：", options: [
+                { text: "是两个独立议题，应分别通过科学与法律解决", score: { liberal: 5 } },
+                { text: "同源：都来自男权文明中“征服并榨取生命”的逻辑", score: { ecofem: 5 } },
+                { text: "同构：都反映了资本主义唯利是图、剥削弱者的本性", score: { socialist: 5 } },
+                { text: "相关：都是中心话语对“他者”进行的贬低与管理", score: { postmodern: 5 } }
             ]},
-            { text: "你认为对环境的破坏与对女性的压迫：", options: [
-                { text: "是两个独立的社会议题，应分别通过科学与法律解决", score: { liberal: 5 } },
-                { text: "同源：都来自男权文明中“征服”与“榨取”生命力的逻辑", score: { ecofem: 5 } },
-                { text: "同构：都反映了资本主义唯利是图、不顾未来的剥削天性", score: { socialist: 5 } },
-                { text: "相关：都是中心主义话语对“他者”进行的贬低与管理", score: { postmodern: 5 } }
-            ]},
-            { text: "你认为实现平权最有效的“第一推力”应该是：", options: [
-                { text: "法律与政策的雷霆之势，消除一切形式的明面偏见", score: { liberal: 5 } },
-                { text: "女性进入所有权力的顶层，彻底改写决策者的基因", score: { radical: 5 } },
-                { text: "建立强大的公共保障体系，彻底减轻家庭内部的负担", score: { socialist: 5 } },
-                { text: "文化领域的全面去中心化，打破任何一种“正确”定义", score: { postmodern: 5 } }
-            ]},
-            { text: "如果女性在科学、技术领域弱势，你认为根源是：", options: [
-                { text: "科研机制在选拔与晋升中存在的长期制度性偏见", score: { liberal: 5 } },
-                { text: "科学研究本身的“控制者”范式排斥了女性的思维习惯", score: { ecofem: 5 } },
-                { text: "资本与男权合谋垄断了通往“真理”与财富的入场券", score: { socialist: 5 } },
-                { text: "多重身份的压迫（如种族、阶级）剥夺了她们的机会", score: { intersectional: 5 } }
-            ]},
-            { text: "当你听到“为母则刚”的赞美时，你的本能感受是：", options: [
-                { text: "反感，这是在用光环掩盖社会支持与责任缺失的真相", score: { liberal: 5 } },
-                { text: "愤怒，这是父权对母性价值最无耻的暴力美化与绑架", score: { radical: 5 } },
-                { text: "怀疑，这在建构一种单一的、本质主义的牺牲型人格", score: { postmodern: 5 } },
-                { text: "欣慰，那是女性生命中蕴含的最具韧性的关怀能量", score: { care: 5 } }
-            ]},
-            { text: "关于“全职太太”的自由，你认为前提必须是：", options: [
-                { text: "拥有受法律绝对保护的、不可分割的家庭财产支配权", score: { liberal: 5 } },
-                { text: "社会承认家务劳动的价值并给予实质性的经济支付", score: { socialist: 5 } },
-                { text: "完全清除了父权审美和家庭角色期待带来的心理依赖", score: { radical: 5 } },
-                { text: "这是个人在充分理解处境后，依然选择承担的主体性", score: { existential: 5 } }
+            { text: "当有人赞美“为母则刚”时，你内心最真实的反应是：", options: [
+                { text: "愤怒：这是父权对母性价值最残忍的道德绑架与美化", score: { radical: 5 } },
+                { text: "反感：这是在用赞美掩盖社会制度性支持缺失的真相", score: { liberal: 5 } },
+                { text: "怀疑：这在建构一种单一的、牺牲型的人格剧本", score: { postmodern: 5 } },
+                { text: "感怀：那是女性生命中蕴含的最具张力的关怀能量", score: { care: 5 } }
             ]},
             { text: "你最终希望建立一个什么样的理想世界？", options: [
                 { text: "每个人都被视为理性的个体，自由地去实现其所有潜能", score: { liberal: 5 } },
-                { text: "权力结构彻底去男性化，由关怀与生命力主导秩序", score: { radical: 5, ecofem: 2 } },
-                { text: "消灭所有基于身份的系统性剥削，实现彻底的分配正义", score: { socialist: 5 } },
+                { text: "权力结构彻底洗牌，关怀与生命力取代征服与效率逻辑", score: { radical: 5, ecofem: 2 } },
+                { text: "消灭所有基于身份的系统剥削，实现彻底的分配正义", score: { socialist: 5 } },
                 { text: "没有标签，差异被热烈庆祝，身份可以在流动中自由变幻", score: { postmodern: 5 } }
+            ]},
+            { text: "关于“男性参与女权”，你的直觉判断是：", options: [
+                { text: "欢迎：因为人权与法治的进步需要全社会的理性契约", score: { liberal: 5 } },
+                { text: "怀疑：作为既得利益者，他们很难真正反斯特权根源", score: { radical: 5 } },
+                { text: "支持：阶级解放必须建立在所有劳动阶层的共同团结", score: { socialist: 5 } },
+                { text: "消解：‘男/女’身份定义本身就是需要被拆除的", score: { postmodern: 5 } }
+            ]},
+            { text: "如果女性在科学界处于弱势，根源在于：", options: [
+                { text: "教育资源分配不均，及科研评价中的隐形偏见", score: { liberal: 5 } },
+                { text: "科学研究本身的“控制者范式”排斥了感性视角", score: { ecofem: 5 } },
+                { text: "资本与男权合谋垄断了通往“真理定义权”的门票", score: { socialist: 5 } },
+                { text: "女性在体制内由于缺乏同伴遭遇了系统性隔离", score: { intersectional: 5 } }
+            ]},
+            { text: "你认为西方女性主义对全球女性的贡献在于：", options: [
+                { text: "确立了人权、自由等普世价值的法治与权利坐标", score: { liberal: 5 } },
+                { text: "提供了工具，帮助我们看清阶级与种族的交叉压迫", score: { intersectional: 5 } },
+                { text: "存在局任：它往往用中产白人经验代替了全球境遇", score: { global: 5 } },
+                { text: "需要警惕：应防止其沦为对第三世界的文化殖民", score: { global: 5 } }
+            ]},
+            { text: "对于“跨性别权益”，你倾向于从哪个角度切入？", options: [
+                { text: "基本人权：每个人都有定义并追求自我身份认同的自由", score: { liberal: 5 } },
+                { text: "流动的性别：彻底拆解‘本质性别’这一虚假的话语构建", score: { postmodern: 5 } },
+                { text: "多重身份：关注跨性别群体在阶级与社会边缘的多重困境", score: { intersectional: 5 } },
+                { text: "女性空间：应保护基于生理特征的特定安全与抗争场域", score: { radical: 3 } }
+            ]},
+            { text: "在公共讨论中，哪种现象最让你感到女性主义的风险？", options: [
+                { text: "被消费主义收编，沦为一个明码标价的时尚标签", score: { radical: 5 } },
+                { text: "脱离底层现状，成为精英阶层在象牙塔里的谈资", score: { socialist: 5 } },
+                { text: "缺乏法律常识，导致讨论无法落地为实质权利", score: { liberal: 5 } },
+                { text: "再次陷入非黑即白的对立，制造了新的话语极权", score: { postmodern: 5 } }
+            ]},
+            { text: "实现性别平等的“第一推力”应该是：", options: [
+                { text: "法律的绝对严明：消除一切形式的显性歧视与特权", score: { liberal: 5 } },
+                { text: "女性全面夺权：让女性进入所有权力的顶层改写基因", score: { radical: 5 } },
+                { text: "公共保障：建立完善社会托育，彻底解放家庭劳动", score: { socialist: 5 } },
+                { text: "文化解构：打破任何试图定义“女性应当如何”的话语", score: { postmodern: 5 } }
+            ]},
+            { text: "关于彩礼等利益争议，你最深刻的洞察是：", options: [
+                { text: "法律保障不足导致的、关于生产资料的风险博弈", score: { liberal: 5 } },
+                { text: "父权制下将女性私有化的一种“买卖”逻辑残留", score: { radical: 5 } },
+                { text: "阶级焦虑与生存压力在亲密关系中的投影", score: { socialist: 5 } },
+                { text: "人们在表演一种传统话语定义的“幸福生活”", score: { postmodern: 5 } }
             ]}
         ];
 
-        const iconData = {
+        const mentorData = {
             liberal_early: { name: "玛丽·伍尔斯通克拉夫特", quote: "“我不希望女性拥有支配男性的权力，而是拥有支配她们自身的权力。”", work: "《为女权辩护》(1792)" },
             liberal_modern: { name: "贝蒂·弗里丹", quote: "“当女性开始追求除了洗碗和抚养孩子以外的东西时，她们才真正开始拥有生活。”", work: "《女性的奥秘》(1963)" },
             existential: { name: "西蒙娜·德·波伏娃", quote: "“女人不是天生的，而是变成的。”", work: "《第二性》(1949)" },
@@ -294,26 +355,27 @@
         };
 
         const resultsDesc = {
-            liberal: { title: "自由主义女性主义", desc: "你主张理性和个人主义。认为性别平等的关键在于消除法律障碍、实现权利的公平。你相信通过体制内的改良，可以达成最终的公正。" },
-            radical: { title: "激进女性主义", desc: "你直击父权制这一核心。认为压迫深植于身体与性关系中。你主张彻底打破男性至上的等级结构，夺回对自我的绝对控制权。" },
-            socialist: { title: "社会主义女性主义", desc: "你敏锐察觉资本主义与父权制的联手。关注无偿家务劳动，主张通过改变经济结构来实现真正的阶级与性别双重解放。" },
+            liberal: { title: "自由主义女性主义", desc: "你主张理性和个人主义。认为性别平等的关键在于消除法律障碍、实现权利公平。你相信通过体制内的改良，可以达成最终的公正。" },
+            radical: { title: "激进女性主义", desc: "你直击父权制核心。认为压迫深植于身体、生育与性关系中。你主张彻底打破男性至上的等级结构，夺回对自我的绝对控制权。" },
+            socialist: { title: "社会主义女性主义", desc: "你敏锐察觉资本主义与父权制的联手。关注无偿家务劳动的社会价值，主张通过改变经济结构来实现真正的解放。" },
             postmodern: { title: "后现代女性主义", desc: "你厌恶标签。认为“女性”是由语言和权力不断构建的范畴。主张解构二元对立，追求差异的流动性，警惕任何本质主义。" },
-            existential: { title: "存在主义女性主义", desc: "你极其看重主体自由。认为女性必须通过创造性劳动确立主体性。每个人都必须为自己的存在负责，拒绝沦为“他者”。" },
-            ecofem: { title: "生态女性主义", desc: "你认为对女性的压迫与对自然的掠夺同源。主张人类应放弃“征服”逻辑，建立人与自然、人与人之间和谐共生的关怀伦理。" },
-            global: { title: "全球女性主义", desc: "你关注各文化背景下女性的独特性。强调尊重本土经验，警惕西方中心视角的局限，在差异中寻求全球性的姐妹情谊。" },
-            intersectional: { title: "交织性女性主义", desc: "你认为压迫是多重的。必须同时考量阶级、种族、性别、性倾向等身份带来的系统性影响，拒绝单一化的受害者叙事。" },
-            care: { title: "关怀/精神分析女性主义", desc: "你重视女性特有的关怀经验与主体声音。认为关系与责任是伦理的核心，主张将长期被忽视的感性价值纳入社会衡量体系。" }
+            existential: { title: "存在主义女性主义", desc: "你极其看重主体的自由。认为女性必须通过创造性劳动确立主体性。每个人都必须为自己的存在负责，拒绝沦为“他者”。" },
+            ecofem: { title: "生态女性主义", desc: "你认为对女性的压迫与对自然的掠夺同源。主张人类应放弃“征服”逻辑，回归与自然、与生命和谐共生的文明。" },
+            global: { title: "全球女性主义", desc: "你关注各文化背景下女性的独特性。强调尊重本土经验，警惕西方中心视角的局限，在差异中寻求全球团结。" },
+            intersectional: { title: "交织性女性主义", desc: "你认为压迫是多重的。必须同时考量阶级、种族、性别等身份带来的交叉压迫，拒绝单一化叙事。" },
+            care: { title: "关怀/精神分析女性主义", desc: "你重视女性特有的关怀经验。认为关系与责任是伦理的核心，主张将长期被忽视的感性价值纳入社会衡量体系。" }
         };
 
         const combinedInterpretations = {
             liberal_radical: "你既相信制度的保障，也警惕父权在身体中的深层扎根，在改良与激进之间寻求平衡。",
             liberal_socialist: "你一面争取机会平等，一面关注宏大的经济结构，在个体权利与分配正义之间寻找交汇。",
             radical_socialist: "你认为解放既关乎私领域的身体，也关乎公领域的劳动。父权与阶级必须同时被撼动。",
-            postmodern_existential: "你重视个体的自由意志，同时对任何固化的身份表示怀疑，存在与解构交织成了你的思想坐标。"
+            postmodern_existential: "你重视个体的自由意志，同时对任何固化的身份表示怀疑，存在与解构交织成了你的思想底色。"
         };
 
         let scores = { liberal: 0, radical: 0, socialist: 0, postmodern: 0, existential: 0, ecofem: 0, global: 0, care: 0, intersectional: 0 };
         let currentQuestion = 0;
+        let answersHistory = []; // 存储历史选择以便返回
 
         function startQuiz() {
             document.getElementById('welcome-screen').classList.add('hidden');
@@ -326,11 +388,20 @@
             document.getElementById('question-number').innerText = `Question ${String(currentQuestion + 1).padStart(2, '0')}`;
             document.getElementById('question-text').innerText = q.text;
             document.getElementById('progress').style.width = `${((currentQuestion) / questions.length) * 100}%`;
+            
+            // 返回按钮的显示逻辑
+            const backBtn = document.getElementById('back-btn');
+            if (currentQuestion > 0) {
+                backBtn.classList.remove('hidden');
+            } else {
+                backBtn.classList.add('hidden');
+            }
+
             const container = document.getElementById('options-container');
             container.innerHTML = '';
             q.options.forEach(opt => {
                 const btn = document.createElement('button');
-                btn.className = "option-btn w-full p-4 md:p-5 text-left text-sm hover:border-black rounded-xl focus:outline-none";
+                btn.className = "option-btn w-full p-4 md:p-5 text-left text-sm hover:border-black rounded-xl focus:outline-none shadow-sm";
                 btn.innerText = opt.text;
                 btn.onclick = () => selectOption(opt.score);
                 container.appendChild(btn);
@@ -339,12 +410,33 @@
         }
 
         function selectOption(score) {
+            // 记录当前选择的分数
+            answersHistory.push(JSON.parse(JSON.stringify(score)));
+            
+            // 累加分数
             for (let key in score) scores[key] += score[key];
+            
             if (currentQuestion < questions.length - 1) {
                 currentQuestion++;
                 showQuestion();
             } else {
                 showResult();
+            }
+        }
+
+        // 返回上一题逻辑
+        function prevQuestion() {
+            if (currentQuestion > 0) {
+                // 获取上一题的选择分数
+                const prevScore = answersHistory.pop();
+                
+                // 扣除相应分数
+                for (let key in prevScore) {
+                    scores[key] -= prevScore[key];
+                }
+                
+                currentQuestion--;
+                showQuestion();
             }
         }
 
@@ -356,12 +448,12 @@
             const secondary = ranked[1].key;
             const tertiary = ranked[2].key;
 
-            let iconKey = primary;
-            if (primary === 'liberal') iconKey = scores.liberal > 15 ? 'liberal_modern' : 'liberal_early';
-            const icon = iconData[iconKey] || iconData.existential;
-            document.getElementById('icon-name').innerText = icon.name;
-            document.getElementById('icon-quote').innerText = icon.quote;
-            document.getElementById('icon-work').innerText = icon.work;
+            let mentorKey = primary;
+            if (primary === 'liberal') mentorKey = scores.liberal > 15 ? 'liberal_modern' : 'liberal_early';
+            const mentor = mentorData[mentorKey] || mentorData.existential;
+            document.getElementById('icon-name').innerText = mentor.name;
+            document.getElementById('icon-quote').innerText = mentor.quote;
+            document.getElementById('icon-work').innerText = mentor.work;
 
             document.getElementById('result-combined').innerText = combinedInterpretations[primary + '_' + secondary] || "你的倾向融合了多重关切，在权利、身体、阶级与解构的多元视角中，确立了自己的思想坐标。";
             
