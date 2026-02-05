@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>女性主义流派倾向测试 | 探索与觉醒</title>
+    <title>思想坐标测试 | 探索与觉醒</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -30,12 +30,12 @@
                         radial-gradient(circle at 90% 80%, rgba(187, 79, 107, 0.04) 0%, transparent 40%);
             z-index: -1;
         }
-        .fade-in { animation: fadeIn 0.8s ease-out forwards; }
+        .fade-in { animation: fadeIn 0.6s ease-out forwards; }
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
+            from { opacity: 0; transform: translateY(8px); }
             to { opacity: 1; transform: translateY(0); }
         }
-        .option-btn { transition: all 0.2s ease; border: 1px solid rgba(0,0,0,0.08); background: white; cursor: pointer; }
+        .option-btn { transition: all 0.2s ease; border: 1px solid rgba(0,0,0,0.06); background: white; cursor: pointer; }
         .option-btn:hover { border-color: var(--accent); background-color: rgba(107, 79, 187, 0.02); }
         .option-btn:active { transform: scale(0.98); background-color: var(--accent); color: white; }
         .progress-bar { transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
@@ -48,10 +48,10 @@
         }
 
         .mentor-card {
-            border: 1px solid rgba(107, 79, 187, 0.1);
+            border: 1px solid rgba(107, 79, 187, 0.08);
             background: linear-gradient(135deg, #ffffff 0%, #fafaff 100%);
         }
-        .quote-mark { font-family: serif; font-size: 3rem; line-height: 1; opacity: 0.08; }
+        .quote-mark { font-family: serif; font-size: 2.5rem; line-height: 1; opacity: 0.1; }
 
         .access-input {
             background: transparent;
@@ -76,74 +76,79 @@
         }
 
         .spectrum-bar {
-            height: 6px;
+            height: 4px;
             background: #eee;
-            border-radius: 3px;
+            border-radius: 2px;
             position: relative;
             margin: 10px 0;
         }
         .spectrum-indicator {
-            width: 12px;
-            height: 12px;
+            width: 10px;
+            height: 10px;
             background: var(--accent);
             border: 2px solid white;
             border-radius: 50%;
             position: absolute;
             top: 50%;
             transform: translate(-50%, -50%);
-            transition: left 1s ease;
+            transition: left 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        /* 解决雷达图容器宽高问题 */
+        .chart-container {
+            position: relative;
+            margin: auto;
+            height: 280px;
+            width: 280px;
         }
     </style>
 </head>
 <body class="min-h-screen flex flex-col">
     <div class="bg-glow"></div>
     
-    <!-- 术语解释弹窗 -->
     <div id="modal-overlay" onclick="closeModal()">
         <div class="bg-white p-8 rounded-3xl max-w-xs w-full shadow-2xl fade-in" onclick="event.stopPropagation()">
-            <h4 id="modal-title" class="text-xs uppercase font-bold tracking-widest text-purple-600 mb-2">术语解释</h4>
+            <h4 id="modal-title" class="text-xs uppercase font-bold tracking-widest text-purple-600 mb-2">思辨词条</h4>
             <p id="modal-content" class="text-sm leading-relaxed text-gray-700"></p>
             <button onclick="closeModal()" class="mt-6 w-full py-2 bg-gray-100 text-[10px] uppercase tracking-widest font-bold rounded-lg">关闭 / Close</button>
         </div>
     </div>
 
-    <nav class="p-6"><span class="text-[10px] tracking-widest uppercase opacity-40 font-light">Theory & Reflection</span></nav>
+    <nav class="p-6"><span class="text-[10px] tracking-widest uppercase opacity-40 font-light italic">Theory & Deep Reflection</span></nav>
 
     <main class="flex-grow flex flex-col items-center justify-center px-6 py-10">
-        <!-- 兑换码锁定页面 -->
+        <!-- 兑换码锁定页面 - 修复重叠词 -->
         <div id="access-screen" class="max-w-md w-full space-y-12 fade-in text-center">
             <div class="space-y-4">
                 <span class="text-[9px] font-bold uppercase tracking-[0.6em] text-purple-400">Restricted Access</span>
-                <h2 class="text-3xl serif leading-tight">请输入激活码以开启探索</h2>
-                <p class="text-[10px] text-gray-400 uppercase tracking-widest">Enter redemption code to unlock</p>
+                <h2 class="text-3xl serif leading-tight">输入激活码开启探索</h2>
+                <p class="text-[10px] text-gray-400 uppercase tracking-widest font-medium">Unlock the archival map</p>
             </div>
             
             <div class="space-y-6">
                 <div class="relative max-w-[200px] mx-auto">
                     <input type="text" id="access-code" class="access-input w-full py-2 text-center text-lg tracking-[0.2em] font-light" placeholder="••••••••" maxlength="15">
                 </div>
-                <div id="error-msg" class="text-[9px] text-red-400 font-bold opacity-0 transition-opacity">兑换码无效，请检查重试</div>
-                <button onclick="verifyAccess()" class="px-12 py-3 bg-black text-white text-[10px] tracking-widest uppercase active:scale-95 transition-transform">验证 / Unlock</button>
+                <div id="error-msg" class="text-[9px] text-red-400 font-bold opacity-0 transition-opacity">验证未通过，请重新核对</div>
+                <button onclick="verifyAccess()" class="px-12 py-3 bg-black text-white text-[10px] tracking-widest uppercase active:scale-95 transition-transform">解锁进入 / Unlock</button>
             </div>
             <p class="text-[8px] tracking-[0.2em] uppercase opacity-20 pt-20">© 2026 Curated by @云树cloudtree</p>
         </div>
 
-        <!-- 欢迎页面 -->
         <div id="welcome-screen" class="hidden max-w-md w-full text-center space-y-8 fade-in">
-            <h1 class="text-4xl md:text-5xl serif leading-tight">性别、权力<br><span class="italic text-gray-500 text-3xl md:text-4xl font-light">与自我的重构</span></h1>
-            <p class="text-sm leading-relaxed text-gray-600 font-light px-4 italic">基于《女性主义思潮导论》，通过 24 组直觉式思辨题，锁定你的精神坐标。</p>
+            <h1 class="text-4xl md:text-5xl serif leading-tight">性别、权力<br><span class="italic text-gray-400 text-3xl md:text-4xl font-light">与自我的重构</span></h1>
+            <p class="text-sm leading-relaxed text-gray-500 font-medium px-4">24 组沉浸式思辨，揭示你潜意识里的思想原点。</p>
             <div class="flex flex-col items-center gap-6">
-                <button onclick="startQuiz()" class="px-10 py-4 bg-black text-white text-xs tracking-widest uppercase shadow-sm active:scale-95 transition-transform">开始探索</button>
-                <div class="text-[10px] text-gray-400 tracking-[0.2em]">Curated by @云树cloudtree</div>
+                <button onclick="startQuiz()" class="px-10 py-4 bg-black text-white text-xs tracking-widest uppercase shadow-sm active:scale-95 transition-transform">开始思辨</button>
+                <div class="text-[10px] text-gray-300 tracking-[0.2em]">Curated by @云树cloudtree</div>
             </div>
         </div>
 
-        <!-- 测试页面 -->
         <div id="quiz-screen" class="hidden max-w-md w-full space-y-8 fade-in">
             <div class="w-full h-[1px] bg-gray-100 relative"><div id="progress" class="progress-bar absolute top-0 left-0 h-full bg-black w-0"></div></div>
             <div class="flex justify-between items-center px-1">
-                <button id="back-btn" onclick="prevQuestion()" class="text-[9px] uppercase tracking-[0.2em] text-gray-400 opacity-50 hidden">← Back</button>
-                <span id="question-number" class="text-[10px] uppercase tracking-widest text-gray-400 mx-auto">Question 01</span>
+                <button id="back-btn" onclick="prevQuestion()" class="text-[9px] uppercase tracking-[0.2em] text-gray-300 hidden hover:text-black transition-colors">← Back</button>
+                <span id="question-number" class="text-[10px] uppercase tracking-widest text-gray-400 mx-auto font-bold">Question 01</span>
             </div>
             <h2 id="question-text" class="text-xl serif leading-snug font-medium text-center px-2"></h2>
             <div id="options-container" class="space-y-3"></div>
@@ -151,108 +156,113 @@
 
         <!-- 结果页面 -->
         <div id="result-screen" class="hidden max-w-md w-full space-y-6 fade-in pb-12">
-            <div id="capture-area" class="bg-[#FDFBF7] p-6 rounded-3xl border border-gray-100 shadow-sm overflow-hidden">
+            <div id="capture-area" class="bg-[#FDFBF7] p-6 rounded-[2.5rem] border border-gray-100 shadow-sm overflow-hidden">
                 <div class="text-center space-y-1 mb-8 pt-4">
-                    <span class="text-[9px] uppercase tracking-widest text-gray-400">Result Analysis</span>
-                    <h2 class="text-2xl serif text-purple-900 italic font-bold">思想坐标探索报告</h2>
+                    <span class="text-[9px] uppercase tracking-widest text-gray-300">Observation Report</span>
+                    <h2 class="text-2xl serif text-purple-950 italic font-bold">思想倾向档案</h2>
                 </div>
 
+                <!-- 核心雷达图 -->
                 <div class="mb-10 px-4">
-                    <div class="aspect-square w-full max-w-[280px] mx-auto">
+                    <div class="chart-container">
                         <canvas id="radarChart"></canvas>
                     </div>
                 </div>
 
-                <div class="mb-10 space-y-4 px-2">
+                <!-- 思想光谱 -->
+                <div class="mb-10 space-y-4 px-4">
                     <div>
-                        <div class="flex justify-between text-[8px] uppercase tracking-widest font-bold text-gray-400 mb-1">
-                            <span>体制内改良 / Reform</span>
-                            <span>结构性颠覆 / Radical</span>
+                        <div class="flex justify-between text-[7px] uppercase tracking-widest font-black text-gray-400 mb-1">
+                            <span>体制改良 / Reform</span>
+                            <span>结构重组 / Radical</span>
                         </div>
                         <div class="spectrum-bar"><div id="spec-1" class="spectrum-indicator" style="left: 50%;"></div></div>
                     </div>
                     <div>
-                        <div class="flex justify-between text-[8px] uppercase tracking-widest font-bold text-gray-400 mb-1">
-                            <span>个体权利 / Individual</span>
-                            <span>系统压迫 / Structure</span>
+                        <div class="flex justify-between text-[7px] uppercase tracking-widest font-black text-gray-400 mb-1">
+                            <span>个体主权 / Individual</span>
+                            <span>系统审视 / Structure</span>
                         </div>
                         <div class="spectrum-bar"><div id="spec-2" class="spectrum-indicator" style="left: 50%;"></div></div>
                     </div>
                 </div>
 
-                <div class="mb-8 p-8 mentor-card rounded-2xl text-center space-y-4 relative overflow-hidden shadow-sm">
+                <!-- 导师卡片 -->
+                <div class="mb-8 p-8 mentor-card rounded-3xl text-center space-y-5 relative overflow-hidden">
                     <div class="quote-mark absolute -top-1 -left-1">“</div>
-                    <h4 class="text-[9px] uppercase text-purple-400 tracking-widest relative z-10 font-bold text-center">精神导师 / Spiritual Mentor</h4>
+                    <h4 class="text-[9px] uppercase text-purple-400 tracking-[0.3em] font-black relative z-10">精神导师 / Mentor</h4>
                     <div class="space-y-4 relative z-10">
-                        <h3 id="icon-name" class="text-2xl serif text-purple-900 border-b border-purple-50 pb-2 inline-block"></h3>
-                        <p id="icon-quote" class="text-sm italic text-gray-700 px-2 leading-relaxed font-light"></p>
+                        <h3 id="icon-name" class="text-2xl serif text-purple-950 border-b-2 border-purple-50 pb-2 inline-block"></h3>
+                        <p id="icon-quote" class="text-sm italic text-gray-700 px-3 leading-relaxed font-medium"></p>
                         <div class="pt-2 text-center">
-                            <p class="text-[8px] text-gray-400 uppercase tracking-widest mb-1">代表作 / Major Work</p>
-                            <p id="icon-work" class="text-[11px] text-purple-800 font-medium"></p>
+                            <p class="text-[8px] text-gray-400 uppercase tracking-widest mb-1">典籍 / Archive</p>
+                            <p id="icon-work" class="text-[11px] text-purple-800 font-bold"></p>
                         </div>
                     </div>
                 </div>
 
-                <div class="space-y-4 mb-10">
-                    <div class="p-6 bg-white rounded-2xl border border-purple-50">
-                        <h4 class="text-[9px] uppercase font-bold mb-2 text-purple-700 tracking-wider text-left">深度洞察</h4>
-                        <p id="result-combined" class="text-sm leading-relaxed text-gray-700 font-light text-left"></p>
+                <div class="space-y-4 mb-10 text-left px-2">
+                    <div class="p-6 bg-white rounded-3xl border border-purple-50 shadow-sm">
+                        <h4 class="text-[9px] uppercase font-black mb-3 text-purple-800 tracking-widest">深度解读</h4>
+                        <p id="result-combined" class="text-[13px] leading-relaxed text-gray-800 font-medium"></p>
                     </div>
-                    <div id="result-primary-block" class="p-5 bg-white/80 rounded-2xl border border-gray-50 text-left">
-                        <h4 class="text-[9px] uppercase text-purple-600 tracking-widest font-bold mb-1">核心色调 / Primary</h4>
-                        <h3 id="result-primary-title" class="text-lg serif text-purple-900 mb-2"></h3>
-                        <p id="result-primary-desc" class="text-xs leading-relaxed text-gray-600 font-light"></p>
+                    <div id="result-primary-block" class="p-5 bg-white/60 rounded-3xl border border-gray-100">
+                        <h4 class="text-[9px] uppercase text-purple-600 tracking-widest font-black mb-1">主导支点</h4>
+                        <h3 id="result-primary-title" class="text-lg serif text-purple-950 mb-2 font-bold"></h3>
+                        <p id="result-primary-desc" class="text-xs leading-relaxed text-gray-600 font-medium"></p>
                     </div>
                 </div>
 
-                <div class="p-6 bg-purple-900 text-white rounded-2xl mb-10 shadow-lg text-left">
-                    <h4 class="text-[9px] uppercase font-bold mb-3 tracking-[0.2em] text-purple-300">进阶书单 / Reading List</h4>
+                <div class="p-6 bg-purple-950 text-white rounded-3xl mb-10 shadow-lg text-left">
+                    <h4 class="text-[9px] uppercase font-bold mb-4 tracking-[0.2em] text-purple-300">进阶书单 / Reading List</h4>
                     <div id="book-list" class="space-y-4"></div>
                 </div>
 
-                <details class="group border border-gray-100 rounded-2xl overflow-hidden mb-6">
-                    <summary class="list-none p-4 bg-gray-50 flex justify-between items-center cursor-pointer font-bold text-[10px] uppercase tracking-widest text-gray-500">
-                        思想图谱全览 / Encyclopedia
+                <details class="group border border-gray-100 rounded-3xl overflow-hidden mb-6 text-left">
+                    <summary class="list-none p-5 bg-gray-50 flex justify-between items-center cursor-pointer font-bold text-[10px] uppercase tracking-widest text-gray-400">
+                        思想全景百科 / Encyclopedia
                         <span class="transition-transform group-open:rotate-180">↓</span>
                     </summary>
                     <div class="p-4 bg-white overflow-x-auto">
                         <table class="w-full text-[10px] text-left border-collapse min-w-[400px]">
                             <thead>
-                                <tr class="border-b border-gray-100 text-gray-400 uppercase">
-                                    <th class="py-2 pr-2">坐标点</th>
-                                    <th class="py-2 px-2">逻辑支点</th>
-                                    <th class="py-2 px-2">现实张力</th>
+                                <tr class="border-b border-gray-100 text-gray-300 uppercase">
+                                    <th class="py-2 pr-2">流派</th>
+                                    <th class="py-2 px-2">核心逻辑</th>
+                                    <th class="py-2 px-2">主要张力</th>
                                 </tr>
                             </thead>
-                            <tbody class="text-gray-600" id="encyclopedia-body"></tbody>
+                            <tbody class="text-gray-600 font-medium" id="encyclopedia-body"></tbody>
                         </table>
                     </div>
                 </details>
 
-                <div class="text-center pt-8 pb-2 opacity-20"><p class="text-[8px] tracking-[0.2em] uppercase">© 2026 Curated by @云树cloudtree</p></div>
+                <div class="text-center pt-8 pb-2 opacity-10"><p class="text-[8px] tracking-[0.2em] uppercase">© 2026 Curated by @云树cloudtree</p></div>
             </div>
 
-            <div class="flex flex-col items-center gap-4">
+            <div class="flex flex-col items-center gap-5 mt-6">
                 <div class="p-1 bg-white border border-gray-100 shadow-sm"><img src="微信二维码.JPG" class="w-20 h-20 grayscale opacity-40 hover:opacity-100 transition-opacity" onerror="this.parentElement.style.display='none'"></div>
                 <p class="text-[8px] text-gray-400 italic">扫码联系 @云树cloudtree，延续思考</p>
             </div>
 
-            <div class="flex gap-3 pt-4 px-2">
-                <button onclick="location.reload()" class="flex-1 py-4 border border-black text-[10px] uppercase tracking-widest active:bg-gray-100 transition-colors">重新开始</button>
-                <button id="save-btn" onclick="saveAsImage()" class="flex-1 py-4 bg-black text-white text-[10px] uppercase tracking-widest active:bg-gray-800 transition-colors">存为档案</button>
+            <div class="flex gap-3 pt-6 px-2">
+                <button onclick="location.reload()" class="flex-1 py-4 border-2 border-black text-[10px] font-black uppercase tracking-widest transition-colors">重新开始</button>
+                <button id="save-btn" onclick="saveAsImage()" class="flex-1 py-4 bg-black text-white text-[10px] font-black uppercase tracking-widest shadow-xl active:scale-95 transition-transform">存为档案</button>
             </div>
         </div>
     </main>
 
     <script>
         const dictionary = {
-            "父权制": "不仅指男性的统治，更是一种无处不在、将‘征服’与‘等级’视为真理的社会逻辑。",
-            "无偿劳动": "被温情脉脉的‘爱’所掩盖的生命耗费，是家庭和资本赖以运转的免费润滑剂。",
-            "体制内改良": "试图通过法律和制度的‘修补’，在现有的游戏规则内换取女性的入场券。",
-            "他者性": "一种被迫的镜像状态：当女性被定义为男性的附庸时，她便失去了定义自己的语言。",
-            "统治逻辑": "一种二元对立的权力范式，总是倾向于物化自然和女性，以便更顺滑地进行榨取。",
-            "俄狄浦斯情结": "一种心理脚本，描述了权力、欲望与认同在潜意识深处的最初博弈。"
+            "父权制": "男性垄断权力和资源的深层秩序，通过制度、文化和潜意识维持其稳固地位。",
+            "无偿劳动": "被隐形化的生命资源，指家庭内部照料、育儿等进入不到市场核算的生产力消耗。",
+            "体制内改良": "在承认现有秩序合法性的前提下，试图通过立法和规则的修补换取局部利益。",
+            "他者性": "一种被迫的附属状态：当女性被定义为对照而非主体时，其真实性便被遮蔽了。",
+            "统治逻辑": "父权文明的核心范式，将自然、女性与边缘群体视为‘待征服’的客体进行榨取。",
+            "俄狄浦斯情结": "潜意识深处的心理母版，描述了权欲、禁忌与自我认同在成长最初期的博弈。"
         };
+
+        let currentChart = null;
 
         function showDefinition(word) {
             document.getElementById('modal-title').innerText = `思辨词条：${word}`;
@@ -276,133 +286,133 @@
             }
         }
 
-        // 重新润色后的 24 道题库，去 AI 味，智性表达
+        // 深度润色后的 24 道题库，去 AI 味
         const questions = [
-            { text: "当你听到“平等”一词，你内心第一时间的冲动是：", options: [
-                { text: "捍卫契约：让法律面前没有任何性别可以拥有的特权", score: { liberal: 5, ind: 5, ref: 5 } },
-                { text: "颠覆棋局：夺回资源，彻底粉碎男权制定的游戏规则", score: { radical: 5, str: 5, rad: 5 } },
-                { text: "消灭剥削：让劳作的底层女性不再被资本与性别双重碾压", score: { socialist: 5, str: 5, rad: 3 } },
-                { text: "释放差异：拒绝用任何人的尺度，来裁剪我们的生命", score: { postmodern: 5, ind: 2, rad: 4 } }
+            { text: "当你听到“平等”一词，你内心最初的冲动倾向于：", options: [
+                { text: "捍卫契约：让法律面前没有任何性别可以拥有的局部特权", score: { liberal: 5, ind: 5, ref: 5 } },
+                { text: "颠覆棋局：夺回资源分配权，粉碎男权制定的那套游戏规则", score: { radical: 5, str: 5, rad: 5 } },
+                { text: "消灭剥削：让底层的女性不再被资本与性别的双重逻辑反复碾压", score: { socialist: 5, str: 5, rad: 3 } },
+                { text: "释放差异：拒绝用任何人的尺度，来裁剪我们的生命纹理", score: { postmodern: 5, ind: 2, rad: 4 } }
             ]},
-            { text: "关于女性的“身体”，哪一道防线让你觉得绝对不容退让？", options: [
-                { text: "夺回主权：生育与身体，必须由且仅由我个人意志裁定", score: { radical: 5, rad: 5 } },
-                { text: "程序自由：打扮或不打扮，应是受法律保护的个体选择", score: { liberal: 5, ref: 5 } },
-                { text: "独立主体：不为外界的凝视负责，只为自己的存在而活", score: { existential: 5, ind: 5 } },
-                { text: "撕碎模板：让所有被权力塑造的‘美学标准’通通见鬼去吧", score: { postmodern: 5, ind: 2 } }
+            { text: "关于“身体”，哪一道防线让你觉得绝对不容被任何人染指？", options: [
+                { text: "主权：生育与身体的归属，必须由且仅由个体意志独立裁定", score: { radical: 5, rad: 5 } },
+                { text: "程序自由：打扮或不打扮，应是受法律保障且被尊重的选择权", score: { liberal: 5, ref: 5 } },
+                { text: "独立主体：不为外界凝视负责，只为自我存在的那份重量而活", score: { existential: 5, ind: 5 } },
+                { text: "撕碎模板：让所有被权力塑造出的‘美学标准’通通作废", score: { postmodern: 5, ind: 2 } }
             ]},
-            { text: "在职场性别偏见面前，最让你感到冒犯的逻辑是：", options: [
-                { text: "傲慢：预设女性‘理性不足’，以此剥夺其核心决策权", score: { liberal: 5, ind: 5 } },
-                { text: "算计：默认女性应多承担家庭琐事，以此压低其竞争价值", score: { socialist: 5, str: 5 } },
-                { text: "规训：强行打上‘性别标签’，把职业限制在刻板印象里", score: { postmodern: 5, ind: 3 } },
-                { text: "恐女：用‘亲和力’之类的词汇，去阉割女性原本的领导力", score: { radical: 5, str: 5, rad: 5 } }
+            { text: "在职场性别偏见面前，最让你感到被冒犯的逻辑是：", options: [
+                { text: "傲慢：预设女性理性不足，以此剥夺其在核心决策中的入场券", score: { liberal: 5, ind: 5 } },
+                { text: "算计：默认女性应多承担家庭琐事，以此压低其公共竞争价值", score: { socialist: 5, str: 5 } },
+                { text: "规训：强行打上性别标签，将多元的人性限制在刻板剧本里", score: { postmodern: 5, ind: 3 } },
+                { text: "阉割：用‘亲和力’等词汇，去抵消女性原本具备的领导力爆发", score: { radical: 5, str: 5, rad: 5 } }
             ]},
-            { text: "如果上天给你一个机会，你可以立刻抹除一个旧制度，你会选：", options: [
-                { text: "私有制：它是一切将女性禁锢在家庭中的经济黑手", score: { socialist: 5, str: 5, rad: 5 } },
-                { text: "父权制：它是那道无形但沉重的、压抑生命力的铁幕", score: { radical: 5, str: 5, rad: 5 } },
-                { text: "法律盲区：它让针对女性的不公在暗影中获得合法性", score: { liberal: 5, ind: 5, ref: 5 } },
-                { text: "二元论：它像剪刀一样，强行把多变的人性裁成两种样板", score: { postmodern: 5, ind: 4, rad: 3 } }
+            { text: "如果能立刻抹除一个旧世界制度，你会优先选择：", options: [
+                { text: "私有制：它是一切将女性禁锢在家庭这一孤岛中的经济推手", score: { socialist: 5, str: 5, rad: 5 } },
+                { text: "父权制：它是那道无形但沉重的、压抑生命张力的黑色铁幕", score: { radical: 5, str: 5, rad: 5 } },
+                { text: "法律盲区：它让针对女性的不公在权力的暗影中获得了合法性", score: { liberal: 5, ind: 5, ref: 5 } },
+                { text: "二元论：它像剪刀一样，强行将多变的人性裁切成两种样板", score: { postmodern: 5, ind: 4, rad: 3 } }
             ]},
-            { text: "对于“成人工业”，你的直觉判断往往锁定在：", options: [
-                { text: "尊重契约：只要是两个独立主体的自愿选择，外人无权干涉", score: { liberal: 5, ind: 5, ref: 5 } },
-                { text: "抵制物化：它是父权对女性肉体最冷酷的、系统性的吞噬", score: { radical: 5, str: 5, rad: 5 } },
-                { text: "关注劳动：别谈什么艺术，它本质上是对边缘阶层的压榨", score: { socialist: 5, str: 5, ref: 2 } },
-                { text: "解构欲望：让我们看看，是谁在后台导演了这一场性表演", score: { postmodern: 5, ind: 2, rad: 4 } }
+            { text: "对于“成人工业”，你的直觉判断往往锁定在哪个支点？", options: [
+                { text: "尊重契约：只要是两个独立主体的自愿选择，外人无权置喙", score: { liberal: 5, ind: 5, ref: 5 } },
+                { text: "抵制物化：它是父权对女性肉体最冷酷的、系统性的榨取", score: { radical: 5, str: 5, rad: 5 } },
+                { text: "关注劳动：撇开艺术外衣，它本质上是对边缘阶层的资本剥削", score: { socialist: 5, str: 5, ref: 2 } },
+                { text: "解构欲望：让我们看看到底是谁在后台导演了这一场性表演", score: { postmodern: 5, ind: 2, rad: 4 } }
             ]},
-            { text: "当科技（如人造子宫）试图介入生育，你的第一反应是：", options: [
-                { text: "解放感：女性终于可以从这块生物性的沉重基石上解脱了", score: { radical: 5, rad: 5 } },
-                { text: "危机感：那是机械文明对自然生命力最后一块阵地的掠夺", score: { ecofem: 5, str: 3 } },
-                { text: "警惕感：得看技术掌握在谁手里，还是会加剧阶级不公", score: { socialist: 5, str: 5 } },
-                { text: "嘲讽感：且看它如何拆穿‘母亲’这个被神圣化的政治定义", score: { postmodern: 5, ind: 1 } }
+            { text: "当科技试图介入生育（如人造子宫），你的第一反应是：", options: [
+                { text: "解放感：女性终于可以从生物性的这块沉重基石上彻底解脱了", score: { radical: 5, rad: 5 } },
+                { text: "危机感：那是机械文明对生命自然力最后一块阵地的霸权掠夺", score: { ecofem: 5, str: 3 } },
+                { text: "警惕感：得看技术掌握在谁手里，否则只会加剧阶级的不公", score: { socialist: 5, str: 5 } },
+                { text: "嘲讽感：且看它如何拆穿‘母亲’这个被高度神圣化的政治定义", score: { postmodern: 5, ind: 1 } }
             ]},
-            { text: "你认为“女性写作”真正的力量应该爆发在：", options: [
-                { text: "智力平权：以此证明女性同样拥有直达理性巅峰的能力", score: { liberal: 5, ind: 5 } },
-                { text: "身体叙事：用诚实的、带痛的经验，夺回被屏蔽的话语权", score: { radical: 5, rad: 5, str: 5 } },
-                { text: "流动的舌头：创造一种拒绝被定义、拒绝被逻辑阉割的新语言", score: { postmodern: 5, ind: 2 } },
-                { text: "可见性的抗争：让那些被遗忘在社会暗角的生命痕迹显现", score: { intersectional: 5, str: 5 } }
+            { text: "你认为“女性写作”最真实的力量应该爆发在哪里？", options: [
+                { text: "智力平权：以此证明女性同样拥有直达人类理性巅峰的能力", score: { liberal: 5, ind: 5 } },
+                { text: "身体叙事：用诚实且带痛的笔触，夺回被长期屏蔽的话语主权", score: { radical: 5, rad: 5, str: 5 } },
+                { text: "流动的舌头：创造一种拒绝被归类、拒绝被传统逻辑阉割的新语言", score: { postmodern: 5, ind: 2 } },
+                { text: "可见性：让那些被遗忘在社会暗角的女性生命痕迹强行显影", score: { intersectional: 5, str: 5 } }
             ]},
-            { text: "关于“母职”，哪一种说法最能触碰到你的内心真相？", options: [
-                { text: "它是一场漫长的、由社会合谋的针对女性精力的温情绑架", score: { radical: 5, rad: 5, str: 5 } },
-                { text: "它蕴藏着最珍贵的关怀能量，这种价值长期被效率社会贬低", score: { care: 5, ind: 2 } },
-                { text: "育儿本应是整个社会的共同体责任，不该由个体肉搏", score: { socialist: 5, str: 5, ref: 3 } },
-                { text: "承担与否，纯粹是一个自由个体对存在命运的自主承诺", score: { existential: 5, ind: 5 } }
+            { text: "关于“母职”，哪一种说法最能触碰到你内心的真相？", options: [
+                { text: "它是一场漫长的、由社会合谋针对女性精力的温情式绑架", score: { radical: 5, rad: 5, str: 5 } },
+                { text: "它蕴藏着最珍贵的关怀能量，这种价值长期被效率社会严重贬低", score: { care: 5, ind: 2 } },
+                { text: "育儿本应是整个社会的共同体责任，而非个体的孤军肉搏", score: { socialist: 5, str: 5, ref: 3 } },
+                { text: "承担与否，纯粹是一个自由个体对存在命运发出的自主承诺", score: { existential: 5, ind: 5 } }
             ]},
-            { text: "面对“女性理应以家庭为重”的陈词滥调，你的反击点是：", options: [
-                { text: "公平逻辑：个人的理想实现，从来不分性别，也不分场域", score: { liberal: 5, ind: 5, ref: 5 } },
-                { text: "拒绝剥削：我拒绝提供任何被视为‘理所应当’的免费劳力", score: { radical: 5, str: 5, rad: 5 } },
-                { text: "解构剧本：彻底撕毁那个由男权文化预设好的‘贤妻’模型", score: { postmodern: 5, ind: 3, rad: 4 } },
-                { text: "存在意志：我将如何消耗我的生命，只取决于我的自由意志", score: { existential: 5, ind: 5 } }
+            { text: "面对“女性理应以家庭为重”的陈旧期待，你的反击点是：", options: [
+                { text: "公平逻辑：个人的理想实现从来不分性别，也不应分场域", score: { liberal: 5, ind: 5, ref: 5 } },
+                { text: "拒绝剥削：我拒绝提供任何被视为理所应当的无偿再生产劳动", score: { radical: 5, str: 5, rad: 5 } },
+                { text: "解构剧本：彻底撕毁那个由男权文化预设好的贤妻良母模型", score: { postmodern: 5, ind: 3, rad: 4 } },
+                { text: "自由：我将如何消耗我的生命，只取决于我的存在选择", score: { existential: 5, ind: 5 } }
             ]},
             { text: "当有人恐吓你“女权太激进会没人要”时，你的态度是：", options: [
-                { text: "鄙夷：你的评价体系本身就充满了对独立人格的不公", score: { liberal: 5, ind: 5 } },
-                { text: "不屑：‘被要’这个词本身就带着一股腐朽的物化臭味", score: { radical: 5, str: 5, rad: 5 } },
-                { text: "无感：你是在试图用婚恋的锁链，去拴住那些自由的灵魂", score: { postmodern: 5, ind: 3 } },
+                { text: "不屑：你的那套评价体系本身就充满了对独立人格的歧视", score: { liberal: 5, ind: 5 } },
+                { text: "鄙夷：‘被要’这个词本身就带着一股腐朽的物化臭味", score: { radical: 5, str: 5, rad: 5 } },
+                { text: "无感：你是在试图用婚恋的枷锁，去恐吓那些自由的灵魂", score: { postmodern: 5, ind: 3 } },
                 { text: "蔑视：我不为满足他人的审判而存在，我为我的自由而活", score: { existential: 5, ind: 5 } }
             ]},
-            { text: "你认为女性展现出的感性、温柔等特质，更底层的动力来自：", options: [
-                { text: "教育惯性：这是社会长期在期待和资源分配上诱导的结果", score: { liberal: 5, ind: 5, ref: 4 } },
-                { text: "心理认同：成长中为了防御痛苦而内化的特定角色结构", score: { psycho: 5, str: 2 } },
-                { text: "表演性：这不过是权力关系中一种不断被重复的战术模仿", score: { postmodern: 5, ind: 3 } },
+            { text: "你认为女性展现出的感性、温柔特质，其底层的动力来自：", options: [
+                { text: "教育惯性：这是社会长期在期待和资源分配上定向诱导的结果", score: { liberal: 5, ind: 5, ref: 4 } },
+                { text: "心理认同：成长中为了防御孤独而内化的特定性别认同结构", score: { psycho: 5, str: 2 } },
+                { text: "表演性：这不过是权力关系中一种不断被重复的生存模仿动作", score: { postmodern: 5, ind: 3 } },
                 { text: "天赋：这些特质里包含着被现代工具文明遗弃的关怀智慧", score: { care: 5, ind: 1 } }
             ]},
-            { text: "关于对自然的掠夺与对女性的压迫，你的洞察是：", options: [
-                { text: "它们是两回事：应分别依靠科学进步与法律完善来解决", score: { liberal: 5, ref: 5 } },
-                { text: "它们是同源的：都源于那种‘征服并榨取他者’的野蛮逻辑", score: { ecofem: 5, str: 5, rad: 5 } },
-                { text: "它们是同构的：都折射出了资本主义唯利是图的残酷底色", score: { socialist: 5, str: 5 } },
-                { text: "它们是话语陷阱：都是中心权力为了管理边界而制造的标签", score: { postmodern: 5, ind: 2 } }
+            { text: "关于自然的掠夺与对女性的压迫，你的真实洞察是：", options: [
+                { text: "二者独立：应分别依靠科学进步与法律完善来独立解决", score: { liberal: 5, ref: 5 } },
+                { text: "逻辑同源：都源于那种征服并榨取他者的野蛮统治范式", score: { ecofem: 5, str: 5, rad: 5 } },
+                { text: "机制同构：都折射出了资本主义唯利是图的那份残酷底色", score: { socialist: 5, str: 5 } },
+                { text: "话语陷阱：都是中心权力为了管理边界而制造的分类标签", score: { postmodern: 5, ind: 2 } }
             ]},
             { text: "赞美“为母则刚”时，你最本能的排斥点在于：", options: [
-                { text: "那是对牺牲的最残忍的道德绑架，也是对困境的廉价美化", score: { radical: 5, str: 5, rad: 5 } },
-                { text: "这种赞美试图掩盖社会制度在托育与支持上的严重缺失", score: { liberal: 5, ref: 5 } },
+                { text: "它是对牺牲的最残忍绑架，也是对残酷现实的廉价美化", score: { radical: 5, str: 5, rad: 5 } },
+                { text: "这种赞美试图掩盖社会制度在托育支持上的结构性缺失", score: { liberal: 5, ref: 5 } },
                 { text: "这在强行把人塞进一个单一的、自我磨灭的人格模板里", score: { postmodern: 5, ind: 3 } },
-                { text: "它让女性生命中原本纯粹的关怀能量，变成了一种义务", score: { care: 5, ind: 2 } }
+                { text: "它让女性原本纯粹的关怀能量，变成了一种被迫的义务", score: { care: 5, ind: 2 } }
             ]},
             { text: "你理想中的未来，更倾向于呈现为何种样貌？", options: [
                 { text: "理性之境：每个人都作为平等的个体，自由实现全部潜能", score: { liberal: 5, ind: 5, ref: 5 } },
-                { text: "和谐之境：关怀与生命力取代征服逻辑，重建世界的秩序", score: { radical: 5, ecofem: 2, rad: 5 } },
-                { text: "正义之境：铲除基于身份的一切剥削，实现彻底的分配公正", score: { socialist: 5, str: 5, rad: 4 } },
-                { text: "自由之境：没有标签，差异被庆祝，身份在流动中变幻莫测", score: { postmodern: 5, ind: 4, rad: 3 } }
+                { text: "生命之境：关怀取代征服逻辑，重建世界的生存秩序", score: { radical: 5, ecofem: 2, rad: 5 } },
+                { text: "正义之境：铲除基于身份的所有剥削，实现分配的公正", score: { socialist: 5, str: 5, rad: 4 } },
+                { text: "自由之境：没有标签，差异被庆祝，身份在流动中变幻", score: { postmodern: 5, ind: 4, rad: 3 } }
             ]},
             { text: "关于“男性参与平权”，你的第一反应倾向于：", options: [
-                { text: "理性拥抱：法治与人权的进步，需要全社会达成理性的契约", score: { liberal: 5, ind: 5, ref: 5 } },
+                { text: "理性拥抱：法治与人权的进步，需要全社会达成理性的合力", score: { liberal: 5, ind: 5, ref: 5 } },
                 { text: "审慎观察：作为既得利益者，他们很难真正反思特权的根源", score: { radical: 5, rad: 5, str: 5 } },
-                { text: "支持联合：阶级解放必须建立在所有劳动者的共同团结之上", score: { socialist: 5, str: 5, ref: 2 } },
-                { text: "消解定义：‘男’与‘女’的这种对立划分，本来就该被拆除", score: { postmodern: 5, ind: 4 } }
+                { text: "联合：阶级解放必须建立在所有劳作者的共同团结之上", score: { socialist: 5, str: 5, ref: 2 } },
+                { text: "消解定义：男与女的这种对立划分，本来就该被彻底拆除", score: { postmodern: 5, ind: 4 } }
             ]},
-            { text: "如果女性在顶级科研领域处于弱势，根源一定在于：", options: [
+            { text: "如果女性在顶级科研领域处于弱势，根源在于：", options: [
                 { text: "偏差：资源分配的倾斜以及评价体系中根深蒂固的隐形偏见", score: { liberal: 5, ref: 5 } },
-                { text: "范式：科学研究本身那种‘控制者视角’排斥了关怀的逻辑", score: { ecofem: 5, str: 4 } },
-                { text: "合谋：资本与权力垄断了通往‘真理定义权’的入场券", score: { socialist: 5, str: 5 } },
-                { text: "排斥：女性在体制内因为缺乏同伴支持而遭遇的结构性边缘化", score: { intersectional: 5, str: 5 } }
+                { text: "范式：科学研究本身那种控制者视角排斥了感性的逻辑", score: { ecofem: 5, str: 4 } },
+                { text: "合谋：资本与权力垄断了通往真理定义权的昂贵门票", score: { socialist: 5, str: 5 } },
+                { text: "孤立：女性在体制内因为缺乏同伴支持而遭遇的边缘化", score: { intersectional: 5, str: 5 } }
             ]},
-            { text: "你认为西方理论对全球女性境遇的阐释，存在的最大盲点是：", options: [
-                { text: "它确立了权利坐标，但也用中产白人的经验代替了全世界", score: { liberal: 5, ref: 5, ind: 5 } },
-                { text: "它提供了一些工具，但有时难以看清更隐秘的文化交叉压迫", score: { intersectional: 5, str: 5 } },
-                { text: "它带有某种新殖民色彩，容易磨平不同地区真实的生命独特性", score: { global: 5, str: 5 } },
-                { text: "它依然在宏大叙事里打转，而忽视了底层女性具体的求生逻辑", score: { global: 5, str: 5, rad: 3 } }
+            { text: "你认为西方理论对全球女性境遇的阐释，存在的盲点是：", options: [
+                { text: "偏差：它确立了坐标，但用中产白人的经验代替了全世界", score: { liberal: 5, ref: 5, ind: 5 } },
+                { text: "单一：它提供了一些工具，但难以看清更隐秘的交叉压迫", score: { intersectional: 5, str: 5 } },
+                { text: "傲慢：它带有某种新殖民色彩，容易磨平生命真实的独特性", score: { global: 5, str: 5 } },
+                { text: "悬浮：它在宏大叙事里打转，忽视了底层具体的求生逻辑", score: { global: 5, str: 5, rad: 3 } }
             ]},
             { text: "对于“跨性别认同”，你最本能的切入角度是：", options: [
-                { text: "尊重人权：每个人都拥有受法律保护的定义自我身份的自由", score: { liberal: 5, ind: 5, ref: 5 } },
-                { text: "解构一切：‘女性’本身就是一个该被扔进垃圾桶的权力标签", score: { postmodern: 5, ind: 5, rad: 5 } },
-                { text: "守护空间：必须警惕这种认同，防止它磨平生理女性的斗争基座", score: { radical: 5, rad: 5, str: 3 } },
-                { text: "联手抗争：跨性别者同样身处交叉压迫的边缘，理应并肩作战", score: { intersectional: 5, str: 5 } }
+                { text: "尊重：每个人都拥有受法律保护的定义自我的自由", score: { liberal: 5, ind: 5, ref: 5 } },
+                { text: "解构：女性本身就是一个该被扔进垃圾桶的权力标签", score: { postmodern: 5, ind: 5, rad: 5 } },
+                { text: "守护：必须警惕这种认同，防止其磨平生理女性的斗争基座", score: { radical: 5, rad: 5, str: 3 } },
+                { text: "联手：跨性别者同样身处交叉压迫的边缘，理应并肩抗争", score: { intersectional: 5, str: 5 } }
             ]},
             { text: "在公共讨论中，哪一种景象最让你感到担忧？", options: [
-                { text: "肤浅：被消费主义收编，变成了一个可以明码标价的时尚勋章", score: { radical: 5, rad: 5, str: 5 } },
-                { text: "割裂：脱离底层女性的温饱，成了精英们在象牙塔里的理论清谈", score: { socialist: 5, str: 5 } },
+                { text: "肤浅：被消费主义收编，变成了一个可以标价的时尚勋章", score: { radical: 5, rad: 5, str: 5 } },
+                { text: "割裂：脱离底层温饱，成了精英们在象牙塔里的理论清谈", score: { socialist: 5, str: 5 } },
                 { text: "失能：缺乏基本的法治共识，导致讨论永远无法落地为权利", score: { liberal: 5, ref: 5 } },
-                { text: "封闭：再次陷入非黑即白的立场审查，制造出了一座新的话语牢笼", score: { postmodern: 5, ind: 4, rad: 5 } }
+                { text: "封闭：再次陷入非黑即白的立场审查，制造出一座新的牢笼", score: { postmodern: 5, ind: 4, rad: 5 } }
             ]},
             { text: "你觉得实现真正的公平，那“第一推力”必须是：", options: [
                 { text: "法律的钢印：彻底铲除一切显性或隐性的制度性特权", score: { liberal: 5, ref: 5, ind: 5 } },
-                { text: "权力的换血：让女性杀入权力的最顶层，从根部改写决策逻辑", score: { radical: 5, rad: 5, str: 5 } },
-                { text: "底层的托举：建立完善的公共托育，彻底打碎家庭这道无形牢房", score: { socialist: 5, str: 5, ref: 3 } },
-                { text: "文化的爆破：炸掉所有试图定义‘女性理应如何’的话语工厂", score: { postmodern: 5, rad: 5 } }
+                { text: "权力的换血：让女性杀入核心决策层，从根部改写统治基因", score: { radical: 5, rad: 5, str: 5 } },
+                { text: "底层的托举：建立完善的公共服务，彻底打碎家庭这道墙", score: { socialist: 5, str: 5, ref: 3 } },
+                { text: "文化的爆破：炸掉所有试图定义女性理应如何的话语工厂", score: { postmodern: 5, rad: 5 } }
             ]},
-            { text: "关于高价彩礼、冠姓权等热点，你最深刻的洞察是：", options: [
-                { text: "那是法治缺位背景下，个体在为自己博取最后的生产资料保障", score: { liberal: 5, ind: 5, ref: 5 } },
-                { text: "那不过是父权交易逻辑中，女性依然被视为私产的可悲残余", score: { radical: 5, str: 5, rad: 5 } },
-                { text: "那是阶级焦虑在亲密关系里的投影，折射出底层的生存艰难", score: { socialist: 5, str: 5 } },
-                { text: "那是人们在按照古老的话语剧本，表演一场虚幻的安定感", score: { postmodern: 5, ind: 4 } }
+            { text: "关于高价彩礼、冠姓权等争议，你最深刻的洞察是：", options: [
+                { text: "博弈：那是法治缺位下，个体在为自己博取最后的安全保障", score: { liberal: 5, ind: 5, ref: 5 } },
+                { text: "残余：那不过是父权交易逻辑中，女性依然被视为私产的投射", score: { radical: 5, str: 5, rad: 5 } },
+                { text: "映射：那是阶级焦虑在亲密关系里的投影，折射出生存艰难", score: { socialist: 5, str: 5 } },
+                { text: "表演：那是人们在按照古老的话语剧本，索取一种虚幻的安定", score: { postmodern: 5, ind: 4 } }
             ]},
             { text: "你最终毕生所求的境界是？", options: [
                 { text: "做一个绝对自由、理性且独立于世的个体", score: { liberal: 5, ind: 5, ref: 5 } },
@@ -410,39 +420,39 @@
                 { text: "与被压迫的众人一起，打碎所有资本与权力的枷锁", score: { socialist: 5, str: 5, rad: 5 } },
                 { text: "在差异中自由变幻，成为一个拒绝被任何人定义的人", score: { postmodern: 5, ind: 5, rad: 5 } }
             ]},
-            { text: "你如何看待现代文明对土地和资源的无休止开发？", options: [
-                { text: "进步的代价：关键在于分配是否公平，而非停止进步", score: { liberal: 5, ref: 3 } },
-                { text: "掠夺的同源：它与对女性的压迫基于相同的‘统治范式’", score: { ecofem: 8, rad: 3 } },
-                { text: "资本的本性：本质上都是对一切生命资料的榨取与贪婪", score: { socialist: 5, str: 4 } },
-                { text: "狂妄的叙事：我们该反思‘人类中心主义’这一自大的话语假象", score: { postmodern: 5, ind: 1 } }
+            { text: "你如何看待现代文明对自然资源的掠夺式开发？", options: [
+                { text: "代价：关键在于分配是否公正，而非停止发展", score: { liberal: 5, ref: 3 } },
+                { text: "逻辑：它与对女性的压迫基于相同的统治范式", score: { ecofem: 8, rad: 3 } },
+                { text: "本性：本质上都是对一切生命资料的榨取与贪婪欲望", score: { socialist: 5, str: 4 } },
+                { text: "虚假：我们应反思人类中心主义这一自大的话语假象", score: { postmodern: 5, ind: 1 } }
             ]},
-            { text: "你认为‘性格特质’的男女差异，其最深层的成因是：", options: [
-                { text: "心理认同：源于童年期对父母角色的认同与复杂的防御机制", score: { psycho: 8, ind: 3 } },
+            { text: "你认为性格特质中的男女差异，最深层的成因是：", options: [
+                { text: "心理认同：源于童年期对性别角色的复杂防御机制", score: { psycho: 8, ind: 3 } },
                 { text: "资源诱导：社会在生存机会和教育选择上差异化分配的后果", score: { liberal: 5, ref: 5 } },
-                { text: "权力表演：一种为了在等级制中存活而反复磨练的战术性动作", score: { postmodern: 5, ind: 4 } },
-                { text: "残酷裁剪：是父权制为了稳定统治，对多样人性进行的暴力裁剪", score: { radical: 5, str: 5 } }
+                { text: "战术表演：一种为了在等级制中存活而反复磨练的权力动作", score: { postmodern: 5, ind: 4 } },
+                { text: "暴力裁剪：是父权制为了稳定，对多样人性进行的无情剪裁", score: { radical: 5, str: 5 } }
             ]}
         ];
 
         const mentorData = {
             liberal_early: { name: "玛丽·伍尔斯通克拉夫特", quote: "“我不希望女性拥有支配男性的权力，而是拥有支配她们自身的权力。”", work: "《为女权辩护》(1792)", books: ["《为女权辩护》", "《女性的奥秘》"] },
-            liberal_modern: { name: "贝蒂·弗里丹", quote: "“当女性开始追求除了洗碗和抚养孩子以外的东西时，她们才真正开始拥有生活。”", work: "《女性的奥秘》(1963)", books: ["《女性的奥秘》", "《看不见的女人》"] },
+            liberal_modern: { name: "贝蒂·弗里丹", quote: "“当女性开始追求除了洗碗以外的东西时，她们才真正开始拥有生活。”", work: "《女性的奥秘》(1963)", books: ["《女性的奥秘》", "《看不见的女人》"] },
             existential: { name: "西蒙娜·德·波伏娃", quote: "“女人不是天生的，而是变成的。”", work: "《第二性》(1949)", books: ["《第二性》", "《厌女》"] },
             radical: { name: "舒拉姆斯·费尔斯通", quote: "“解放的最终目标不仅是消除特权，而是消除性别歧视本身。”", work: "《性的辩证法》(1970)", books: ["《性的辩证法》", "《性政治》"] },
             socialist: { name: "西尔维娅·费德里奇", quote: "“他们说这是爱，我们说这是无偿劳动。”", work: "《卡利班与女巫》(2004)", books: ["《卡利班与女巫》", "《资本主义与父权制》"] },
             postmodern: { name: "朱迪斯·巴特勒", quote: "“性别不是我们‘是’什么，而是我们‘做’什么，它是一场反复的表演。”", work: "《性别麻烦》(1990)", books: ["《性别麻烦》", "《解构女性主义》"] },
-            ecofem: { name: "范达娜·席娃", quote: "“我们要么拥有由女性引领的未来，要么就完全没有未来。”", work: "《生存》(1988)", books: ["《生存》", "《自然之死》"] },
+            ecofem: { name: "范达娜·席娃", quote: "“我们要么拥有一个由女性引领的未来，要么就完全没有未来。”", work: "《生存》(1988)", books: ["《生存》", "《自然之死》"] },
             psycho: { name: "卡罗尔·吉利根", quote: "“拥有声音就是拥有人性。”", work: "《不同的声音》(1982)", books: ["《不同的声音》", "《此性非一》"] }
         };
 
         const resultsDesc = {
-            liberal: { title: "自由主义坐标", desc: "你相信理性的力量，坚守程序正义与契约精神。你认为平等的真谛在于消除法律的阴影，让每个灵魂都能在无差别的赛道上自由奔跑。" },
-            radical: { title: "激进主义坐标", desc: "你洞穿了名为‘父权’的深重结构。认为压迫并非只是不公，而是深植于肉体、繁衍与权力骨架中的寄生虫。你主张彻底的夺权，而非卑微的请愿。" },
-            socialist: { title: "社会主义坐标", desc: "你敏锐地察觉到了资本与父权在这场共谋中的分成。你关注无偿劳动中被抹去的血汗，认为真正的自由必须建立在经济结构的重组之上。" },
-            postmodern: { title: "后现代主义坐标", desc: "你厌恶一切固化的标签。你认为‘女性’从来不是一个天然的范畴，而是一场由语言和权力导演的永恒表演。你致力于拆解边界，在流动的差异中寻找自由。" },
-            existential: { title: "存在主义坐标", desc: "你极其珍视主体的绝对自由。拒绝接受任何预设的‘他者’命运，认为每个人都必须在旷野中，通过自我的选择与创造，确立生命的本质。" },
-            ecofem: { title: "生态女性主义坐标", desc: "你感知到了自然之死与女性之困的共振。认为人类对万物的掠夺与对女性的禁锢同出一源。你主张建立一种温热的关怀伦理，反抗冷酷的统治逻辑。" },
-            psycho: { title: "精神分析坐标", desc: "你深入潜意识的迷宫。认为不平等的根源在于幼年期塑造的人格镜像。你致力于理解那些被内化的枷锁，寻求一种心理结构维度的深刻重组。" }
+            liberal: { title: "自由主义坐标", desc: "你信奉理性的力量。认为平等的支点在于消除法律的阴影，让每个灵魂都能在无差别的赛道上自由奔跑。" },
+            radical: { title: "激进主义坐标", desc: "你洞穿了名为‘父权’的深重结构。认为压迫并非不公，而是深植于肉体、繁衍与权力骨架中的寄生虫。" },
+            socialist: { title: "社会主义坐标", desc: "你察觉到了资本与父权在这场共谋中的分成。你关注那些被抹去的血汗，认为自由必须建立在结构的重构之上。" },
+            postmodern: { title: "后现代主义坐标", desc: "你厌恶一切固化的标签。认为‘女性’是一场由语言导演的永恒表演。你致力于拆解边界，在流动中确立自由。" },
+            existential: { title: "存在主义坐标", desc: "你极其珍视主体的绝对自由。拒绝接受任何预设的他者命运，认为每个人都必须通过自我的创造确立本质。" },
+            ecofem: { title: "生态女性主义坐标", desc: "你感知到了自然之死与女性之困的共振。主张建立一种温热的关怀伦理，反抗冷酷的主宰逻辑。" },
+            psycho: { title: "精神分析坐标", desc: "你深入潜意识的迷宫。认为不平等的根源在于幼年期塑造的人格镜像。你致力于理解那些被内化的枷锁。" }
         };
 
         const encyclopediaData = [
@@ -467,22 +477,19 @@
         function showQuestion() {
             const q = questions[currentQuestion];
             document.getElementById('question-number').innerText = `Question ${String(currentQuestion + 1).padStart(2, '0')}`;
-            
             let text = q.text;
             Object.keys(dictionary).forEach(word => {
                 const regex = new RegExp(word, 'g');
                 text = text.replace(regex, `<span class="keyword-highlight" onclick="showDefinition('${word}')">${word}</span>`);
             });
             document.getElementById('question-text').innerHTML = text;
-
             document.getElementById('progress').style.width = `${((currentQuestion) / questions.length) * 100}%`;
             document.getElementById('back-btn').style.display = currentQuestion > 0 ? 'block' : 'none';
-
             const container = document.getElementById('options-container');
             container.innerHTML = '';
             q.options.forEach(opt => {
                 const btn = document.createElement('button');
-                btn.className = "option-btn w-full p-4 md:p-5 text-left text-sm hover:border-black rounded-xl focus:outline-none shadow-sm";
+                btn.className = "option-btn w-full p-4 md:p-5 text-left text-sm hover:border-black rounded-3xl shadow-sm font-medium";
                 btn.innerText = opt.text;
                 btn.onclick = () => selectOption(opt.score);
                 container.appendChild(btn);
@@ -512,7 +519,8 @@
 
         function showResult() {
             document.getElementById('quiz-screen').classList.add('hidden');
-            document.getElementById('result-screen').classList.remove('hidden');
+            const resultScreen = document.getElementById('result-screen');
+            resultScreen.classList.remove('hidden');
 
             const resultKeys = ['liberal', 'radical', 'socialist', 'postmodern', 'existential', 'ecofem', 'psycho'];
             const ranked = Object.keys(scores).filter(k => resultKeys.includes(k)).map(key => ({ key, score: scores[key] })).sort((a, b) => b.score - a.score);
@@ -526,7 +534,7 @@
             const r1 = resultsDesc[primary] || resultsDesc.existential;
             document.getElementById('result-primary-title').innerText = r1.title;
             document.getElementById('result-primary-desc').innerText = r1.desc;
-            document.getElementById('result-combined').innerText = `你的倾向展现了对 ${r1.title} 的高度认同。在性别与权力的迷雾中，你倾向于守住 ${primary === 'liberal' ? '理性个体' : primary === 'radical' ? '身体主权' : '社会结构'} 的坐标。这并非一种逃避，而是在纷扰声浪中确立自我的深刻回响。`;
+            document.getElementById('result-combined').innerText = `你的思辨纹理呈现出对 ${r1.title} 的高度锚定。在纷繁的权力议题中，你倾向于守住 ${primary === 'liberal' ? '理性个体' : primary === 'radical' ? '身体主权' : '社会结构'} 的支点。这并非一种终点，而是在时代的声浪中对自我的一次清醒叩问。`;
 
             const bookContainer = document.getElementById('book-list');
             bookContainer.innerHTML = mentor.books.map(b => `<div class="border-l-2 border-purple-400 pl-4 py-1 font-bold text-xs">· ${b}</div>`).join('');
@@ -534,9 +542,9 @@
             const tableBody = document.getElementById('encyclopedia-body');
             tableBody.innerHTML = encyclopediaData.map(d => `
                 <tr class="border-b border-gray-50">
-                    <td class="py-3 pr-2 font-bold text-navy">${d.name}</td>
-                    <td class="py-3 px-2">${d.core}</td>
-                    <td class="py-3 px-2">${d.critique}</td>
+                    <td class="py-4 pr-2 font-bold text-purple-950">${d.name}</td>
+                    <td class="py-4 px-2">${d.core}</td>
+                    <td class="py-4 px-2">${d.critique}</td>
                 </tr>
             `).join('');
 
@@ -545,31 +553,39 @@
             document.getElementById('spec-1').style.left = `${Math.min(95, Math.max(5, spec1Ratio))}%`;
             document.getElementById('spec-2').style.left = `${Math.min(95, Math.max(5, spec2Ratio))}%`;
 
-            const ctx = document.getElementById('radarChart').getContext('2d');
-            new Chart(ctx, {
-                type: 'radar',
-                data: {
-                    labels: ['自由', '激进', '社会', '后现代', '存在', '生态', '精分'],
-                    datasets: [{
-                        data: [scores.liberal, scores.radical, scores.socialist, scores.postmodern, scores.existential, scores.ecofem, scores.psycho],
-                        backgroundColor: 'rgba(107, 79, 187, 0.2)',
-                        borderColor: '#6B4FBB',
-                        borderWidth: 2,
-                        pointBackgroundColor: '#6B4FBB'
-                    }]
-                },
-                options: {
-                    animation: false,
-                    plugins: { legend: { display: false } },
-                    scales: {
-                        r: {
-                            min: 0,
-                            ticks: { display: false },
-                            grid: { color: 'rgba(0,0,0,0.05)' },
-                            pointLabels: { font: { size: 9, weight: 'bold' }, color: '#999' }
+            // 修复图表渲染 bug：加入延迟确保布局稳定
+            requestAnimationFrame(() => {
+                setTimeout(() => {
+                    if (currentChart) currentChart.destroy();
+                    const ctx = document.getElementById('radarChart').getContext('2d');
+                    currentChart = new Chart(ctx, {
+                        type: 'radar',
+                        data: {
+                            labels: ['自由', '激进', '社会', '后现代', '存在', '生态', '精分'],
+                            datasets: [{
+                                data: [scores.liberal, scores.radical, scores.socialist, scores.postmodern, scores.existential, scores.ecofem, scores.psycho],
+                                backgroundColor: 'rgba(107, 79, 187, 0.15)',
+                                borderColor: '#6B4FBB',
+                                borderWidth: 1.5,
+                                pointBackgroundColor: '#6B4FBB',
+                                pointRadius: 2
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: { legend: { display: false } },
+                            scales: {
+                                r: {
+                                    min: 0,
+                                    ticks: { display: false },
+                                    grid: { color: 'rgba(0,0,0,0.04)' },
+                                    pointLabels: { font: { size: 9, weight: 'bold' }, color: '#999' }
+                                }
+                            }
                         }
-                    }
-                }
+                    });
+                }, 100);
             });
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
@@ -577,7 +593,12 @@
         async function saveAsImage() {
             const btn = document.getElementById('save-btn');
             btn.innerText = "正在存档...";
-            const canvas = await html2canvas(document.getElementById('capture-area'), { scale: 3, backgroundColor: "#FDFBF7" });
+            const canvas = await html2canvas(document.getElementById('capture-area'), { 
+                scale: 3, 
+                backgroundColor: "#FDFBF7",
+                logging: false,
+                useCORS: true
+            });
             const link = document.createElement('a');
             link.download = '思想倾向档案_cloudtree.png';
             link.href = canvas.toDataURL();
