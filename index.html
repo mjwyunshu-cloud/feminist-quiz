@@ -94,11 +94,15 @@
             transition: left 0.8s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
-        .chart-container {
+        .chart-wrapper {
             position: relative;
             margin: auto;
             height: 280px;
-            width: 280px;
+            width: 100%;
+            max-width: 280px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
     </style>
 </head>
@@ -159,12 +163,11 @@
             <div id="capture-area" class="bg-[#FDFBF7] p-6 rounded-[2.5rem] border border-gray-100 shadow-sm overflow-hidden">
                 <div class="text-center space-y-1 mb-8 pt-4">
                     <span class="text-[9px] uppercase tracking-widest text-gray-300">Observation Report</span>
-                    <!-- 结果页标题已修正为“女性主义倾向探索报告” -->
                     <h2 class="text-2xl serif text-purple-950 italic font-bold">女性主义倾向探索报告</h2>
                 </div>
 
                 <div class="mb-10 px-4">
-                    <div class="chart-container">
+                    <div class="chart-wrapper">
                         <canvas id="radarChart"></canvas>
                     </div>
                 </div>
@@ -244,7 +247,8 @@
             </div>
 
             <div class="flex gap-3 pt-6 px-2">
-                <button onclick="location.reload()" class="flex-1 py-4 border-2 border-black text-[10px] font-black uppercase tracking-widest transition-colors">重新测试</button>
+                <!-- 修改：不再 reload 页面，而是应用内重置 -->
+                <button onclick="restartQuiz()" class="flex-1 py-4 border-2 border-black text-[10px] font-black uppercase tracking-widest transition-colors">重新测试</button>
                 <button id="save-btn" onclick="saveAsImage()" class="flex-1 py-4 bg-black text-white text-[10px] font-black uppercase tracking-widest shadow-xl active:scale-95 transition-transform">存为档案</button>
             </div>
         </div>
@@ -260,7 +264,10 @@
             "俄狄浦斯情结": "潜意识深处的心理母版，描述了权欲、禁忌与自我认同在成长最初期的博弈。"
         };
 
-        let currentChart = null;
+        let chartInstance = null;
+        let scores = { liberal: 0, radical: 0, socialist: 0, postmodern: 0, existential: 0, ecofem: 0, psycho: 0, intersectional: 0, global: 0, care: 0, ind: 0, str: 0, ref: 0, rad: 0 };
+        let currentQuestion = 0;
+        let answersHistory = [];
 
         function showDefinition(word) {
             document.getElementById('modal-title').innerText = `思辨词条：${word}`;
@@ -284,6 +291,7 @@
             }
         }
 
+        // 核心 24 道题库
         const questions = [
             { text: "当你听到“平等”一词，你内心最初的冲动倾向于：", options: [
                 { text: "捍卫契约：让法律面前没有任何性别可以拥有的局部特权", score: { liberal: 5, ind: 5, ref: 5 } },
@@ -373,7 +381,7 @@
                 { text: "契约精神：法治与人权的进步，需要全社会达成理性的合力", score: { liberal: 5, ind: 5, ref: 5 } },
                 { text: "审慎观察：作为既得利益者，他们很难真正反思特权的根源", score: { radical: 5, rad: 5, str: 5 } },
                 { text: "联合：阶级解放必须建立在所有劳作者的共同团结之上", score: { socialist: 5, str: 5, ref: 2 } },
-                { text: "消解：‘男’与‘女’的这种对立划分，本来就该被彻底拆除", score: { postmodern: 5, ind: 4 } }
+                { text: "消解：‘男’与‘女’的对立划分本身，本来就该被彻底拆除", score: { postmodern: 5, ind: 4 } }
             ]},
             { text: "如果女性在顶级科研领域处于弱势，根源一定在于：", options: [
                 { text: "偏差：资源分配的倾斜以及评价体系中根深蒂固的隐形偏见", score: { liberal: 5, ref: 5 } },
@@ -391,7 +399,7 @@
                 { text: "尊重：每个人都拥有受法律保护的定义自我的自由", score: { liberal: 5, ind: 5, ref: 5 } },
                 { text: "解构：女性本身就是一个该被扔进垃圾桶的权力标签", score: { postmodern: 5, ind: 5, rad: 5 } },
                 { text: "守护：必须警惕这种认同，防止其磨平生理女性的斗争基座", score: { radical: 5, rad: 5, str: 3 } },
-                { text: "联手：跨性别者同样身处交叉压迫的边缘，理应并肩抗争", score: { intersectional: 5, str: 5 } }
+                { text: "联手：跨性别者同样身处交叉压迫的边缘，理应并肩作战", score: { intersectional: 5, str: 5 } }
             ]},
             { text: "在公共讨论中，哪一种景象最让你感到担忧？", options: [
                 { text: "肤浅：被消费主义收编，变成了一个可以标价的时尚勋章", score: { radical: 5, rad: 5, str: 5 } },
@@ -427,7 +435,7 @@
                 { text: "心理脚本：源于童年期对性别角色的复杂认同与防御机制", score: { psycho: 8, ind: 3 } },
                 { text: "资源诱导：社会在生存机会和教育选择上差异化分配的后果", score: { liberal: 5, ref: 5 } },
                 { text: "战术表演：一种为了在等级制中存活而反复磨练的权力动作", score: { postmodern: 5, ind: 4 } },
-                { text: "裁剪：是父权制为了稳定，对多样人性进行的无情剪裁", score: { radical: 5, str: 5 } }
+                { text: "裁剪：是父权制为了稳定，对多样人性进行的暴力修剪", score: { radical: 5, str: 5 } }
             ]}
         ];
 
@@ -461,14 +469,34 @@
             { name: "精神分析", core: "人格重构、认同博弈、潜意识觉醒", critique: "过度依赖传统的分析框架，解释主观色彩较重" }
         ];
 
-        let scores = { liberal: 0, radical: 0, socialist: 0, postmodern: 0, existential: 0, ecofem: 0, psycho: 0, intersectional: 0, global: 0, care: 0, ind: 0, str: 0, ref: 0, rad: 0 };
-        let currentQuestion = 0;
-        let answersHistory = [];
-
         function startQuiz() {
             document.getElementById('welcome-screen').classList.add('hidden');
             document.getElementById('quiz-screen').classList.remove('hidden');
             showQuestion();
+        }
+
+        // 修改点：应用内立刻重置逻辑
+        function restartQuiz() {
+            // 1. 重置所有状态变量
+            scores = { liberal: 0, radical: 0, socialist: 0, postmodern: 0, existential: 0, ecofem: 0, psycho: 0, intersectional: 0, global: 0, care: 0, ind: 0, str: 0, ref: 0, rad: 0 };
+            currentQuestion = 0;
+            answersHistory = [];
+            
+            // 2. 销毁当前图表实例
+            if (chartInstance) {
+                chartInstance.destroy();
+                chartInstance = null;
+            }
+
+            // 3. UI 切换：隐藏结果，显示欢迎屏 (跳过激活码)
+            document.getElementById('result-screen').classList.add('hidden');
+            document.getElementById('welcome-screen').classList.remove('hidden');
+            
+            // 4. 重置进度条
+            document.getElementById('progress').style.width = '0%';
+            
+            // 5. 滚动到顶部
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         function showQuestion() {
@@ -552,9 +580,12 @@
 
             requestAnimationFrame(() => {
                 setTimeout(() => {
-                    if (currentChart) currentChart.destroy();
-                    const ctx = document.getElementById('radarChart').getContext('2d');
-                    currentChart = new Chart(ctx, {
+                    const canvas = document.getElementById('radarChart');
+                    const ctx = canvas.getContext('2d');
+                    if (chartInstance) chartInstance.destroy();
+                    canvas.width = 280;
+                    canvas.height = 280;
+                    chartInstance = new Chart(ctx, {
                         type: 'radar',
                         data: {
                             labels: ['自由', '激进', '社会', '后现代', '存在', '生态', '精分'],
@@ -570,36 +601,45 @@
                         options: {
                             responsive: true,
                             maintainAspectRatio: false,
+                            devicePixelRatio: 2,
                             plugins: { legend: { display: false } },
                             scales: {
                                 r: {
                                     min: 0,
                                     ticks: { display: false },
                                     grid: { color: 'rgba(0,0,0,0.04)' },
-                                    pointLabels: { font: { size: 9, weight: 'bold' }, color: '#999' }
+                                    pointLabels: { font: { size: 10, weight: 'bold', family: 'Inter' }, color: '#666' }
                                 }
                             }
                         }
                     });
-                }, 100);
+                }, 150);
             });
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         async function saveAsImage() {
             const btn = document.getElementById('save-btn');
+            const originalText = btn.innerText;
             btn.innerText = "正在存档...";
-            const canvas = await html2canvas(document.getElementById('capture-area'), { 
-                scale: 3, 
-                backgroundColor: "#FDFBF7",
-                logging: false,
-                useCORS: true
-            });
-            const link = document.createElement('a');
-            link.download = '女性主义倾向报告_cloudtree.png';
-            link.href = canvas.toDataURL();
-            link.click();
-            btn.innerText = "存为档案";
+            if (chartInstance) chartInstance.update('none');
+            try {
+                const canvas = await html2canvas(document.getElementById('capture-area'), { 
+                    scale: 3, 
+                    backgroundColor: "#FDFBF7",
+                    logging: false,
+                    useCORS: true,
+                    allowTaint: true
+                });
+                const link = document.createElement('a');
+                link.download = '女性主义倾向报告_cloudtree.png';
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+            } catch (err) {
+                console.error("存档失败:", err);
+            } finally {
+                btn.innerText = originalText;
+            }
         }
     </script>
 </body>
