@@ -94,7 +94,6 @@
             transition: left 0.8s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
-        /* 解决雷达图容器宽高问题 */
         .chart-container {
             position: relative;
             margin: auto;
@@ -117,7 +116,7 @@
     <nav class="p-6"><span class="text-[10px] tracking-widest uppercase opacity-40 font-light italic">Theory & Deep Reflection</span></nav>
 
     <main class="flex-grow flex flex-col items-center justify-center px-6 py-10">
-        <!-- 兑换码锁定页面 - 修复重叠词 -->
+        <!-- 兑换码锁定页面 -->
         <div id="access-screen" class="max-w-md w-full space-y-12 fade-in text-center">
             <div class="space-y-4">
                 <span class="text-[9px] font-bold uppercase tracking-[0.6em] text-purple-400">Restricted Access</span>
@@ -137,13 +136,14 @@
 
         <div id="welcome-screen" class="hidden max-w-md w-full text-center space-y-8 fade-in">
             <h1 class="text-4xl md:text-5xl serif leading-tight">性别、权力<br><span class="italic text-gray-400 text-3xl md:text-4xl font-light">与自我的重构</span></h1>
-            <p class="text-sm leading-relaxed text-gray-500 font-medium px-4">24 组沉浸式思辨，揭示你潜意识里的思想原点。</p>
+            <p class="text-sm leading-relaxed text-gray-500 font-medium px-4 italic">基于《女性主义思潮导论》，通过 24 组直觉式思辨题，锁定你的思想坐标。</p>
             <div class="flex flex-col items-center gap-6">
                 <button onclick="startQuiz()" class="px-10 py-4 bg-black text-white text-xs tracking-widest uppercase shadow-sm active:scale-95 transition-transform">开始思辨</button>
                 <div class="text-[10px] text-gray-300 tracking-[0.2em]">Curated by @云树cloudtree</div>
             </div>
         </div>
 
+        <!-- 测试页面 -->
         <div id="quiz-screen" class="hidden max-w-md w-full space-y-8 fade-in">
             <div class="w-full h-[1px] bg-gray-100 relative"><div id="progress" class="progress-bar absolute top-0 left-0 h-full bg-black w-0"></div></div>
             <div class="flex justify-between items-center px-1">
@@ -159,17 +159,16 @@
             <div id="capture-area" class="bg-[#FDFBF7] p-6 rounded-[2.5rem] border border-gray-100 shadow-sm overflow-hidden">
                 <div class="text-center space-y-1 mb-8 pt-4">
                     <span class="text-[9px] uppercase tracking-widest text-gray-300">Observation Report</span>
-                    <h2 class="text-2xl serif text-purple-950 italic font-bold">思想倾向档案</h2>
+                    <!-- 结果页标题已修正为“女性主义倾向探索报告” -->
+                    <h2 class="text-2xl serif text-purple-950 italic font-bold">女性主义倾向探索报告</h2>
                 </div>
 
-                <!-- 核心雷达图 -->
                 <div class="mb-10 px-4">
                     <div class="chart-container">
                         <canvas id="radarChart"></canvas>
                     </div>
                 </div>
 
-                <!-- 思想光谱 -->
                 <div class="mb-10 space-y-4 px-4">
                     <div>
                         <div class="flex justify-between text-[7px] uppercase tracking-widest font-black text-gray-400 mb-1">
@@ -187,7 +186,6 @@
                     </div>
                 </div>
 
-                <!-- 导师卡片 -->
                 <div class="mb-8 p-8 mentor-card rounded-3xl text-center space-y-5 relative overflow-hidden">
                     <div class="quote-mark absolute -top-1 -left-1">“</div>
                     <h4 class="text-[9px] uppercase text-purple-400 tracking-[0.3em] font-black relative z-10">精神导师 / Mentor</h4>
@@ -207,7 +205,7 @@
                         <p id="result-combined" class="text-[13px] leading-relaxed text-gray-800 font-medium"></p>
                     </div>
                     <div id="result-primary-block" class="p-5 bg-white/60 rounded-3xl border border-gray-100">
-                        <h4 class="text-[9px] uppercase text-purple-600 tracking-widest font-black mb-1">主导支点</h4>
+                        <h4 class="text-[9px] uppercase text-purple-600 tracking-widest font-black mb-1">核心倾向</h4>
                         <h3 id="result-primary-title" class="text-lg serif text-purple-950 mb-2 font-bold"></h3>
                         <p id="result-primary-desc" class="text-xs leading-relaxed text-gray-600 font-medium"></p>
                     </div>
@@ -246,7 +244,7 @@
             </div>
 
             <div class="flex gap-3 pt-6 px-2">
-                <button onclick="location.reload()" class="flex-1 py-4 border-2 border-black text-[10px] font-black uppercase tracking-widest transition-colors">重新开始</button>
+                <button onclick="location.reload()" class="flex-1 py-4 border-2 border-black text-[10px] font-black uppercase tracking-widest transition-colors">重新测试</button>
                 <button id="save-btn" onclick="saveAsImage()" class="flex-1 py-4 bg-black text-white text-[10px] font-black uppercase tracking-widest shadow-xl active:scale-95 transition-transform">存为档案</button>
             </div>
         </div>
@@ -286,7 +284,6 @@
             }
         }
 
-        // 深度润色后的 24 道题库，去 AI 味
         const questions = [
             { text: "当你听到“平等”一词，你内心最初的冲动倾向于：", options: [
                 { text: "捍卫契约：让法律面前没有任何性别可以拥有的局部特权", score: { liberal: 5, ind: 5, ref: 5 } },
@@ -318,7 +315,7 @@
                 { text: "关注劳动：撇开艺术外衣，它本质上是对边缘阶层的资本剥削", score: { socialist: 5, str: 5, ref: 2 } },
                 { text: "解构欲望：让我们看看到底是谁在后台导演了这一场性表演", score: { postmodern: 5, ind: 2, rad: 4 } }
             ]},
-            { text: "当科技试图介入生育（如人造子宫），你的第一反应是：", options: [
+            { text: "当科技试图介入生育（如人造子宫），你最直观的感受是：", options: [
                 { text: "解放感：女性终于可以从生物性的这块沉重基石上彻底解脱了", score: { radical: 5, rad: 5 } },
                 { text: "危机感：那是机械文明对生命自然力最后一块阵地的霸权掠夺", score: { ecofem: 5, str: 3 } },
                 { text: "警惕感：得看技术掌握在谁手里，否则只会加剧阶级的不公", score: { socialist: 5, str: 5 } },
@@ -332,7 +329,7 @@
             ]},
             { text: "关于“母职”，哪一种说法最能触碰到你内心的真相？", options: [
                 { text: "它是一场漫长的、由社会合谋针对女性精力的温情式绑架", score: { radical: 5, rad: 5, str: 5 } },
-                { text: "它蕴藏着最珍贵的关怀能量，这种价值长期被效率社会严重贬低", score: { care: 5, ind: 2 } },
+                { text: "它蕴含着最珍贵的关怀能量，这种价值长期被效率社会严重贬低", score: { care: 5, ind: 2 } },
                 { text: "育儿本应是整个社会的共同体责任，而非个体的孤军肉搏", score: { socialist: 5, str: 5, ref: 3 } },
                 { text: "承担与否，纯粹是一个自由个体对存在命运发出的自主承诺", score: { existential: 5, ind: 5 } }
             ]},
@@ -345,7 +342,7 @@
             { text: "当有人恐吓你“女权太激进会没人要”时，你的态度是：", options: [
                 { text: "不屑：你的那套评价体系本身就充满了对独立人格的歧视", score: { liberal: 5, ind: 5 } },
                 { text: "鄙夷：‘被要’这个词本身就带着一股腐朽的物化臭味", score: { radical: 5, str: 5, rad: 5 } },
-                { text: "无感：你是在试图用婚恋的枷锁，去恐吓那些自由的灵魂", score: { postmodern: 5, ind: 3 } },
+                { text: "无感：你是在试图用婚恋的锁链，去恐吓那些自由的灵魂", score: { postmodern: 5, ind: 3 } },
                 { text: "蔑视：我不为满足他人的审判而存在，我为我的自由而活", score: { existential: 5, ind: 5 } }
             ]},
             { text: "你认为女性展现出的感性、温柔特质，其底层的动力来自：", options: [
@@ -358,7 +355,7 @@
                 { text: "二者独立：应分别依靠科学进步与法律完善来独立解决", score: { liberal: 5, ref: 5 } },
                 { text: "逻辑同源：都源于那种征服并榨取他者的野蛮统治范式", score: { ecofem: 5, str: 5, rad: 5 } },
                 { text: "机制同构：都折射出了资本主义唯利是图的那份残酷底色", score: { socialist: 5, str: 5 } },
-                { text: "话语陷阱：都是中心权力为了管理边界而制造的分类标签", score: { postmodern: 5, ind: 2 } }
+                { text: "话语陷阱：都是中心权力为了管理边界而制造出的分类标签", score: { postmodern: 5, ind: 2 } }
             ]},
             { text: "赞美“为母则刚”时，你最本能的排斥点在于：", options: [
                 { text: "它是对牺牲的最残忍绑架，也是对残酷现实的廉价美化", score: { radical: 5, str: 5, rad: 5 } },
@@ -372,13 +369,13 @@
                 { text: "正义之境：铲除基于身份的所有剥削，实现分配的公正", score: { socialist: 5, str: 5, rad: 4 } },
                 { text: "自由之境：没有标签，差异被庆祝，身份在流动中变幻", score: { postmodern: 5, ind: 4, rad: 3 } }
             ]},
-            { text: "关于“男性参与平权”，你的第一反应倾向于：", options: [
-                { text: "理性拥抱：法治与人权的进步，需要全社会达成理性的合力", score: { liberal: 5, ind: 5, ref: 5 } },
+            { text: "关于“男性参与平权”，你的第一反应是：", options: [
+                { text: "契约精神：法治与人权的进步，需要全社会达成理性的合力", score: { liberal: 5, ind: 5, ref: 5 } },
                 { text: "审慎观察：作为既得利益者，他们很难真正反思特权的根源", score: { radical: 5, rad: 5, str: 5 } },
                 { text: "联合：阶级解放必须建立在所有劳作者的共同团结之上", score: { socialist: 5, str: 5, ref: 2 } },
-                { text: "消解定义：男与女的这种对立划分，本来就该被彻底拆除", score: { postmodern: 5, ind: 4 } }
+                { text: "消解：‘男’与‘女’的这种对立划分，本来就该被彻底拆除", score: { postmodern: 5, ind: 4 } }
             ]},
-            { text: "如果女性在顶级科研领域处于弱势，根源在于：", options: [
+            { text: "如果女性在顶级科研领域处于弱势，根源一定在于：", options: [
                 { text: "偏差：资源分配的倾斜以及评价体系中根深蒂固的隐形偏见", score: { liberal: 5, ref: 5 } },
                 { text: "范式：科学研究本身那种控制者视角排斥了感性的逻辑", score: { ecofem: 5, str: 4 } },
                 { text: "合谋：资本与权力垄断了通往真理定义权的昂贵门票", score: { socialist: 5, str: 5 } },
@@ -427,10 +424,10 @@
                 { text: "虚假：我们应反思人类中心主义这一自大的话语假象", score: { postmodern: 5, ind: 1 } }
             ]},
             { text: "你认为性格特质中的男女差异，最深层的成因是：", options: [
-                { text: "心理认同：源于童年期对性别角色的复杂防御机制", score: { psycho: 8, ind: 3 } },
+                { text: "心理脚本：源于童年期对性别角色的复杂认同与防御机制", score: { psycho: 8, ind: 3 } },
                 { text: "资源诱导：社会在生存机会和教育选择上差异化分配的后果", score: { liberal: 5, ref: 5 } },
                 { text: "战术表演：一种为了在等级制中存活而反复磨练的权力动作", score: { postmodern: 5, ind: 4 } },
-                { text: "暴力裁剪：是父权制为了稳定，对多样人性进行的无情剪裁", score: { radical: 5, str: 5 } }
+                { text: "裁剪：是父权制为了稳定，对多样人性进行的无情剪裁", score: { radical: 5, str: 5 } }
             ]}
         ];
 
@@ -448,7 +445,7 @@
         const resultsDesc = {
             liberal: { title: "自由主义坐标", desc: "你信奉理性的力量。认为平等的支点在于消除法律的阴影，让每个灵魂都能在无差别的赛道上自由奔跑。" },
             radical: { title: "激进主义坐标", desc: "你洞穿了名为‘父权’的深重结构。认为压迫并非不公，而是深植于肉体、繁衍与权力骨架中的寄生虫。" },
-            socialist: { title: "社会主义坐标", desc: "你察觉到了资本与父权在这场共谋中的分成。你关注那些被抹去的血汗，认为自由必须建立在结构的重构之上。" },
+            socialist: { title: "社会主义坐标", desc: "你察觉到了资本与父权在这场共谋中的分成。你关注那些被抹去的血汗，认为自由必须建立在结构的重组之上。" },
             postmodern: { title: "后现代主义坐标", desc: "你厌恶一切固化的标签。认为‘女性’是一场由语言导演的永恒表演。你致力于拆解边界，在流动中确立自由。" },
             existential: { title: "存在主义坐标", desc: "你极其珍视主体的绝对自由。拒绝接受任何预设的他者命运，认为每个人都必须通过自我的创造确立本质。" },
             ecofem: { title: "生态女性主义坐标", desc: "你感知到了自然之死与女性之困的共振。主张建立一种温热的关怀伦理，反抗冷酷的主宰逻辑。" },
@@ -534,7 +531,7 @@
             const r1 = resultsDesc[primary] || resultsDesc.existential;
             document.getElementById('result-primary-title').innerText = r1.title;
             document.getElementById('result-primary-desc').innerText = r1.desc;
-            document.getElementById('result-combined').innerText = `你的思辨纹理呈现出对 ${r1.title} 的高度锚定。在纷繁的权力议题中，你倾向于守住 ${primary === 'liberal' ? '理性个体' : primary === 'radical' ? '身体主权' : '社会结构'} 的支点。这并非一种终点，而是在时代的声浪中对自我的一次清醒叩问。`;
+            document.getElementById('result-combined').innerText = `你的思辨纹理呈现出对 ${r1.title} 的高度锚定。这表明你在复杂的性别议题中，倾向于守住 ${primary === 'liberal' ? '理性个体' : primary === 'radical' ? '身体主权' : '社会结构'} 的支点。这不是一种终点，而是在时代的声浪中对自我的一次清醒叩问。`;
 
             const bookContainer = document.getElementById('book-list');
             bookContainer.innerHTML = mentor.books.map(b => `<div class="border-l-2 border-purple-400 pl-4 py-1 font-bold text-xs">· ${b}</div>`).join('');
@@ -553,7 +550,6 @@
             document.getElementById('spec-1').style.left = `${Math.min(95, Math.max(5, spec1Ratio))}%`;
             document.getElementById('spec-2').style.left = `${Math.min(95, Math.max(5, spec2Ratio))}%`;
 
-            // 修复图表渲染 bug：加入延迟确保布局稳定
             requestAnimationFrame(() => {
                 setTimeout(() => {
                     if (currentChart) currentChart.destroy();
@@ -600,7 +596,7 @@
                 useCORS: true
             });
             const link = document.createElement('a');
-            link.download = '思想倾向档案_cloudtree.png';
+            link.download = '女性主义倾向报告_cloudtree.png';
             link.href = canvas.toDataURL();
             link.click();
             btn.innerText = "存为档案";
