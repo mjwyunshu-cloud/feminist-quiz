@@ -67,10 +67,7 @@
             border-bottom: 1px solid rgba(0,0,0,0.1);
             transition: border-color 0.3s ease;
         }
-        .access-input:focus {
-            outline: none;
-            border-bottom-color: var(--accent);
-        }
+        .access-input:focus { outline: none; border-bottom-color: var(--accent); }
 
         #modal-overlay {
             display: none;
@@ -84,40 +81,12 @@
             padding: 20px;
         }
 
-        .spectrum-bar {
-            height: 4px;
-            background: #eee;
-            border-radius: 2px;
-            position: relative;
-            margin: 10px 0;
-        }
-        .spectrum-indicator {
-            width: 10px;
-            height: 10px;
-            background: var(--accent);
-            border: 2px solid white;
-            border-radius: 50%;
-            position: absolute;
-            top: 50%;
-            transform: translate(-50%, -50%);
-            transition: left 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-        }
+        .spectrum-bar { height: 4px; background: #eee; border-radius: 2px; position: relative; margin: 10px 0; }
+        .spectrum-indicator { width: 10px; height: 10px; background: var(--accent); border: 2px solid white; border-radius: 50%; position: absolute; top: 50%; transform: translate(-50%, -50%); transition: left 0.8s cubic-bezier(0.16, 1, 0.3, 1); }
 
-        .chart-wrapper {
-            position: relative;
-            margin: auto;
-            height: 280px;
-            width: 100%;
-            max-width: 280px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .ref-divider {
-            border-top: 1px dashed rgba(107, 79, 187, 0.2);
-            margin: 1rem 0;
-        }
+        .chart-wrapper { position: relative; margin: auto; height: 300px; width: 100%; max-width: 300px; display: flex; align-items: center; justify-content: center; }
+        .ref-divider { border-top: 1px dashed rgba(107, 79, 187, 0.2); margin: 1rem 0; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
     </style>
 </head>
 <body class="min-h-screen flex flex-col">
@@ -126,13 +95,13 @@
     <!-- Modal -->
     <div id="modal-overlay" onclick="window.closeModal()">
         <div class="bg-white p-8 rounded-3xl max-w-xs w-full shadow-2xl fade-in" onclick="event.stopPropagation()">
-            <h4 id="modal-title" class="text-xs uppercase font-bold tracking-widest text-purple-600 mb-2">思辨词条</h4>
-            <p id="modal-content" class="text-sm leading-relaxed text-gray-700"></p>
+            <h4 id="modal-title" class="text-xs uppercase font-bold tracking-widest text-purple-600 mb-2">理论词条</h4>
+            <p id="modal-content" class="text-sm leading-relaxed text-gray-700 font-medium"></p>
             <button onclick="window.closeModal()" class="mt-6 w-full py-2 bg-gray-100 text-[10px] uppercase tracking-widest font-bold rounded-lg">关闭 / Close</button>
         </div>
     </div>
 
-    <nav class="p-6"><span class="text-[10px] tracking-widest uppercase opacity-40 font-light italic">Theory & Deep Reflection</span></nav>
+    <nav class="p-6"><span class="text-[10px] tracking-widest uppercase opacity-40 font-light italic">Theory & Deep Dialectics</span></nav>
 
     <main class="flex-grow flex flex-col items-center justify-center px-6 py-10">
         <!-- Access Screen -->
@@ -142,10 +111,9 @@
                 <h2 class="text-3xl serif leading-tight">输入激活码开启探索</h2>
                 <p class="text-[10px] text-gray-400 uppercase tracking-widest font-medium">Unlock the archival map</p>
             </div>
-            
             <div class="space-y-6">
                 <div class="relative max-w-[200px] mx-auto">
-                    <input type="text" id="access-code" class="access-input w-full py-2 text-center text-lg tracking-[0.2em] font-light" placeholder="••••••••" maxlength="15">
+                    <input type="text" id="access-code" class="access-input w-full py-2 text-center text-lg tracking-[0.2em] font-light" placeholder="••••••••">
                 </div>
                 <div id="error-msg" class="text-[9px] text-red-400 font-bold opacity-0 transition-opacity">验证未通过，请重新核对</div>
                 <button onclick="window.verifyAccess()" class="px-12 py-3 bg-black text-white text-[10px] tracking-widest uppercase active:scale-95 transition-transform">解锁进入 / Unlock</button>
@@ -170,13 +138,17 @@
                 <span id="question-number" class="text-[10px] uppercase tracking-[0.2em] text-red-400 ml-auto font-black italic">STEP 01 / 30</span>
             </div>
             <div class="w-full h-[2px] bg-gray-100 relative"><div id="progress" class="progress-bar absolute top-0 left-0 h-full bg-black w-0"></div></div>
-            <h2 id="question-text" class="text-xl serif leading-snug font-medium px-2 py-4"></h2>
+            
+            <div class="py-4">
+                <h2 id="question-text" class="text-xl serif leading-snug font-medium px-2 mb-1"></h2>
+                <p id="question-context" class="text-[10px] text-gray-400 px-2 italic font-medium"></p>
+            </div>
             
             <div id="options-container" class="space-y-4"></div>
 
             <div id="confirm-container" class="hidden pt-6 fade-in">
                 <button onclick="window.confirmOption()" class="w-full py-4 bg-[#2D332F] text-white text-[11px] font-black tracking-[0.2em] uppercase shadow-lg active:scale-[0.98] transition-all flex items-center justify-center gap-2">
-                    CONFIRM & CONTINUE →
+                    确认并继续 / CONFIRM →
                 </button>
             </div>
         </div>
@@ -190,8 +162,23 @@
                 </div>
 
                 <div class="mb-10 px-4">
-                    <div class="chart-wrapper">
-                        <canvas id="radarChart"></canvas>
+                    <div class="chart-wrapper"><canvas id="radarChart"></canvas></div>
+                </div>
+
+                <div class="mb-10 space-y-4 px-4">
+                    <div>
+                        <div class="flex justify-between text-[7px] uppercase tracking-widest font-black text-gray-400 mb-1">
+                            <span>体制改良 / Reform</span>
+                            <span>结构颠覆 / Radical</span>
+                        </div>
+                        <div class="spectrum-bar"><div id="spec-1" class="spectrum-indicator" style="left: 50%;"></div></div>
+                    </div>
+                    <div>
+                        <div class="flex justify-between text-[7px] uppercase tracking-widest font-black text-gray-400 mb-1">
+                            <span>个体主权 / Individual</span>
+                            <span>系统审视 / Structure</span>
+                        </div>
+                        <div class="spectrum-bar"><div id="spec-2" class="spectrum-indicator" style="left: 50%;"></div></div>
                     </div>
                 </div>
 
@@ -208,29 +195,52 @@
                     </div>
                 </div>
 
-                <!-- 三级倾向展示 -->
-                <div class="space-y-4 mb-10 px-2">
+                <!-- 三级倾向解读区 (修复：确保核心倾向正常显示) -->
+                <div class="space-y-4 mb-10 px-2 text-left">
                     <div class="p-6 bg-white rounded-3xl border border-purple-50 shadow-sm">
-                        <h4 class="text-[9px] uppercase font-black mb-1 text-purple-800 tracking-widest">核心倾向 / Primary</h4>
+                        <h4 class="text-[9px] uppercase font-black mb-1 text-purple-800 tracking-widest">思想综述 / Summary</h4>
+                        <p id="result-combined" class="text-[13px] leading-relaxed text-gray-800 font-medium"></p>
+                    </div>
+                    <div class="p-5 bg-white rounded-2xl border border-purple-100 shadow-sm">
+                        <h4 class="text-[9px] uppercase font-black mb-1 text-purple-700 tracking-widest">核心倾向 / Primary</h4>
                         <h3 id="result-primary-title" class="text-lg serif text-purple-950 mb-2 font-bold"></h3>
                         <p id="result-primary-desc" class="text-xs leading-relaxed text-gray-700 font-medium"></p>
                     </div>
-                    <div class="p-5 bg-white/80 rounded-3xl border border-gray-100">
+                    <div class="p-5 bg-white/80 rounded-2xl border border-gray-100">
                         <h4 class="text-[9px] uppercase text-gray-400 tracking-widest font-black mb-1">次要倾向 / Secondary</h4>
                         <h3 id="result-secondary-title" class="text-md serif text-purple-950 mb-2 font-bold"></h3>
                         <p id="result-secondary-desc" class="text-xs leading-relaxed text-gray-600 font-medium"></p>
                     </div>
-                    <div class="p-5 bg-white/60 rounded-3xl border border-gray-100">
+                    <div class="p-5 bg-white/60 rounded-2xl border border-gray-100">
                         <h4 class="text-[9px] uppercase text-gray-400 tracking-widest font-black mb-1">延伸倾向 / Tertiary</h4>
                         <h3 id="result-tertiary-title" class="text-md serif text-purple-900 mb-2 font-bold"></h3>
                         <p id="result-tertiary-desc" class="text-xs leading-relaxed text-gray-600 font-medium"></p>
                     </div>
                 </div>
 
-                <div class="p-6 bg-purple-950 text-white rounded-3xl mb-10 shadow-lg text-left">
+                <div class="p-6 bg-purple-950 text-white rounded-3xl mb-8 shadow-lg text-left">
                     <h4 class="text-[9px] uppercase font-bold mb-4 tracking-[0.2em] text-purple-300">进阶书单 / Reading List</h4>
                     <div id="book-list" class="space-y-4"></div>
                 </div>
+
+                <details class="group border border-gray-100 rounded-3xl overflow-hidden mb-6 text-left">
+                    <summary class="list-none p-5 bg-gray-50 flex justify-between items-center cursor-pointer font-bold text-[10px] uppercase tracking-widest text-gray-400">
+                        思想全景百科 / Encyclopedia
+                        <span class="transition-transform group-open:rotate-180">↓</span>
+                    </summary>
+                    <div class="p-4 bg-white overflow-x-auto no-scrollbar">
+                        <table class="w-full text-[10px] text-left border-collapse min-w-[400px]">
+                            <thead>
+                                <tr class="border-b border-gray-100 text-gray-300 uppercase">
+                                    <th class="py-2 pr-2">流派</th>
+                                    <th class="py-2 px-2">逻辑支点</th>
+                                    <th class="py-2 px-2">主要张力</th>
+                                </tr>
+                            </thead>
+                            <tbody class="text-gray-600 font-medium" id="encyclopedia-body"></tbody>
+                        </table>
+                    </div>
+                </details>
 
                 <div class="text-center pt-8 pb-2 opacity-10"><p class="text-[8px] tracking-[0.2em] uppercase">© 2026 Curated by @云树cloudtree</p></div>
             </div>
@@ -241,7 +251,7 @@
             </div>
 
             <div class="flex gap-3 pt-6 px-2">
-                <button onclick="window.restartQuiz()" class="flex-1 py-4 border-2 border-black text-[10px] font-black uppercase tracking-widest transition-all active:bg-black active:text-white">重新测试</button>
+                <button onclick="window.restartQuiz()" class="flex-1 py-4 border-2 border-black text-[10px] font-black uppercase tracking-widest transition-all">重新测试</button>
                 <button id="save-btn" onclick="window.saveAsImage()" class="flex-1 py-4 bg-black text-white text-[10px] font-black uppercase tracking-widest shadow-xl active:scale-95 transition-transform">存为档案</button>
             </div>
         </div>
@@ -252,203 +262,204 @@
             "父权制": "男性垄断权力和资源的深层秩序，通过制度、文化和潜意识维持其稳固地位。",
             "无偿劳动": "被隐形化的生命资源，指家庭内部照料、育儿等进入不到市场核算的生产力消耗。",
             "体制内改良": "在承认现有秩序合法性的前提下，试图通过立法和规则的修补换取局部利益。",
-            "他者性": "一种被迫的附属状态：当女性被定义为对照而非主体时，其真实性便被遮蔽了。",
-            "统治逻辑": "父权文明的核心范式，将自然、女性与边缘群体视为‘待征服’的客体进行榨取。",
-            "俄狄浦斯情结": "潜意识深处的心理母版，描述了权欲、禁忌与自我认同在成长最初期的博弈。"
+            "他者性": "存在主义核心概念。指女性被定义为对照而非主体，其存在是为了满足中心主体的投射。",
+            "物质基础": "马克思主义术语，指社会的经济结构和生产力，认为其决定了上层建筑如法律、道德和性别观。",
+            "统治逻辑": "生态女性主义概念，指男权文明中“征服并榨取他者”的同源范式，同时作用于自然与女性。"
         };
 
+        // 30道硬核思辨题库
         const questions = [
-            { text: "当你听到“平等”一词，你内心最初的冲动倾向于：", options: [
-                { text: "捍卫契约：让法律面前没有任何性别可以拥有的特权", ref: "自由主义。认为制度的排斥是根源，主张通过法治修复权利。", score: { liberal: 5 } },
-                { text: "颠覆棋局：彻底重构权力生成的逻辑，而非在旧规则里乞讨", ref: "激进主义。认为压迫深植于权力骨架，必须从根部爆破。", score: { radical: 5 } },
-                { text: "消灭剥削：让底层的劳作者不再被资本与性别的双重逻辑收割", ref: "社会主义。关注阶级与性别的合谋剥削。", score: { socialist: 5 } },
-                { text: "释放差异：拒绝用任何人的尺度，来裁剪我们的生命纹理", ref: "后现代。差异本身即是力量，拒绝同质化的平等。", score: { postmodern: 5 } }
+            { text: "当你听到“平等”一词，你内心最初的冲动倾向于：", context: "这反映了你对不平等根源的直觉：是规则偏差，还是权力结构？", options: [
+                { text: "捍卫契约：让法律面前没有任何性别可以拥有的特权", ref: "自由主义。主张在现有制度框架内修复规则，通过程序正义消除排斥。", score: { liberal: 5, ref: 5, ind: 5 } },
+                { text: "颠覆棋局：彻底重构权力生成的逻辑，而非在旧规则里乞讨", ref: "激进主义。认为不平等的根源在于权力结构本身，必须从根部爆破。", score: { radical: 5, rad: 5, str: 5 } },
+                { text: "消灭剥削：让底层的劳作者不再被资本与性别的双重逻辑收割", ref: "社会主义。关注阶级与性别的合谋剥削。", score: { socialist: 5, str: 5, rad: 3 } },
+                { text: "释放差异：拒绝用任何人的尺度，来裁剪我们的生命纹理", ref: "后现代。差异本身即是力量，拒绝同质化的平等定义。", score: { postmodern: 5, rad: 4, ind: 2 } }
             ]},
-            { text: "关于女性的“身体”，哪一道防线让你觉得绝对不容被任何人染指？", options: [
-                { text: "身体主权：堕胎、生育及免于暴力的绝对自主控制权", ref: "激进主义。身体是权力的最后战场。", score: { radical: 5 } },
-                { text: "程序自由：打扮或不打扮，应是受法律保障的选择权利", ref: "自由主义。捍卫公私界限与个体权利。", score: { liberal: 5 } },
-                { text: "主体意志：不为外界凝视负责，只为自我存在的重量而活", ref: "存在主义。拒绝沦为男性的“他者”。", score: { existential: 5 } },
-                { text: "解构审美：挑战由主流话语构建出来的“美学极权”", ref: "后现代。所谓“美”不过是权力的定制产品。", score: { postmodern: 5 } }
+            { text: "关于女性的“身体”，哪一道防线让你觉得绝对不容被任何人染指？", context: "这涉及身体主权的归属：它是受法律保护的权利，还是对抗父权的最后阵地？", options: [
+                { text: "身体主权：堕胎、生育及免于暴力的绝对自主决定权", ref: "激进主义。身体是权力的最后战场。", score: { radical: 5, rad: 5 } },
+                { text: "程序自由：打扮或不打扮，应是受法律保障的选择权利", ref: "自由主义。捍卫公私界限与个体权利。", score: { liberal: 5, ref: 5 } },
+                { text: "主体意志：不为外界凝视负责，只为自我存在的重量而活", ref: "存在主义。拒绝沦为男性的“他者”。", score: { existential: 5, ind: 5 } },
+                { text: "解构审美：挑战由主流话语构建出来的“美学极权”", ref: "后现代。所谓“美”不过是权力的定制产品。", score: { postmodern: 5, ind: 2 } }
             ]},
-            { text: "在职场性别偏见面前，哪种逻辑最让你感到被冒犯？", options: [
-                { text: "智力物化：预设女性理性不足，以此剥夺决策参与权", ref: "自由主义。对理性主体的歧视是文明的倒退。", score: { liberal: 5 } },
-                { text: "套利算计：默认女性应多承担家庭无偿劳动，以此压低其竞争价值", ref: "社会主义。剥削不仅是偏见，更是剩余价值的掠夺。", score: { socialist: 5 } },
-                { text: "规训裁剪：强行打上性别标签，将多元的人性限制在刻板剧本里", ref: "后现代。反对本质主义的身份定义。", score: { postmodern: 5 } },
-                { text: "权力阉割：用“亲和力”等词汇，去抵消女性原本的领导力爆发", ref: "激进主义。警惕父权对女性强者的文化吸纳与消解。", score: { radical: 5 } }
+            { text: "在职场性别偏见面前，哪种逻辑最让你感到被冒犯？", context: "这是对不公处境的回溯：是智力偏见，还是结构的系统性套利？", options: [
+                { text: "智力物化：预设女性理性不足，以此剥夺决策参与权", ref: "自由主义。对理性主体的歧视是文明的倒退。", score: { liberal: 5, ind: 5 } },
+                { text: "套利算计：默认女性应多承担无偿劳动，以此压低其竞争价值", ref: "社会主义。剥削不仅是偏见，更是剩余价值的掠夺。", score: { socialist: 5, str: 5 } },
+                { text: "规训裁剪：强行打上性别标签，将多元的人性限制在刻板剧本里", ref: "后现代。反对本质主义的身份定义。", score: { postmodern: 5, ind: 3 } },
+                { text: "权力阉割：用“亲和力”等词汇，去抵消女性原本具备的领导力爆发", ref: "激进主义。警惕父权对女性强者的文化吸纳与消解。", score: { radical: 5, str: 5, rad: 5 } }
             ]},
-            { text: "关于私有制与性别的关系，你的直觉洞察是：", options: [
-                { text: "私有制是核心祸根：它为了财产继承将女性禁锢在家庭中", ref: "马克思主义。经济基础决定上层建筑，私有制产生压迫。", score: { marxist: 5 } },
-                { text: "私有制是工具之一：父权制才是更古老、更根本的心理结构", ref: "激进主义。认为性别压迫先于阶级压迫存在。", score: { radical: 5 } },
-                { text: "私有制需要修正：关键在于赋予女性平等的财产所有权与继承权", ref: "自由主义。主张在现有框架下通过权利平等来纠偏。", score: { liberal: 5 } },
-                { text: "私有制是叙事：它是建立在对“所有权”这一自大概念的幻想上", ref: "后现代。解构关于占有和边界的话语体系。", score: { postmodern: 5 } }
+            { text: "关于“私有制”与性别的关系，你的直觉分析倾向于：", context: "探讨压迫的物质基础：经济制度是祸根，还是其表现形式？", options: [
+                { text: "祸根：私有制为了财产继承将女性禁锢在无薪家庭中", ref: "马克思主义。经济基础决定上层建筑，私有制产生压迫。", score: { marxist: 5, str: 5, rad: 5 } },
+                { text: "工具：它是父权制的衍生品，性别压迫比阶级压迫更原始", ref: "激进主义。认为性别压迫先于阶级压迫存在。", score: { radical: 5, str: 3, rad: 5 } },
+                { text: "偏差：关键在于赋予女性平等的财产所有权与继承权", ref: "自由主义。主张在现有框架下通过权利平等来纠偏。", score: { liberal: 5, ref: 5 } },
+                { text: "话语：它是建立在‘占有’这一自大叙事上的幻象", ref: "后现代。解构关于占有的权力话语。", score: { postmodern: 5, ind: 4 } }
             ]},
-            { text: "当谈论“家务劳动”时，你最希望看到的变革是：", options: [
-                { text: "家务社会化：由社会公共服务取代个体的孤军肉搏", ref: "社会主义。主张将照料劳动从家庭转向公共领域。", score: { socialist: 5 } },
-                { text: "计薪照料：承认再生产劳动的经济价值，并给予实质支付", score: { marxist: 3, socialist: 5 }, ref: "社会主义/马克思主义。拒绝将剥削美化为“爱”。" },
-                { text: "伴侣平分：通过沟通与契约，实现家庭内部的权力平衡", ref: "自由主义。强调个体间的公平协议。", score: { liberal: 5 } },
-                { text: "解构职责：彻底撕毁“贤内助”这一被权力预设的剧本", ref: "后现代。瓦解固化的角色期待。", score: { postmodern: 5 } }
+            { text: "当谈论“家务劳动”时，你最希望看到的变革是：", context: "涉及再生产劳动的价值重定义：社会化、计薪，还是内部契约？", options: [
+                { text: "社会化：由完善的公共服务取代个体的孤军肉搏", ref: "社会主义。主张将照料劳动从私人转向公共。", score: { socialist: 5, str: 5, ref: 4 } },
+                { text: "计薪：承认再生产劳动的经济价值，并给予实质支付", ref: "马克思主义/社会主义。拒绝将剥削美化为“爱”。", score: { marxist: 3, socialist: 5, str: 5 } },
+                { text: "平衡：通过法律和沟通，实现家庭内部权力的公平分配", ref: "自由主义。强调个体间的公平契约。", score: { liberal: 5, ind: 5, ref: 5 } },
+                { text: "解构：彻底撕毁‘贤内助’这一被权力预设的剧本", ref: "后现代。瓦解固化的角色期待。", score: { postmodern: 5, ind: 3 } }
             ]},
-            { text: "对于“成人工业”，你的思辨支点通常锁定在：", options: [
-                { text: "尊重契约：只要是两个独立主体的自愿选择，外人无权置喙", ref: "自由主义。强调个体的自决权与法理边界。", score: { liberal: 5 } },
-                { text: "抵制物化：它是父权文明对女性肉体最系统、最冷酷的榨取", ref: "激进主义。认为这是性景观对人性的批量异化。", score: { radical: 5 } },
-                { text: "劳动保障：承认其工作属性，保护从业者不被资本剥削", ref: "社会主义。关注边缘阶层在市场中的生存困境。", score: { socialist: 5 } },
-                { text: "解构表演：看看到底是谁在后台导演了这一场性叙事", ref: "后现代。欲望是被话语和权力反复排演的结果。", score: { postmodern: 5 } }
+            { text: "对于“成人工业”，你的思辨支点通常锁定在：", context: "权衡主体自决与系统性剥削的界限。", options: [
+                { text: "契约：只要是两个独立主体的自愿选择，外人无权干涉", ref: "自由主义。强调个体自决权与法理边界。", score: { liberal: 5, ind: 5, ref: 5 } },
+                { text: "物化：它是父权文明对女性肉体最冷酷的系统性榨取", ref: "激进主义。认为这是性景观对人性的异化。", score: { radical: 5, str: 5, rad: 5 } },
+                { text: "剥削：撇开艺术外衣，它本质上是对边缘阶层的资本榨取", ref: "社会主义。关注边缘阶层在市场中的生存困境。", score: { socialist: 5, str: 5, ref: 2 } },
+                { text: "解构：看看到底是谁在后台导演了这一场性叙事", ref: "后现代。欲望是被话语和权力反复排演的结果。", score: { postmodern: 5, ind: 2, rad: 4 } }
             ]},
-            { text: "当科技（如人造子宫）试图介入生育，你的第一反应倾向于：", options: [
-                { text: "解放：女性终于可以从生物性的生殖黑洞中彻底解脱", ref: "激进主义（费尔斯通派）。技术是打破生物枷锁的关键。", score: { radical: 5 } },
-                { text: "忧虑：那是机械文明对生命自然力最后一块阵地的霸权掠夺", ref: "生态主义。反抗工具理性对有机生命的彻底殖民。", score: { ecofem: 5 } },
-                { text: "警惕：技术从来不中立，关键在于它掌握在哪个阶级手里", ref: "社会主义。防止技术演变成新的资源垄断。", score: { socialist: 5 } },
-                { text: "解构：它将拆穿“母亲”这个被高度神圣化的政治定义", ref: "后现代。一旦母职可被取代，母性神话将瞬间坍塌。", score: { postmodern: 5 } }
+            { text: "当科技试图介入生育（如人造子宫），你的第一直觉是：", context: "探讨生物性的解放及其代价：是救赎还是更大的殖民？", options: [
+                { text: "解放：女性终于可以从生物性的生殖枷锁中彻底解脱", ref: "激进主义（费尔斯通派）。技术是打破生物枷锁的关键。", score: { radical: 5, rad: 5 } },
+                { text: "掠夺：那是工具文明对自然与生命力最后一块阵地的殖民", ref: "生态主义。反抗工具理性对生命的彻底掌控。", score: { ecofem: 5, str: 5 } },
+                { text: "警惕：技术从不中立，关键在于它掌握在哪个阶级手里", ref: "社会主义。防止技术演变成新的阶级垄断。", score: { socialist: 5, str: 5 } },
+                { text: "嘲讽：且看它如何拆穿‘母亲’这个被神圣化的定义", ref: "后现代。一旦母职可被取代，母性神话将坍塌。", score: { postmodern: 5, ind: 1 } }
             ]},
-            { text: "你认为女性倾向于“感性、温柔”主要是因为：", options: [
-                { text: "资源诱导：社会在教育和生存机会上定向引导的结果", ref: "自由主义。如果分配逻辑改变，性格差异将迅速消失。", score: { liberal: 5 } },
-                { text: "心理脚本：源于幼年期对性别角色的复杂认同与防御机制", ref: "精神分析。这是在无助时为了换取爱而交出的质押物。", score: { psycho: 5 } },
-                { text: "战术表演：一种为了在等级制中存活而磨练的权力动作", ref: "后现代。并没有先验的特质，只有永恒的生存模仿。", score: { postmodern: 5 } },
-                { text: "关怀智慧：这些特质里包含着被现代文明遗弃的伦理财富", ref: "关怀女性主义。主张将感性价值纳入社会衡量体系。", score: { care: 5 } }
+            { text: "你认为女性展现出的感性、温柔特质，更底层的成因是：", context: "本质主义与建构主义的经典交锋。", options: [
+                { text: "诱导：社会长期在期待和资源分配上定向引导的结果", ref: "自由主义。改变分配逻辑，性格差异将迅速消失。", score: { liberal: 5, ref: 5 } },
+                { text: "脚本：源于幼年期对性别角色的认同与防御机制", ref: "精神分析。看清内化枷锁如何变成性格。", score: { psycho: 8, str: 3 } },
+                { text: "表演：一种为了在等级制中存活而磨练出来的权力动作", ref: "后现代表演理论。如果你不需要这种伪装，特质也就消失了。", score: { postmodern: 8, rad: 5 } },
+                { text: "智慧：这些特质里包含着被现代文明遗弃的关怀智慧", ref: "关怀女性主义。主张将感性价值纳入社会衡量体系。", score: { care: 8, ind: 2 } }
             ]},
-            { text: "关于“母职”，哪一种说法最能触碰到你内心的真相？", options: [
-                { text: "温情绑架：它是一场由社会合谋针对女性精力的系统性消耗", ref: "激进主义。母爱常被神圣化以换取无偿奉献。", score: { radical: 5 } },
-                { text: "关怀能量：这种照料关系不应被抛弃，而应被社会全面尊重", ref: "关怀女性主义。主张社会应学习母性的共生逻辑。", score: { care: 5 } },
-                { text: "公共责任：育儿是共同体责任，不应由个体母亲全程肉搏", ref: "社会主义。主张照料劳动的社会化重组。", score: { socialist: 5 } },
-                { text: "存在承诺：它应是自由主体在清晰觉察代价后的主观创造", ref: "存在主义。拒绝预设天职，强调自主承诺。", score: { existential: 5 } }
+            { text: "关于“母职”，哪一种解析最能触碰到你感知的真相？", context: "探讨母亲身份在权力光谱中的位置。", options: [
+                { text: "绑架：它是一场由社会合谋针对女性精力的无偿榨取", ref: "激进主义。母爱常被神圣化以换取无偿奉献。", score: { radical: 5, rad: 8, str: 5 } },
+                { text: "能量：这种照料关系不应被抛弃，而应被社会全面尊重", ref: "关怀女性主义。主张社会应学习母性的共生逻辑。", score: { care: 8, ecofem: 5 } },
+                { text: "结构：育儿应是共同体责任，不应由个体母亲全程肉搏", ref: "社会主义。主张照料劳动的社会化，打破家庭围墙。", score: { socialist: 5, str: 8 } },
+                { text: "承诺：它应是个体主体在认清代价后的自选承诺", ref: "存在主义。拒绝预设天职，强调主体对生命的创造。", score: { existential: 8, ind: 8 } }
             ]},
-            { text: "你如何看待对自然资源的掠夺与对女性的压迫？", options: [
-                { text: "同源压迫：都源于那种“征服并榨取他者”的野蛮统治逻辑", ref: "生态女性主义。认为父权制将自然和女性通通客体化。", score: { ecofem: 5 } },
-                { text: "机制同构：都折射出了资本主义唯利是图的残酷底色", ref: "马克思主义/社会主义。资本的扩张不分性别与物种。", score: { marxist: 3, socialist: 2 } },
-                { text: "两个议题：应分别依靠科学进步与法律完善来独立解决", ref: "自由主义。主张用专业工具修复专业规则。", score: { liberal: 5 } },
-                { text: "分类陷阱：这些边界都是权力为了方便管理而制造的标签", ref: "后现代。解构“自然”与“人类”的二元划分。", score: { postmodern: 5 } }
+            { text: "如果你将对自然的无度榨取，与对女性压迫联系起来看：", context: "探讨统治范式的同源性。", options: [
+                { text: "同源：都源于那种‘征服并榨取他者’的主宰范式", ref: "生态女性主义。认为对自然的掠夺与对女性的禁锢同卵双生。", score: { ecofem: 8, str: 8, rad: 5 } },
+                { text: "剥削：这不过是追求剩余价值的贪婪在跨物种延展", ref: "马克思主义。剥削没有边界，直到资源枯竭。", score: { marxist: 8, str: 8 } },
+                { text: "独立：应分别依靠科学进步与法律完善来解决", ref: "自由主义。主张用专业工具修复专业规则。", score: { liberal: 5, ref: 5 } },
+                { text: "陷阱：这些边界都是权力为了方便管理而制造的标签", ref: "后现代。解构“自然”与“人类”的二元划分。", score: { postmodern: 8, ind: 1 } }
             ]},
-            { text: "当有人恐吓你“女权太激进会没人要”时，你的态度是：", options: [
-                { text: "鄙夷：你的那套评价体系本身就充满了对独立人格的歧视", ref: "自由主义。维护个体的尊严与公正评价权。", score: { liberal: 5 } },
-                { text: "不屑：被要这个词本身就带着一股腐朽的物化臭味", ref: "激进主义。拒绝将女性视为等待认领的商品。", score: { radical: 5 } },
-                { text: "无感：你是在试图用婚恋中心主义的枷锁来恐吓灵魂", ref: "后现代。跳出他人设立的身份陷阱即是自由。", score: { postmodern: 5 } },
-                { text: "蔑视：我不为满足他人的审判而存在，我为自我的自由而活", ref: "存在主义。主体审判高于一切他者的目光。", score: { existential: 5 } }
+            { text: "当有人恐吓你“女权太激进会没人要”时，你的态度是：", context: "对评价体系的反向解构。", options: [
+                { text: "鄙夷：你那套评价体系本身就充满了对独立人格的歧视", ref: "自由主义。维护个体的尊严与公正评价权。", score: { liberal: 5, ind: 5 } },
+                { text: "不屑：‘被要’这个词本身就带着一股腐朽的物化臭味", ref: "激进主义。拒绝将女性视为等待认领的商品。", score: { radical: 5, str: 5, rad: 5 } },
+                { text: "无感：你是在试图用婚恋中心主义的枷锁来恐吓灵魂", ref: "后现代。跳出他人设立的身份陷阱即是自由。", score: { postmodern: 5, ind: 3 } },
+                { text: "蔑视：我不为满足他人的审判而存在，我为自我而活", ref: "存在主义。主体审判高于一切他者的目光。", score: { existential: 5, ind: 5 } }
             ]},
-            { text: "关于西方女性主义理论对全球的影响，你的观察是：", options: [
-                { text: "西方中心：它往往用中产白人的经验强行代替全世界", ref: "全球女性主义。主张打破白人女性的话语霸权。", score: { global: 5 } },
-                { text: "交叉遮蔽：它有时难以看清种族、阶级与国别的多重压迫", ref: "交织性/多文化。必须考量身份缠绕产生的独特困局。", score: { multicultural: 5 } },
-                { text: "确立坐标：它提供了人权与自由的基准，具有普世价值", ref: "自由主义。相信理性权利框架的通用性。", score: { liberal: 5 } },
-                { text: "新殖民：应防止其沦为对第三世界的另一种文化话语霸权", ref: "全球/后殖民。真正的解放应生长在本土土壤中。", score: { global: 5 } }
+            { text: "关于西方理论对全球女性境遇的影响，你的直觉是：", context: "全球化背景下的权力与文化张力。", options: [
+                { text: "霸权：它往往用中产白人的经验强行代替全世界", ref: "全球女性主义。主张打破白人女性的话语霸权。", score: { global: 8, str: 5 } },
+                { text: "遮蔽：它有时难以看清种族、阶级与性别的交叉压迫", ref: "交织性/多文化。必须考量身份缠绕产生的独特困局。", score: { multicultural: 8, str: 5 } },
+                { text: "基准：它确立了人权、自由等坐标，具有普世价值", ref: "自由主义。相信理性权利框架的通用性。", score: { liberal: 5, ind: 3, ref: 5 } },
+                { text: "殖民：应防止其沦为对边缘地区的另一种话语霸权", ref: "全球/后殖民。真正的解放应生长在本土土壤中。", score: { global: 8, str: 4 } }
             ]},
-            { text: "针对高价彩礼、冠姓权等热点，你最深刻的洞察是：", options: [
-                { text: "博弈残余：那是法治缺位背景下，个体在博取生存保障", ref: "自由主义。制度无力兜底时，人们只能寻求原始抵押。", score: { liberal: 5 } },
-                { text: "交易投影：说明女性依然被潜意识视为父权的私产", ref: "激进主义。不管如何包装，核心依然是所有权的占有。", score: { radical: 5 } },
-                { text: "阶级映射：那是底层在极度匮乏的空间里相互绝望掠夺", ref: "社会主义。不仅是性别问题，更是贫穷的结构性折射。", score: { socialist: 5 } },
-                { text: "剧场表演：人们在按照古老的话语剧本，表演一场安稳感", ref: "后现代。安定感是一种文化虚构，人们在模仿幻象。", score: { postmodern: 5 } }
+            { text: "针对“亲密关系中的权力博弈”，你的直觉判定是：", context: "家庭与私领域的政治学。", options: [
+                { text: "政治：每一场争吵背后都隐藏着宏大的权力结构", ref: "激进主义名言。家庭从来不是避风港，而是微缩战场。", score: { radical: 5, str: 5, rad: 5 } },
+                { text: "契约：应通过明确的法权划分来解决关系的不公", ref: "自由主义。信任规则而非人性，才是止损的良药。", score: { liberal: 5, ref: 5 } },
+                { text: "认同：我们在爱人身上寻找的是幼年期缺失的镜像", ref: "精神分析。看清关系背后那些幽深的认同脚本。", score: { psycho: 5, str: 2 } },
+                { text: "流动：不应是定格，而是差异的不断协商与重置", ref: "后现代。解构稳定的‘爱’，拥抱流动的博弈。", score: { postmodern: 5, ind: 4 } }
             ]},
-            { text: "你觉得实现真正的公平，那“第一推力”必须是：", options: [
-                { text: "法律钢印：彻底铲除一切显性或隐性的制度性特权", ref: "自由主义。只有从法律之眼看去性别无异，平等才成立。", score: { liberal: 5 } },
-                { text: "权力换血：让女性杀入核心决策层，从根部改写统治基因", ref: "激进主义。不仅要权利，更要权力主导权的彻底更迭。", score: { radical: 5 } },
-                { text: "分配正义：打通生产与再生产的壁垒，实现彻底的福利兜底", ref: "社会主义。再多的承诺也抵不过完善的公共托育。", score: { socialist: 5 } },
-                { text: "语境爆破：炸掉所有试图定义“女性理应如何”的话语工厂", ref: "后现代。先有思想的废墟，才有自我的重建。", score: { postmodern: 5 } }
+            { text: "你觉得实现真正的公平，那“第一推力”必须是：", context: "变革路径的选择。", options: [
+                { text: "法律：彻底铲除一切显性或隐性的制度性特权", ref: "自由主义。只有在法律面前性别无异，平等才成立。", score: { liberal: 5, ref: 5, ind: 5 } },
+                { text: "夺权：让女性杀入决策层，从根部改写统治基因", ref: "激进主义。不仅要权利，更要权力主导权的更迭。", score: { radical: 5, rad: 5, str: 5 } },
+                { text: "托举：建立完善的公共服务，彻底实现福利兜底", ref: "社会主义。再多的承诺也抵不过完善的托育体系。", score: { socialist: 5, str: 5, ref: 4 } },
+                { text: "爆破：炸掉所有试图定义“女性应如何”的话语工厂", ref: "后现代。先有思想废墟，才有自我重建。", score: { postmodern: 5, rad: 5 } }
             ]},
-            { text: "关于“精神分析”在性别研究中的位置，你倾向于：", options: [
-                { text: "挖掘潜意识：压迫不仅在体制内，更在内化的心理镜像里", ref: "精神分析。探寻摇篮期就开始的心理防御战。", score: { psycho: 5 } },
-                { text: "警惕解释权：应防止其变成加深刻板印象的“科学偏见”", ref: "自由/后现代的警惕。不应将主观分析固化为必然真理。", score: { liberal: 2, postmodern: 3 } },
-                { text: "重构家庭：通过打破单一的抚育模式来终结性别的循环", ref: "精神分析/社会主义。主张通过养育结构的改变来重塑人格。", score: { psycho: 3, socialist: 2 } },
-                { text: "无视：比起虚无缥缈的梦境，现实的经济与权利更紧迫", ref: "马克思主义/自由主义的务实。强调可见的物质基础。", score: { marxist: 3, liberal: 2 } }
+            { text: "关于“精神分析”在性别研究中的角色，你倾向于：", context: "探讨深层认知的成因。", options: [
+                { text: "挖掘：压迫不仅在体制内，更在内化的心理镜像里", ref: "精神分析。探寻摇篮期就开始的心理防御战。", score: { psycho: 8, str: 3 } },
+                { text: "警惕：应防止其变成加深刻板印象的“科学偏见”", ref: "自由/后现代。不应将主观分析固化为必然真理。", score: { liberal: 2, postmodern: 3 } },
+                { text: "重构：通过打破单一抚育模式来终结性别的循环", ref: "精神分析/社会主义。主张通过养育结构重塑人格。", score: { psycho: 5, socialist: 3 } },
+                { text: "务实：比起梦境，现实的经济与权利更紧迫", ref: "马克思主义/自由主义。强调可见的物质基础。", score: { marxist: 5, liberal: 2 } }
             ]},
-            // 补充至30道题目，覆盖11个流派
-            { text: "如果上天给你一个机会立刻抹除一个旧制度，你会选：", options: [
-                { text: "私有财产制：一切剥削与家庭奴役的经济母版", score: { marxist: 5 }, ref: "马克思主义对剥削根源的终极狙击。" },
-                { text: "性别二元制：将人类强行裁剪为两类样板的分类铁幕", score: { postmodern: 5 }, ref: "后现代对二分法话语的彻底颠覆。" },
-                { text: "父权统治制：超越时代的、对女性生命张力的黑色铁幕", score: { radical: 5 }, ref: "激进主义对跨时代权力结构的爆破。" },
-                { text: "法律盲区：让不公在暗影中获得合法性的制度漏洞", score: { liberal: 5 }, ref: "自由主义对规则正义的极致追求。" }
+            { text: "如果让你立刻抹除一个旧制度，你会选：", context: "对社会根基的终极狙击。", options: [
+                { text: "私有财产制：剥削与家庭奴役的终极温床", ref: "马克思主义。彻底终结阶级剥削的物理根基。", score: { marxist: 8, str: 8 } },
+                { text: "性别二元制：人类的分类铁幕与身份牢笼", ref: "后现代。从话语底层颠覆二分法统治逻辑。", score: { postmodern: 8, rad: 5 } },
+                { text: "父权统治制：对生命张力的黑色跨时代压制", ref: "激进主义。炸掉人类历史上最古老的枷锁。", score: { radical: 8, rad: 8 } },
+                { text: "法律盲区：让不公在暗影中获合法性的漏洞", ref: "自由主义。追求绝对透明且公正的程序正义。", score: { liberal: 8, ref: 8 } }
             ]},
-            { text: "你如何看待那些为了抗议而进行的“激进动作”？", options: [
-                { text: "觉醒的火种：它刺穿了温情的幻象，直抵权力的腐烂根部", score: { radical: 5 }, ref: "激进主义认为极端的动作有时是唤醒麻木的良药。" },
-                { text: "策略的失误：应在法治框架内，用理性达成全社会的契约", score: { liberal: 5 }, ref: "自由主义坚守程序正义，警惕非理性的对抗。" },
-                { text: "流动的表达：它是对固化政治秩序的一次充满生命力的解构", score: { postmodern: 5 }, ref: "后现代视其为一场打破话语垄断的快闪艺术。" },
-                { text: "阶级的怒吼：是受压迫者在走投无路时对资本秩序的反扑", score: { marxist: 5 }, ref: "马克思主义关注物质匮乏下的阶级反击。" }
+            { text: "当你看到关于“底层困苦女性”的报道，你的共情点在于：", context: "探讨压迫的多重交织性。", options: [
+                { text: "多重身份交叉：她们承受着种族与性别的叠压", ref: "交织性/多文化。必须看清多重枷锁的缠绕。", score: { multicultural: 8, str: 5 } },
+                { text: "被遗忘的劳作：她们是繁华世界被剥削的润滑剂", ref: "社会主义。关注剩余价值的最底层收割。", score: { socialist: 8, str: 8 } },
+                { text: "生存韧性：她们展现了一种野生的生命哲学", ref: "生态女性主义。感知边缘生命与大地的连接。", score: { ecofem: 5 } },
+                { text: "权利盲点：她们应拥有受法律保护的资源权", ref: "自由主义。权利普世性不应因身份打折扣。", score: { liberal: 5, ref: 5 } }
             ]},
-            { text: "当你看到关于“黑人女性”或“底层农村女性”的报道，你的共情点在于：", options: [
-                { text: "多重身份交叉：她们承受着种族、阶级与性别的多重叠压", score: { multicultural: 5, intersectional: 5 }, ref: "交织性理论。必须看清多重枷锁的缠绕。" },
-                { text: "被遗忘的劳作：她们是这个繁华世界最沉默且被榨取的润滑剂", score: { marxist: 5, socialist: 5 }, ref: "社会主义。关注最底层的劳动剩余价值收割。" },
-                { text: "生存的韧性：她们在大地的边缘展现出了一种野生的生命哲学", score: { ecofem: 5 }, ref: "生态女性主义。感知边缘生命与大地的深层连接。" },
-                { text: "权利的盲点：她们应拥有受法律同等保护的教育与资源权", score: { liberal: 5 }, ref: "自由主义。权利的普世性不应因身份而打折扣。" }
+            { text: "你认为性格差异最深层的判定是：", context: "特质是裁剪出来的，还是演出来的？", options: [
+                { text: "暴力裁剪：是父权制为了稳定，对人性的阉割", ref: "激进主义。不符合统治逻辑的人性部分通通被切除。", score: { radical: 8, rad: 8 } },
+                { text: "心理脚本：我们在摇篮里就开始的认同战结果", ref: "精神分析。看清内化枷锁如何变成固定性格。", score: { psycho: 8, str: 3 } },
+                { text: "资源诱导：为了在不公分配中存活的战术倾向", ref: "自由主义。改变分配，差异将迅速消失。", score: { liberal: 5, ref: 5 } },
+                { text: "权力表演：一种为了在等级制中存活的动作惯性", ref: "后现代表演论。如果没有观众，特质也将瓦解。", score: { postmodern: 8, ind: 4 } }
             ]},
-            { text: "你最终毕生所求的境界是？", options: [
-                { text: "做一个绝对自由、理性且独立于世的个体", score: { liberal: 5, existential: 5 }, ref: "自由与存在的终极浪漫。主体性高于一切。" },
-                { text: "彻底终结性别这一古老且残忍的阶级制度", score: { radical: 5 }, ref: "激进主义的壮丽终篇。炸掉“男女”这个分水岭。" },
-                { text: "与被压迫的众人一起，打碎所有资本与权力的枷锁", score: { marxist: 5, socialist: 5 }, ref: "大同愿景。没有剥削者的劳动尊严世界。" },
-                { text: "在差异中自由变幻，成为一个拒绝被定义的游牧者", score: { postmodern: 5 }, ref: "后现代的游牧精神。永远在逃离身份的定居。" }
+            { text: "你认为现代女性遭遇的“容貌焦虑”，根源在于：", context: "探讨凝视作为控制手段的本质。", options: [
+                { text: "凝视内化：我们将自己变成了取悦强者的视觉客体", ref: "激进/精分。凝视是最高级的心理控制墙。", score: { radical: 5, psycho: 5 } },
+                { text: "资本收割：美妆工业为了制造需求而在制造匮乏", ref: "马克思主义。焦虑是商品经济扩张的润滑剂。", score: { marxist: 8, str: 8 } },
+                { text: "竞争偏差：评价机制在资源分配上对“美”的奖励", ref: "自由主义。这是一种典型的不当竞争偏差与权利扭曲。", score: { liberal: 5, ref: 5 } },
+                { text: "话语样板：我们被“标准化”的叙事修剪了生命力", ref: "后现代。解构屏幕背后那只名为“标准”的手。", score: { postmodern: 8, rad: 5 } }
             ]},
-            { text: "如果可以选择一种“核心伦理”作为社会基石，你会选：", options: [
-                { text: "公正与权利：每个人在法律面前的绝对对等", score: { liberal: 5 }, ref: "自由主义。正义即公平的契约执行。" },
-                { text: "关怀与责任：建立人与人之间温热且互惠的连接", score: { care: 5 }, ref: "关怀伦理。关系比规则更重要。" },
-                { text: "主体自决：每个人对生命本质的自主定义与承诺", score: { existential: 5 }, ref: "存在主义。生命即自我的创造过程。" },
-                { text: "共生与平衡：人类与万物自然在生态网络中的和谐", score: { ecofem: 5 }, ref: "生态主义。打破人类中心主义的傲慢。" }
+            { text: "你如何看待现代文明对土地资源的掠夺式开发？", context: "生态学与性别压迫的逻辑共振。", options: [
+                { text: "统治范式：它与压迫女性基于相同的主宰逻辑", ref: "生态主义。不心疼河流的人，也很难理解女性。", score: { ecofem: 8, str: 5 } },
+                { text: "资本扩张：追逐剩余价值在跨物种之间的延展", ref: "马克思主义。剥削没有边界，直到资源枯竭。", score: { marxist: 8, str: 8 } },
+                { text: "必经代价：关键在于分配公正，而非停止发展", ref: "自由主义。相信理性规则可以优化发展的副作用。", score: { liberal: 5, ref: 5 } },
+                { text: "人类中心：应解构这一套自圆其说的话语假象", ref: "后现代。打破人类作为“中心”的虚假叙事。", score: { postmodern: 8, ind: 1 } }
             ]},
-            { text: "对于“母系社会”的传说，你的态度倾向于：", options: [
-                { text: "一种浪漫的向往：那是关怀与和平战胜征服逻辑的黄金时代", score: { ecofem: 5, care: 5 }, ref: "生态/关怀派。寻找一种被历史遮蔽的文明范式。" },
-                { text: "理论的参照：它证明了父权制并非天然如此，而是历史的构建", score: { radical: 5 }, ref: "激进主义。通过历史溯源瓦解父权制的合法性。" },
-                { text: "考古的话语：这些叙事本身也是在利用过去来编排当下的欲望", score: { postmodern: 5 }, ref: "后现代。警惕对“原始母性”的过度神圣化。" },
-                { text: "无感的史实：关键在于当下的物质生产关系如何重构", score: { marxist: 5 }, ref: "马克思主义。只有当下的劳动关系才是变革的核心。" }
+            { text: "你认为“女哲学家”被遗忘，最难以忍受的原因是：", context: "历史书写权力的博弈。", options: [
+                { text: "话语排斥：理性这一词汇被定义为“男性领地”", ref: "自由主义。夺回被定义的理性，捍卫智力主权。", score: { liberal: 8, ref: 5 } },
+                { text: "物质匮乏：女性长期被剥夺了生产资料与书桌", ref: "马克思主义。思考需要经济基础的支撑。", score: { marxist: 8, str: 8 } },
+                { text: "叙事修剪：史学书写者将她们强行归为“琐碎”", ref: "后现代。解构历史书写背后的权力拼贴。", score: { postmodern: 8, rad: 5 } },
+                { text: "视角缺失：关怀智慧在战争文明里被严重贬低", ref: "生态/关怀。失去的是另一种解读世界的视角。", score: { ecofem: 5, care: 5 } }
             ]},
-            { text: "在“全职主妇”是否属于剥削这一争论中，你的锚点是：", options: [
-                { text: "资本的共谋：它是资本主义将再生产成本转嫁给女性的阴谋", score: { marxist: 5, socialist: 5 }, ref: "马克思主义。家务劳动是为资本提供劳动力补给的无薪工场。" },
-                { text: "选择的假象：如果父权审美依然在操纵潜意识，那就没有真自由", score: { radical: 5, psycho: 5 }, ref: "激进/精分。警惕那些被植入内心的、关于“奉献”的程序。" },
-                { text: "契约的完善：应在法律上赋予家务劳动以财产共有权和报酬", score: { liberal: 5 }, ref: "自由主义。主张在现行体制内将私域劳动法理化。" },
-                { text: "存在的主体：关键看个体是否在荒野中确立了自己的本质", score: { existential: 5 }, ref: "存在主义。评价不应针对身份，而应针对个人的主体承诺。" }
+            { text: "你如何看待“跨性别权益”对传统女性空间的挑战？", context: "本质主义与解构主义的最激烈交火。", options: [
+                { text: "自决：每个人都有法律保护的定义自我的自由", ref: "自由主义/存在主义。灵魂的主宰权应归还个体。", score: { liberal: 5, existential: 5, ind: 8 } },
+                { text: "解构：‘女性’本身就是一个该被扔掉的标签", ref: "后现代。模糊范畴，瓦解权力的核心分类依据。", score: { postmodern: 8, rad: 8 } },
+                { text: "联合：我们都是边缘的他者，应并肩抗争", ref: "交织性。边缘者的联合是唯一有效的威胁力量。", score: { intersectional: 8, str: 8 } },
+                { text: "支点：生理经验（如生育）是不可磨灭的底座", ref: "激进派。生理独特性是战场分明的防线。", score: { radical: 3, rad: 3 } }
             ]},
-            { text: "你认为现代女性遭遇的“容貌焦虑”，根源在于：", options: [
-                { text: "男权凝视的内化：我们将自己变成了取悦强者的视觉客体", score: { radical: 5, psycho: 5 }, ref: "激进/精分。凝视是最高级的心理隔离墙。" },
-                { text: "资本的收割：美妆工业为了制造消费需求，在人为制造匮乏感", score: { marxist: 5 }, ref: "马克思主义。焦虑不过是商品经济扩张的润滑剂。" },
-                { text: "竞争的工具：社会评价机制在资源分配上对“美”的隐形奖励", score: { liberal: 5 }, ref: "自由主义。这是一种典型的不正当竞争偏差。" },
-                { text: "话语的样板：我们被“标准化”的图像叙事强行修剪了生命力", score: { postmodern: 5 }, ref: "后现代。解构屏幕背后那只名为“标准化”的手。" }
+            { text: "如果选择一种“核心伦理”作为社会基石，你会选：", context: "文明底层架构的重置方案。", options: [
+                { text: "公正与权利：每个人在法律面前的绝对对等", ref: "自由主义。正义即公平的契约执行。", score: { liberal: 8, ref: 8 } },
+                { text: "关怀与责任：建立温热且互惠的关系连接", ref: "关怀伦理。关系比规则更重要。", score: { care: 8, ind: 4 } },
+                { text: "主体自决：每个人对生命本质的自主定义", ref: "存在主义。生命即自我创造的过程。", score: { existential: 8, ind: 8 } },
+                { text: "平衡：人类与万物自然在生态网络中的和谐", ref: "生态主义。打破人类中心主义的傲慢。", score: { ecofem: 8, str: 5 } }
             ]},
-            { text: "关于“亲密关系中的权力博弈”，你的直觉判断是：", options: [
-                { text: "私人的即政治的：每一场争吵背后都隐藏着宏大的权力结构", score: { radical: 5 }, ref: "激进主义名言。家庭从来不是避风港，而是微缩战场。" },
-                { text: "法律的钢印：应通过明确的法权划分来解决亲密关系的不公", score: { liberal: 5 }, ref: "自由主义。信任规则而非信任人性，才是止损的良药。" },
-                { text: "认同的错位：我们在爱人身上寻找的是幼年期缺失的镜像", score: { psycho: 5 }, ref: "精神分析。看清关系背后那些幽深的认同脚本。" },
-                { text: "关系的流动：关系不应是权力的定格，而是差异的不断协商", score: { postmodern: 5 }, ref: "后现代。解构稳定的“爱”之定义，拥抱流动的博弈。" }
+            { text: "你毕生所求的最终境界是：", context: "思想彼岸的锚定。", options: [
+                { text: "做一个绝对自由、理性且独立于世的个体", ref: "自由与存在的浪漫。主体性高于一切。", score: { liberal: 5, existential: 8, ind: 8 } },
+                { text: "彻底终结性别这一古老且残忍的阶级制度", ref: "激进主义。炸掉“男女”这一分裂的红利结构。", score: { radical: 8, rad: 8 } },
+                { text: "与被压迫者一起，打碎资本与权力的枷锁", ref: "马克思/社会主义愿景。没有剥削者的尊严世界。", score: { marxist: 8, socialist: 8, str: 8 } },
+                { text: "在差异中变幻，拒绝被任何人定义的人", ref: "后现代。永远逃离身份定居的游牧精神。", score: { postmodern: 8, rad: 8, ind: 5 } }
             ]},
-            { text: "你认为“女哲学家”被历史遗忘，最令你难以忍受的原因是：", options: [
-                { text: "话语的排斥：理性这一词汇长期被定义为“男性专属”的领地", score: { liberal: 5, care: 5 }, ref: "自由主义对智力主权的捍卫。夺回被定义的理性。" },
-                { text: "物质的匮乏：女性长期被剥夺了进行纯粹思辨所需的生产资料", score: { marxist: 5 }, ref: "马克思主义。书桌是需要经济基础支撑的。" },
-                { text: "叙事的修剪：历史书写者通过分类，将她们强行归为“琐碎”", score: { postmodern: 5 }, ref: "后现代。历史不过是胜出者的话语拼贴。解构历史书写。" },
-                { text: "视角的缺失：关怀与连接的智慧，在崇尚战争的文明里被贬低", score: { ecofem: 5, care: 5 }, ref: "生态/关怀派。我们失去的是另一种解读世界的文明视角。" }
+            { text: "你认为真正的“解放”，终点应该呈现为：", context: "乌托邦色彩的路径终局。", options: [
+                { text: "性别盲视：性别不再成为一个有意义的标签", ref: "自由主义终点。性别彻底退回为生物背景。", score: { liberal: 8, ref: 8 } },
+                { text: "多样性狂欢：每一种流动的身份都被庆祝", ref: "后现代。没有中心，只有无限边缘的盛放。", score: { postmodern: 8, rad: 8 } },
+                { text: "秩序重塑：基于关怀与和谐共生建立新秩序", ref: "生态/关怀。用温润秩序取代冰冷征服。", score: { care: 8, ecofem: 8 } },
+                { text: "剥削终结：全人类共同掌握资料，消灭压迫", ref: "马克思主义。再无压迫者的宁静彼岸。", score: { marxist: 8, socialist: 8, str: 8 } }
             ]},
-            { text: "面对“全球化”对女性境遇的改变，你的审视角度是：", options: [
-                { text: "交叉剥削：它加剧了第一世界对第三世界女性劳动力的套利", score: { global: 5, multicultural: 5 }, ref: "交织性/全球。必须看到国别背后的资本压榨链。" },
-                { text: "权利的扩张：它将人权、自由等坐标带到了原本封闭的角落", score: { liberal: 5 }, ref: "自由主义。技术与全球化是权利扩散的正向媒介。" },
-                { text: "身份的撕裂：本地文化与外来话语在身体上产生的剧烈摩擦", score: { global: 5, postmodern: 3 }, ref: "后殖民视角。关注那种难以言说的、在夹缝中的生存张力。" },
-                { text: "共生的破坏：它用统一的消费主义逻辑，摧毁了古老的生态平衡", score: { ecofem: 5 }, ref: "生态主义。警惕“进步”对多样生命纹理的无差别磨平。" }
+            { text: "当你听到关于“计薪家务”的提议时：", context: "承认劳动的价值，还是加固了陷阱？", options: [
+                { text: "解放：承认其经济价值，彻底终结无偿剥削", ref: "马克思/社会主义。剥削必须被明码标价地停止。", score: { marxist: 8, socialist: 8, str: 8 } },
+                { text: "陷阱：这会将女性更深地禁锢在私人的牢笼里", ref: "自由主义/激进。应追求走出家庭，而非留在家里领工资。", score: { liberal: 5, radical: 5, ref: 5 } },
+                { text: "交易：这是一种契约化的进步，有助于权利对等", ref: "自由主义。通过法权将私域劳动契约化。", score: { liberal: 8, ref: 8 } },
+                { text: "解构：应反思“家”与“工场”这套二元划分", ref: "后现代。打破空间与身份的传统话语绑定。", score: { postmodern: 8 } }
             ]},
-            { text: "你认为实现真正的“解放”，那终点应该呈现为：", options: [
-                { text: "性别盲视：性别不再成为一个有意义的分类标签", score: { liberal: 5, postmodern: 3 }, ref: "自由主义的法治终点。性别彻底退回为纯粹的生物背景。" },
-                { text: "多样性的狂欢：每一种差异、每一种流动的身份都被热烈庆祝", score: { postmodern: 5 }, ref: "后现代的差异共和。没有中心，只有无限的边缘。" },
-                { text: "秩序的重构：基于生命关怀与和谐共生建立的新文明秩序", score: { care: 5, ecofem: 5 }, ref: "生态/关怀派。用温润的秩序取代冰冷的征服逻辑。" },
-                { text: "剥削的终结：全人类共同掌握生产资料，彻底消灭阶级压迫", score: { marxist: 5, socialist: 5 }, ref: "马克思主义的终极彼岸。再无压迫者的宁静。" }
+            { text: "在面临“婚恋”与“事业”的冲突时，你认为：", context: "对生活重心分配的哲学判定。", options: [
+                { text: "主体优先：自我实现是唯一值得献身的本质任务", ref: "存在主义。不为任何人牺牲主体的超越性。", score: { existential: 8, ind: 8 } },
+                { text: "结构不公：这是由于照料成本未能社会化导致的难题", ref: "社会主义。质疑冲突本身是社会制度的缺失。", score: { socialist: 8, str: 8 } },
+                { text: "权力控制：婚恋常作为削弱女性公共竞争力的手段", ref: "激进主义。警惕亲密关系背后的权力战术。", score: { radical: 8, rad: 5 } },
+                { text: "个体契约：关键在于伴侣双方通过协商达成公平", ref: "自由主义。强调基于互惠的个体协议。", score: { liberal: 5, ref: 8 } }
             ]},
-            { text: "关于“性格特质中的男女差异”，你最深层的判定是：", options: [
-                { text: "暴力裁剪：是父权制为了稳定，对多样人性进行的无情切除", score: { radical: 5 }, ref: "激进主义。不符合统治逻辑的人性部分通通被阉割。" },
-                { text: "心理脚本：我们在摇篮里就开始的防御与认同战的结果", score: { psycho: 8 }, ref: "精神分析。看清那些被内化的枷锁如何变成“性格”。" },
-                { text: "资源诱导：一种理性的、为了在有限分配中存活的战术倾向", score: { liberal: 5 }, ref: "自由主义。改变分配，性格差异将迅速回归均值。" },
-                { text: "权力表演：一种为了在等级制中存活而磨练的动作惯性", score: { postmodern: 5 }, ref: "后现代表演理论。如果你不需要这种伪装，特质也就消失了。" }
+            { text: "你如何看待那些为了抗议而进行的“激进动作”？", context: "对抗争策略的伦理评估。", options: [
+                { text: "火种：它刺穿了温情幻象，直抵权力的根部", ref: "激进主义。极端动作是唤醒麻木的良药。", score: { radical: 8, rad: 8 } },
+                { text: "失策：应在法治框架内用理性达成社会契约", ref: "自由主义。坚守程序正义，警惕非理性。", score: { liberal: 5, ref: 8 } },
+                { text: "表达：是对固化政治秩序的一次生命力解构", ref: "后现代。打破话语垄断的快闪艺术。", score: { postmodern: 8, rad: 5 } },
+                { text: "阶级：受压迫者在走投无路时的反向夺权", ref: "马克思主义。关注匮乏下的生存反扑。", score: { marxist: 8, str: 8 } }
             ]},
-            { text: "面对文明对土地资源的掠夺式开发，从你的底层逻辑来看：", options: [
-                { text: "统治范式的同源：它与对女性的压迫基于相同的主宰逻辑", score: { ecofem: 8 }, ref: "生态主义。如果你不心疼被污染的河流，你也很难理解女性。" },
-                { text: "资本的扩张本性：这不过是追逐剩余价值的贪婪在跨物种延展", score: { marxist: 5 }, ref: "马克思主义。剥削没有边界，直到资源枯竭。" },
-                { text: "进步的必经代价：关键在于分配是否公正，而非停止发展", score: { liberal: 5 }, ref: "自由主义。相信理性规则可以优化发展的副作用。" },
-                { text: "人类中心主义的自大：我们应解构这一套自圆其说的话语假象", score: { postmodern: 5 }, ref: "后现代。打破人类作为“世界中心”的虚假叙事。" }
+            { text: "关于“全职主妇”，你认为真正的自由抉择建立在：", context: "探讨自主性的前提条件。", options: [
+                { text: "财产：拥有法律保护的、不可分割的共有权", ref: "自由主义。通过法理将私域劳动契约化。", score: { liberal: 8, ref: 8 } },
+                { text: "心理：个人已完全清除了父权角色的潜意识暗示", ref: "精分/激进。警惕被植入内心的奉献程序。", score: { psycho: 8, rad: 8 } },
+                { text: "计酬：社会承认家务价值并给予经济补偿", ref: "马克思/社会主义。打碎无薪劳动的剥削神话。", score: { marxist: 8, str: 8 } },
+                { text: "主体：主体在充分认清代价后愿意承担的承诺", ref: "存在主义。评价意志而非评价身份。", score: { existential: 8, ind: 8 } }
             ]},
-            { text: "关于“跨性别权益”，你最本能的切入角度是：", options: [
-                { text: "主体自决权：每个人都有受法律保护的、定义自我本质的自由", score: { liberal: 5, existential: 5 }, ref: "自由主义/存在主义。灵魂的主宰权应归还个体。" },
-                { text: "身份解构：‘女性’本身就是一个该被扔进垃圾桶的权力标签", score: { postmodern: 5 }, ref: "后现代。模糊范畴，即是瓦解权力最核心的分类依据。" },
-                { text: "边缘的联合：我们都是被排斥的他者，应在交叉压迫中并肩作战", score: { intersectional: 5, multicultural: 5 }, ref: "交织性视角。边缘者的联合是唯一具有威胁性的力量。" },
-                { text: "基座的守护：生理经验（如生育）是抗争的不可磨灭的物理支点", score: { radical: 3 }, ref: "部分激进流派的阵地感。生理独特性是战场分明的最后防线。" }
+            { text: "你如何看待“科学真理”在性别议题中的位置？", context: "探讨客观性背后的权力叙事。", options: [
+                { text: "警惕：科学叙事长期以来排斥了女性的生命经验", ref: "生态/关怀。质疑所谓“客观理性”的统治范式。", score: { care: 5, ecofem: 8 } },
+                { text: "修正：应消除科研评价中根深蒂固的男性偏见", ref: "自由主义。主张用公正的评价体系优化科学界。", score: { liberal: 5, ref: 8 } },
+                { text: "解构：所谓的“科学真理”本质上是一种权力话语", ref: "后现代。看清知识如何被权力编织成教条。", score: { postmodern: 8, rad: 5 } },
+                { text: "阶级：科研资源被垄断，是阶级地位的投影", ref: "马克思主义。谁掌握了实验室，谁就掌握了真理。", score: { marxist: 5, str: 8 } }
             ]}
         ];
 
+        // 结果解读数据 (11流派完整版)
         const mentorData = {
             liberal: { name: "玛丽·伍尔斯通克拉夫特", quote: "“我不希望女性拥有支配男性的权力，而是拥有支配她们自身的权力。”", work: "《为女权辩护》(1792)", books: ["《为女权辩护》", "《女性的奥秘》"] },
             radical: { name: "舒拉姆斯·费尔斯通", quote: "“解放的最终目标不仅是消除特权，而是消除性别歧视本身。”", work: "《性的辩证法》(1970)", books: ["《性的辩证法》", "《性政治》"] },
-            marxist: { name: "亚历山德拉·柯伦泰", quote: "“没有经济上的独立，任何平等都只是镜中花。”", work: "《新道德与劳动阶级》(1918)", books: ["《柯伦泰选集》", "《家庭与苏维埃国家》"] },
+            marxist: { name: "亚历山德拉·柯伦泰", quote: "“没有经济上的独立，任何平等都只是镜中花。”", work: "《新道德与劳动阶级》(1918)", books: ["《柯伦泰选集》", "《家庭与社会》"] },
             socialist: { name: "西尔维娅·费德里奇", quote: "“他们说这是爱，我们说这是无偿劳动。”", work: "《卡利班与女巫》(2004)", books: ["《卡利班与女巫》", "《工资与家务》"] },
             existential: { name: "西蒙娜·德·波伏娃", quote: "“女人不是天生的，而是变成的。”", work: "《第二性》(1949)", books: ["《第二性》", "《厌女》"] },
             postmodern: { name: "朱迪斯·巴特勒", quote: "“性别不是我们‘是’什么，而是我们‘做’什么，它是一场反复的表演。”", work: "《性别麻烦》(1990)", books: ["《性别麻烦》", "《解构女性主义》"] },
-            ecofem: { name: "范达娜·席娃", quote: "“我们要么拥有由女性引领的未来，要么就完全没有未来。”", work: "《生存》(1988)", books: ["《生存》", "《自然之死》"] },
+            ecofem: { name: "范达娜·席娃", quote: "“我们要么拥有一个由女性引领的未来，要么就完全没有未来。”", work: "《生存》(1988)", books: ["《生存》", "《自然之死》"] },
             psycho: { name: "卡罗尔·吉利根", quote: "“拥有声音就是拥有人性。”", work: "《不同的声音》(1982)", books: ["《不同的声音》", "《此性非一》"] },
             multicultural: { name: "贝尔·胡克斯", quote: "“女性主义是为了每一个人。”", work: "《激情的政治》(2000)", books: ["《激情的政治》", "《所有人的女性主义》"] },
             global: { name: "奥德雷·洛德", quote: "“主人的工具永远无法拆除主人的房子。”", work: "《姐妹局外人》(1984)", books: ["《姐妹局外人》", "《扎米》"] },
@@ -458,25 +469,34 @@
         const resultsDesc = {
             liberal: { title: "自由主义倾向", desc: "你信奉理性的力量。认为平等的支点在于消除法律与制度的阴影，让每个灵魂都能在无差别的赛道上自由奔跑。" },
             radical: { title: "激进主义倾向", desc: "你洞穿了名为‘父权’的深重结构。认为压迫并非不公，而是深植于肉体、繁衍与权力骨架中的寄生虫。" },
-            marxist: { title: "马克思主义倾向", desc: "你敏锐察觉到了经济基础的决定作用。认为女性的压迫是私有制与阶级社会最隐秘的利益分成。" },
-            socialist: { title: "社会主义倾向", desc: "你关注“家务”与“阶级”的联合绞杀。主张通过结构的彻底重组，打通公共领域与私人领域的壁垒。" },
-            postmodern: { title: "后现代主义倾向", desc: "你厌恶一切固化的标签。认为‘女性’是一场由语言导演的表演。你在差异中寻找自由，拒绝被任何定义定格。" },
-            existential: { title: "存在主义倾向", desc: "你极其珍视主体的绝对自由。拒绝接受任何预设的命运，认为每个人都必须通过自我的创造，确立生命的本质。" },
-            ecofem: { title: "生态女性主义倾向", desc: "你感知到了自然之死与女性之困的共振。主张建立一种温热的关怀伦理，反抗冷酷的、主宰一切的统治逻辑。" },
-            psycho: { title: "精神分析倾向", desc: "你深入潜意识的迷宫。认为不平等的根源在于幼年期塑造的人格镜像，致力于理解并重构那些被内化的枷锁。" },
-            multicultural: { title: "多文化/黑人倾向", desc: "你关注身份的交叉性。拒绝白人中产阶级的单一叙事，在多重边缘中寻找最真实、最带痛的生命经验。" },
-            global: { title: "全球女性主义倾向", desc: "你警惕西方的文化霸权。强调尊重本土经验，在复杂的国际权力网络中寻求真正的、具有差异性的全球团结。" },
+            marxist: { title: "马克思主义倾向", desc: "你敏锐察觉到了经济基础的决定作用。认为女性受压迫是私有制与阶级社会最隐秘的利益分成。" },
+            socialist: { title: "社会主义倾向", desc: "你关注“再生产劳动”被抹杀的价值。主张通过结构的彻底重组，打通公共领域与私人领域的壁垒。" },
+            postmodern: { title: "后现代主义倾向", desc: "你厌恶固化标签。认为‘女性’是一场由语言导演的表演。你在差异中寻找自由，拒绝被任何定义定格。" },
+            existential: { title: "存在主义倾向", desc: "你极其珍视主体的绝对自由。拒绝接受任何预设命运，认为每个人都必须通过自我的创造，确立本质。" },
+            ecofem: { title: "生态女性主义倾向", desc: "你感知到了自然之死与女性之困的共振。主张建立温热的关怀伦理，反抗冷酷主宰一切的统治逻辑。" },
+            psycho: { title: "精神分析倾向", desc: "你深入潜意识迷宫。认为不平等根源在于幼年期塑造的人格镜像，致力于重塑那些被内化的枷锁。" },
+            multicultural: { title: "多文化/交叉倾向", desc: "你关注身份的交叉性。拒绝单一叙事，在多重边缘中寻找最真实、最带痛的生命经验。" },
+            global: { title: "全球女性主义倾向", desc: "你警惕西方文化霸权。强调尊重本土经验，在复杂的国际权力网络中寻求真正的差异化团结。" },
             care: { title: "关怀/连接倾向", desc: "你重视人际连接的厚度。认为责任与情感并非弱点，而是重构社会秩序、治愈冰冷理性的核心能量。" }
         };
 
+        const encyclopediaData = [
+            { name: "自由主义", core: "法治契约、均等、理性主体", critique: "有时忽视了赛道本身的斜率" },
+            { name: "激进主义", core: "父权制爆破、身体主权、夺权", critique: "可能陷入本质主义" },
+            { name: "社会主义", core: "家务社会化、反剥削、重组", critique: "容易落入经济决定论" },
+            { name: "后现代", core: "解构二元、流动身份、话语权", critique: "消解了行动主体" },
+            { name: "存在主义", core: "拒绝他者化、超越性、自决", critique: "对系统性物质匮乏关注不足" }
+        ];
+
+        // 逻辑核心
         let chartInstanceLocal = null;
-        let scores = { liberal: 0, radical: 0, marxist: 0, socialist: 0, psycho: 0, care: 0, existential: 0, postmodern: 0, multicultural: 0, global: 0, ecofem: 0 };
+        let scores = { liberal: 0, radical: 0, marxist: 0, socialist: 0, psycho: 0, care: 0, existential: 0, postmodern: 0, multicultural: 0, global: 0, ecofem: 0, ref: 0, rad: 0, ind: 0, str: 0 };
         let currentQuestion = 0;
         let answersHistory = [];
         let selectedOptionIdx = null;
 
-        // Interaction functions
         window.closeModal = function() { document.getElementById('modal-overlay').style.display = 'none'; };
+        
         window.verifyAccess = function() {
             const input = document.getElementById('access-code').value.trim();
             if (input.toLowerCase() === 'cloudtree') {
@@ -488,11 +508,13 @@
                 setTimeout(() => err.style.opacity = '0', 2000);
             }
         };
+
         window.startQuiz = function() {
             document.getElementById('welcome-screen').classList.add('hidden');
             document.getElementById('quiz-screen').classList.remove('hidden');
             showQuestion();
         };
+
         window.restartQuiz = function() {
             Object.keys(scores).forEach(k => scores[k] = 0);
             currentQuestion = 0; answersHistory = []; selectedOptionIdx = null;
@@ -502,32 +524,13 @@
             document.getElementById('progress').style.width = '0%';
             window.scrollTo({ top: 0, behavior: 'smooth' });
         };
-        window.confirmOption = function() {
-            if (selectedOptionIdx === null) return;
-            const q = questions[currentQuestion];
-            const opt = q.options[selectedOptionIdx];
-            answersHistory.push({ selectedIdx: selectedOptionIdx, score: JSON.parse(JSON.stringify(opt.score)) });
-            for (let key in opt.score) scores[key] += opt.score[key];
-            if (currentQuestion < questions.length - 1) { currentQuestion++; showQuestion(); } else { showResult(); }
-        };
-        window.prevQuestion = function() {
-            if (currentQuestion > 0) {
-                const history = answersHistory.pop();
-                for (let key in history.score) scores[key] -= history.score[key];
-                currentQuestion--; showQuestion();
-            }
-        };
-        window.showDefinition = function(word) {
-            document.getElementById('modal-title').innerText = `思辨词条：${word}`;
-            document.getElementById('modal-content').innerText = dictionary[word];
-            document.getElementById('modal-overlay').style.display = 'flex';
-        };
 
         function showQuestion() {
             const q = questions[currentQuestion];
             selectedOptionIdx = null;
             document.getElementById('confirm-container').classList.add('hidden');
             document.getElementById('question-number').innerText = `STEP ${String(currentQuestion + 1).padStart(2, '0')} / 30`;
+            document.getElementById('question-context').innerText = `背景：${q.context}`;
             let text = q.text;
             Object.keys(dictionary).forEach(word => {
                 const regex = new RegExp(word, 'g');
@@ -558,15 +561,41 @@
             });
         }
 
+        window.confirmOption = function() {
+            if (selectedOptionIdx === null) return;
+            const q = questions[currentQuestion];
+            const opt = q.options[selectedOptionIdx];
+            answersHistory.push({ selectedIdx: selectedOptionIdx, score: JSON.parse(JSON.stringify(opt.score)) });
+            for (let key in opt.score) scores[key] += opt.score[key];
+            if (currentQuestion < questions.length - 1) { currentQuestion++; showQuestion(); } else { showResult(); }
+        };
+
+        window.prevQuestion = function() {
+            if (currentQuestion > 0) {
+                const history = answersHistory.pop();
+                for (let key in history.score) scores[key] -= history.score[key];
+                currentQuestion--; showQuestion();
+            }
+        };
+
+        window.showDefinition = function(word) {
+            document.getElementById('modal-title').innerText = `理论词条：${word}`;
+            document.getElementById('modal-content').innerText = dictionary[word];
+            document.getElementById('modal-overlay').style.display = 'flex';
+        };
+
         function showResult() {
             document.getElementById('quiz-screen').classList.add('hidden');
             document.getElementById('result-screen').classList.remove('hidden');
-            const ranked = Object.keys(scores).map(key => ({ key, score: scores[key] })).sort((a, b) => b.score - a.score);
+
+            const allSchools = ['liberal', 'radical', 'marxist', 'socialist', 'existential', 'postmodern', 'ecofem', 'psycho', 'multicultural', 'global', 'care'];
+            const ranked = allSchools.map(key => ({ key, score: scores[key] || 0 })).sort((a, b) => b.score - a.score);
             
             const primary = ranked[0].key;
             const secondary = ranked[1].key;
             const tertiary = ranked[2].key;
 
+            // 修复：确保核心倾向及流派信息显示
             const mentor = mentorData[primary] || mentorData.existential;
             document.getElementById('icon-name').innerText = mentor.name;
             document.getElementById('icon-quote').innerText = mentor.quote;
@@ -584,21 +613,33 @@
             document.getElementById('result-tertiary-title').innerText = r3.title;
             document.getElementById('result-tertiary-desc').innerText = r3.desc;
 
-            const bookContainer = document.getElementById('book-list');
-            bookContainer.innerHTML = mentor.books.map(b => `<div class="border-l-2 border-purple-400 pl-4 py-1 font-bold text-xs">· ${b}</div>`).join('');
+            document.getElementById('result-combined').innerText = `你的思辨倾向表现出对 ${r1.title} 的高度锚定。这表明你在复杂的议题丛林中，倾向于守住 ${primary === 'liberal' ? '理性个体' : '结构颠覆'} 的支点。这并非结论，而是一次对自我逻辑的清醒叩问。`;
 
+            const bookContainer = document.getElementById('book-list');
+            bookContainer.innerHTML = (mentor.books || []).map(b => `<div class="border-l-2 border-purple-400 pl-4 py-1 font-bold text-xs">· ${b}</div>`).join('');
+
+            const tableBody = document.getElementById('encyclopedia-body');
+            tableBody.innerHTML = encyclopediaData.map(d => `<tr class="border-b border-gray-50"><td class="py-4 pr-2 font-bold text-purple-950">${d.name}</td><td class="py-4 px-2 leading-snug">${d.core}</td><td class="py-4 px-2 leading-snug">${d.critique}</td></tr>`).join('');
+
+            // 光谱位置
+            const spec1Ratio = (scores.rad / (scores.rad + scores.ref + 1)) * 100;
+            const spec2Ratio = (scores.str / (scores.str + scores.ind + 1)) * 100;
+            document.getElementById('spec-1').style.left = `${Math.min(95, Math.max(5, spec1Ratio))}%`;
+            document.getElementById('spec-2').style.left = `${Math.min(95, Math.max(5, spec2Ratio))}%`;
+
+            // 雷达图绘制
             requestAnimationFrame(() => {
                 setTimeout(() => {
                     const canvas = document.getElementById('radarChart');
                     const ctx = canvas.getContext('2d');
                     if (chartInstanceLocal) chartInstanceLocal.destroy();
-                    canvas.width = 280; canvas.height = 280;
+                    canvas.width = 300; canvas.height = 300;
                     chartInstanceLocal = new Chart(ctx, {
                         type: 'radar',
                         data: {
-                            labels: ['自由', '激进', '马/社', '后现代', '存在', '生态', '精分'],
+                            labels: ['自由', '激进', '马/社', '后现代', '存在', '生态', '精分', '全球'],
                             datasets: [{
-                                data: [scores.liberal, scores.radical, (scores.marxist + scores.socialist)/1.5, scores.postmodern, scores.existential, scores.ecofem, scores.psycho],
+                                data: [scores.liberal, scores.radical, (scores.marxist + scores.socialist)/1.5, scores.postmodern, scores.existential, scores.ecofem, scores.psycho, scores.global],
                                 backgroundColor: 'rgba(107, 79, 187, 0.15)', borderColor: '#6B4FBB', borderWidth: 1.5, pointBackgroundColor: '#6B4FBB', pointRadius: 2
                             }]
                         },
