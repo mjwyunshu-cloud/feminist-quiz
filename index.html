@@ -98,8 +98,8 @@
         <!-- Welcome Screen -->
         <div id="welcome-screen" class="hidden max-w-md w-full text-center space-y-8 fade-in">
             <h1 class="text-4xl md:text-5xl serif leading-tight">性别、权力<br><span class="italic text-gray-400 text-3xl md:text-4xl font-light">与自我的重构</span></h1>
-            <p class="text-sm leading-relaxed text-gray-500 font-medium px-4 italic">基于《女性主义思潮导论》，通过 30 组逻辑博弈，揭示你思想的底层支点。</p>
-            <button onclick="window.startQuiz()" class="px-10 py-4 bg-black text-white text-xs tracking-widest uppercase active:scale-95 transition-transform">开始思辨</button>
+            <p class="text-sm leading-relaxed text-gray-500 font-medium px-4 italic">基于《女性主义思潮导论》，通过 30 组无重复深度博弈，揭示你思想的底层纹理。</p>
+            <button onclick="window.startQuiz()" class="px-10 py-4 bg-black text-white text-xs tracking-widest uppercase shadow-sm active:scale-95 transition-transform">开始思辨</button>
         </div>
 
         <!-- Quiz Screen -->
@@ -223,116 +223,198 @@
 
     <script>
         const dictionary = {
-            "父权制": "男性垄断权力与资源的结构体系，通过制度、话语和潜意识维持其稳固地位。",
+            "父权制": "男性垄断权力和资源的深层秩序，通过制度、文化和潜意识维持其稳固地位。",
             "再生产劳役": "指家庭内部的照料、育儿等被自然化、无偿化的劳动过程，是社会运行的隐形基石。",
             "物质基础": "马克思主义术语，指社会的经济结构和生产力，认为其决定了法律、性别观等上层建筑。",
             "权力话语": "指知识并非中立，而是被权力编织用来对人群进行分类、规训和排斥的工具。"
         };
 
         const questions = [
-            { text: "当你听到“平等”一词，你内心最初的冲动倾向于：", context: "考察不平等根源的直觉定位：是规则偏差，还是权力结构？", type: "multiple", options: [
-                { text: "捍卫契约：让法律面前没有任何性别可以拥有的局部特权", ref: "自由主义。主张在现有制度框架内修复规则。", score: { liberal: 5, ref: 5, ind: 5 } },
-                { text: "颠覆棋局：彻底重构权力生成的逻辑，而非在旧规则里乞讨", ref: "激进主义。认为压迫深植于权力骨架本身。", score: { radical: 5, rad: 5, str: 5 } },
-                { text: "消灭剥削：让底层的劳作者不再被资本与性别的双重逻辑收割", ref: "社会主义/马克思主义。关注阶级与性别的合谋剥削。", score: { socialist: 5, marxist: 3, str: 5, rad: 3 } },
-                { text: "释放差异：拒绝用任何人的尺度，来裁剪我们的生命纹理", ref: "后现代。差异本身即是力量，拒绝同质化的平等。", score: { postmodern: 5, rad: 4, ind: 2 } },
-                { text: "交织审视：关注不同种族与阶级身份缠绕下的不平等落差", ref: "交织性视角。反对单一受害者叙事。", score: { multicultural: 5, str: 5 } }
+            { text: "关于“私有制”与性别的关系，你的直觉洞察是：", context: "辨析物质基础：经济剥削是性压迫的母版，还是其后续工具？", type: "single", options: [
+                { text: "经济祸根：资本为了稳定继承权，必然要将女性禁锢在家庭中", ref: "马克思主义。消除私有制是性别解放的物理前提。", score: { marxist: 8, str: 8 } },
+                { text: "心理工具：父权制才是更原始的枷锁，私有制只是其后续扩张手段", ref: "激进主义。认为性别阶级先于并塑造了经济阶级。", score: { radical: 8, rad: 8 } },
+                { text: "制度偏差：关键在于确保女性拥有平等的掌控权与继承权", ref: "自由主义。主张在现有法律框架内纠偏。", score: { liberal: 5, ref: 8 } },
+                { text: "话语幻象：‘所有权’这一概念本身就是父权文明的话语建构", ref: "后现代。解构‘占有’这一宏大叙事的话语权。", score: { postmodern: 8, ind: 2 } }
             ]},
-            { text: "关于女性的“身体”，哪一道防线让你觉得绝对不容被任何人染指？", context: "涉及“身体主权”：它是法律下的权利，还是对抗霸权的最后阵地？", type: "multiple", options: [
-                { text: "身体主权：堕胎、生育及免于暴力的绝对自主决定权", ref: "激进主义。身体是权力的最后战场。", score: { radical: 5, rad: 8 } },
-                { text: "程序自由：打扮或不打扮，应是受法律保障且不被干涉的权利", ref: "自由主义。捍卫公私界限与个体权利。", score: { liberal: 5, ref: 8 } },
-                { text: "主体意志：不为外界凝视负责，只为自我存在的重量而活", ref: "存在主义。拒绝被定义为他者的对照。", score: { existential: 5, ind: 8 } },
-                { text: "解构审美：挑战由主流话语构建出来的“标准化美感模板”", ref: "后现代。所谓“美”不过是权力的定制产品。", score: { postmodern: 5, rad: 5 } },
-                { text: "自然连接：抵制科技逻辑对身体自然节律的过度殖民与异化", ref: "生态女性主义。保护有机身体的完整性。", score: { ecofem: 5, str: 5 } }
+            { text: "你认为女性展现出的“温柔、感性”等特质，其底层动力是：", context: "辨析：是诱导的、上演的，还是阉割后的残余？", type: "multiple", options: [
+                { text: "资源诱导：由于社会在生存机会分配上导致的理性倾向", ref: "自由主义。特质是理性个体在不公环境下的自适应选择。", score: { liberal: 8, ref: 5 } },
+                { text: "心理脚本：源于幼年期对性别角色的认同博弈与潜意识防御机制", ref: "精神分析。性别特质是在摇篮里就开始的防御性内化。", score: { psycho: 8, str: 3 } },
+                { text: "权力表演：这不过是弱者为了降低生存阻力而磨练出来的动作惯性", ref: "后现代表演理论。认为没有先验本质，只有不断重复。", score: { postmodern: 8, rad: 5 } },
+                { text: "文明智慧：这些特质里包含着被理性文明遗弃的‘关怀伦理内核’", ref: "关怀女性主义。主张将关怀价值社会化并升维。", score: { care: 8, ind: 2 } },
+                { text: "暴力裁剪：父权制为了稳定，对多样化人性进行的针对性阉割", ref: "激进主义。特质是被强行‘剪掉’非统治性格后的残余。", score: { radical: 8, rad: 8 } }
             ]},
-            { text: "关于“私有制”与性别的关系，你的直觉洞察是：", context: "辨析：经济剥削是压迫的母版，还是它的执行工具？", type: "multiple", options: [
-                { text: "经济祸根：资本为了稳定继承，必然要将女性禁锢在无薪家庭中", ref: "马克思主义。关注资本如何通过‘家庭’这一无薪工厂获益。", score: { marxist: 8, str: 8 } },
-                { text: "心理工具：父权制才是更原始的枷锁，私有制只是其延伸手段", ref: "激进主义。认为性别阶级先于并塑造了经济阶级。", score: { radical: 8, rad: 8 } },
-                { text: "制度缺陷：关键在于赋予女性平等的财产所有权与继承权", ref: "自由主义。主张在法治框架内纠偏。", score: { liberal: 5, ref: 8 } },
-                { text: "殖民残留：私有制的推行往往伴随着对本土共生文化的破坏与掠夺", ref: "全球/生态视角。关注宏观权力扩张的历史性。" , score: { global: 5, ecofem: 5 } },
-                { text: "话语幻象：它是建立在“绝对占有”这一自大叙事上的逻辑假象", ref: "后现代。解构关于“所有权”的话语神话。", score: { postmodern: 8, ind: 2 } }
+            { text: "在评价“家务劳动”时，你认为谁是逻辑上的第一获益者？", context: "辨析：剥削者是抽象的资本系统，还是具体的男性群体？", type: "multiple", options: [
+                { text: "资本系统：通过转嫁劳动力再生产成本，榨取女性的剩余价值", ref: "马克思主义/社会主义。关注‘资本’如何套利。", score: { marxist: 8, socialist: 5, str: 8 } },
+                { text: "具体的男性阶层：作为一个统治阶级，直接享用了女性的劳务", ref: "激进主义。家务是具体的阶级统治，而非单纯经济问题。", score: { radical: 8, rad: 8 } },
+                { text: "关系纽带：虽然分配不均，但它是维持关怀连接的基础工作", ref: "关怀女性主义。主张赋予照料劳动以伦理地位。", score: { care: 5, ind: 4 } },
+                { text: "现行秩序：这种分工维持了现行制度的低成本运作与稳定", ref: "保守/自由主义。强调维持现有契约的稳定性。", score: { liberal: 3, ref: 5 } }
             ]},
-            { text: "在评价“家务劳动”时，你认为谁是逻辑上的第一获益者？", context: "考察剥解逻辑的细分：区分资本利得、男权红利与情感羁绊。", type: "multiple", options: [
-                { text: "抽象的资本系统：通过转嫁劳动力再生产成本，榨取女性剩余价值", ref: "马克思主义。关注‘资本’如何套利。", score: { marxist: 8, str: 8 } },
-                { text: "具体的男性阶层：作为一个统治阶级，直接享用了个体的劳务服务", ref: "激进主义。家务是具体的阶级统治形式。", score: { radical: 8, rad: 8 } },
-                { text: "共同的生活纽带：虽然分配不均，但它是维持关怀关系的基础劳作", ref: "关怀派。主张赋予‘照料’以伦理地位。", score: { care: 8, ind: 4 } },
-                { text: "制度的低成本运作：这种分工维持了现行秩序的所谓情感缓冲与稳定", ref: "改良/保守。维持契约的最低成本。", score: { liberal: 3, ref: 5 } },
-                { text: "话语的陷阱：‘家庭主妇’这一角色的发明，是为了规训女性的存在", ref: "后现代。解构身份标签的行政功能。", score: { postmodern: 5 } }
+            { text: "如果你将对自然的无度榨取，与对女性压迫联系起来看：", context: "辨析统治范式的同源性。你是否感知到大地的受难与女性的受困在逻辑上重合？", type: "single", options: [
+                { text: "统治同源：都源于那种“征服并榨取他者”的范式与主宰欲望", ref: "生态女性主义。认为对大地的掠夺与对女性的禁锢同源。", score: { ecofem: 8, str: 5, rad: 8 } },
+                { text: "机制同构：追逐剩余价值的贪婪欲望在跨物种延展，是资本扩张的残余", ref: "马克思主义。剥削没有边界，直到资源枯竭。", score: { marxist: 8, str: 8 } },
+                { text: "独立议题：应分别依靠科学规律与法律完善，而非在逻辑上强行统一", ref: "自由主义。主张用专业工具修复具体规则。", score: { liberal: 5, ref: 8 } },
+                { text: "话语标签：‘自然’与‘女性’是被权力为了管理而编排的叙事", ref: "后现代。解构两者被强行‘本质化’的话语阴谋。", score: { postmodern: 8, ind: 1 } }
             ]},
-            { text: "你认为女性展现出的“温柔、感性”等特质，其底层动力源是：", context: "辨析：是诱导的、上演的、被剪裁的，还是被遗忘的智慧？", type: "multiple", options: [
-                { text: "资源诱导：由于生存机会分配差异导致的、对优胜劣汰的理性自适应", ref: "自由主义。特质是环境压力下的个体主选。", score: { liberal: 8, ref: 5 } },
-                { text: "心理脚本：源于幼年期对性别角色的认同博弈与潜意识防御", ref: "精神分析。探讨内化枷锁的心理发生学。", score: { psycho: 8, str: 2 } },
-                { text: "权力表演：这不过是弱者在等级制中为了降低生存阻力的惯性动作", ref: "后现代表演论。认为没有先验本质，只有不断重复。", score: { postmodern: 8, rad: 5 } },
-                { text: "文明智慧：这些特质里包含着被现代文明忽视的“关怀伦理内核”", ref: "关怀派。主张将这些特质社会化与升维。", score: { care: 8, ind: 2 } },
-                { text: "暴力裁剪：父权制为了系统稳定，对多样化人性进行的针对性阉割", ref: "激进派。特质是被强行‘剪掉’非统治性格后的残余。", score: { radical: 8, rad: 8 } }
+            { text: "当面临针对女性的“暴力威胁”时，你认为最优先的对抗路径是：", context: "辨析：法治修复、结构性颠覆，还是心理觉醒？", type: "multiple", options: [
+                { text: "法治修复：制定并严厉执行保护法，彻底消除执法中的性别偏见", ref: "自由主义。相信程序正义和制度完善是保障安全的钢印。", score: { liberal: 8, ref: 8 } },
+                { text: "结构颠覆：瓦解鼓励‘男强女弱’的二元话语，炸掉暴力的文化温床", ref: "后现代/激进。主张从语言和权力根部消除暴力的合法性。", score: { radical: 5, postmodern: 8, rad: 8 } },
+                { text: "阶级重塑：由于暴力根植于经济依附，唯有消除贫困与依赖才能根本止损", ref: "马克思/社会主义。强调暴力背后的经济依附性。", score: { marxist: 8, str: 8 } },
+                { text: "防御共生：建立互助社区，通过关系而非规则来提供即时庇护", ref: "关怀/多文化。强调连接感与非体制防御网络的建立。", score: { care: 8, multicultural: 5 } }
             ]},
-            { text: "面对文明对土地资源的掠夺式开发，从你的底层逻辑来看：", context: "考察统治范式的同源性。你是否感知到对自然的受难与对女性的禁锢同源？", type: "multiple", options: [
-                { text: "统治范式同源：它与压迫女性基于相同“征服他者”的主宰逻辑", ref: "生态女性主义。认为对大地的掠夺与对女性的控制共享同一逻辑。", score: { ecofem: 8, rad: 8 } },
-                { text: "资本本性：追逐剩余价值的贪婪欲望在跨物种延展，是阶级病的晚期", ref: "马克思主义。剥削没有边界，直到系统崩塌。", score: { marxist: 8, str: 8 } },
-                { text: "管理规则失效：关键在于分配是否程序正义，而非单纯停止进步", ref: "自由主义。相信理性规则可以优化发展的副作用。", score: { liberal: 5, ref: 8 } },
-                { text: "知识霸权：这反映了那种“将生命客体化”的现代性单一知识图景", ref: "后现代/后殖民。解构中心化的理性叙事。", score: { postmodern: 5, global: 5 } },
-                { text: "生存的断裂：人类正在切断与赖以生存的有机网络之间的情感连接", ref: "生态/关怀。呼吁回归连接与责任。", score: { ecofem: 5, care: 5 } }
+            { text: "在职场晋升受阻时，你内心的第一反应倾向于：", context: "辨析：是个体实力的误判，还是结构的排异？", type: "single", options: [
+                { text: "程序偏差：这是评价体系偏见导致的、针对我个人潜能的资源漏损", ref: "自由主义。相信理性规则可以修复，追求公平赛道。", score: { liberal: 8, ref: 8 } },
+                { text: "结构排异：这是作为非中心主体的女性身份，在男性权力场中的必然遭遇", ref: "激进派。看透结构对身份的先天排斥。", score: { radical: 8, rad: 8 } },
+                { text: "资本套利：资本默认女性的退路是家庭，因而优先舍弃了我的竞争位", ref: "社会主义。关注资本如何借由家庭退路压低女性议价权。", score: { socialist: 8, str: 8 } },
+                { text: "认同伪装：我是否为了在该系统中生存，而过度模仿并阉割了自己的主体性？", ref: "存在主义/精分。关注主体的他者化困境。", score: { existential: 8, ind: 8 } }
             ]},
-            { text: "关于西方理论对全球女性境遇的阐释，你最本能的审视角度是：", context: "考察权力的地缘格局：是权利的扩张，还是话语的霸权？", type: "multiple", options: [
-                { text: "警惕霸权：它往往用中产白人的经验强行代替全世界，遮蔽了交叉性", ref: "多文化/交织性。主张打破单一度量衡。", score: { multicultural: 8, str: 8 } },
-                { text: "本土优先：真正的解放应生长在具体的生存土壤中，而非强行移植", ref: "全球/后殖民。关注生存纹理的差异。", score: { global: 8, str: 5 } },
-                { text: "确立坐标：它提供了人权、自由等基本文明基准，具有普世有效性", ref: "自由主义。相信理性权利框架的利器属性。", score: { liberal: 5, ref: 8 } },
-                { text: "话语解构：看清‘文明/落后’这套叙事如何被权力编织以实现脱殖", ref: "后现代。解构二元对立的文明等级论。", score: { postmodern: 8, rad: 5 } },
-                { text: "共同受难：尽管形式不同，但所有女性都身处父权统治的同一张网中", ref: "早期激进/全球。寻找超越差异的姐妹共同体。", score: { radical: 5, global: 3 } }
+            { text: "关于“母职”，哪一种解析最能触碰到你内心的真相？", context: "辨析：是神圣的爱，还是无薪的再生产劳动？", type: "multiple", options: [
+                { text: "温情绑架：母爱被高度神圣化，本质上是为了诱导女性参与无偿榨取", ref: "激进主义。警惕‘赞美’作为一种廉价的统治手段。", score: { radical: 8, rad: 8 } },
+                { text: "生存伦理：这种照料经验应被尊重，并取代征服逻辑作为社会基础", ref: "关怀派。主张赋予‘母性伦理’公共属性。", score: { care: 8, ind: 4 } },
+                { text: "结构缺失：育儿应是共同体责任，现在的重压是制度转嫁了成本", ref: "社会主义。主张照料劳动的彻底社会化重组。", score: { socialist: 8, str: 8 } },
+                { text: "交叉遮蔽：不同阶级与种族的母亲遭遇的压迫完全不同，不能概括", ref: "多文化/交织性。关注身份重叠带来的差异痛感。", score: { multicultural: 8, intersectional: 8 } },
+                { text: "主体承诺：承担与否，应是一个自由主体在清晰觉察代价后的自定", ref: "存在主义。不承认预设天职，强调自主承诺。", score: { existential: 8, ind: 8 } }
             ]},
-            { text: "你认为现代女性遭遇的“容貌焦虑”，其根源最可能定位于：", context: "辨析凝视作为控制手段的本质：是审美、资本、还是权力的内化？", type: "multiple", options: [
+            { text: "你如何看待现代女性遭遇的“容貌焦虑”？", context: "辨析：是审美的内化，还是资本创造的匮乏？", type: "multiple", options: [
                 { text: "凝视内化：我们将自己异化为满足强者的客体，这是一种心理阉割", ref: "激进/精分。认为凝视是最高级的心理控制墙。", score: { radical: 5, psycho: 8, rad: 8 } },
                 { text: "资本收割：美妆工业为了制造需求而在人为制造匮乏感并以此牟利", ref: "马克思主义。焦虑是商品经济扩张的润滑剂。", score: { marxist: 8, str: 8 } },
-                { text: "竞争偏差：社会评价机制在资源分配上对‘美’的不当奖赏扭曲了平等", ref: "自由主义。认为这是一种典型的非理性偏差，应受法治约束。", score: { liberal: 5, ref: 8 } },
-                { text: "话语标准化：我们被标准化的图像叙事修剪了，解构‘标准’才是自救", ref: "后现代。解构屏幕背后那只名为‘标准化’的話语之手。", score: { postmodern: 8, rad: 5 } },
-                { text: "身体排他性：这种焦虑正在边缘化那些因阶级或残障而无法达标的女性", ref: "交织性。关注审美极权对边缘群体的暴力剔除。", score: { multicultural: 8 } }
+                { text: "偏差：评价机制对‘美’的不当奖赏，扭曲了平等的竞争权", ref: "自由主义。认为这是一种典型的非理性偏差，应受法制约束。", score: { liberal: 5, ref: 8 } },
+                { text: "话语标准化：我们被标准化的图像叙事修剪了，解构‘标准’才是自救", ref: "后现代。解构屏幕背后那只名为‘标准化’的话语之手。", score: { postmodern: 8, rad: 5 } }
             ]},
-            { text: "当你听到“母系社会”的传说，你的态度倾向于：", context: "辨析：是历史的真实，还是当下的精神避难所？", type: "multiple", options: [
-                { text: "原型向往：那是关怀战胜征服的黄金时代，证明了和平秩序的可行性", ref: "生态/关怀派。寻找被历史遮蔽的文明母版。", score: { ecofem: 5, care: 5 } },
-                { text: "理论参照：它证明了父权并非天然，而是可以被颠覆的历史性构建", ref: "激进主义。利用历史追溯剥夺父权合法性。", score: { radical: 8, rad: 5 } },
-                { text: "考古话语：这些叙事本身也在利用过去编排当下的欲望，应受质疑", ref: "后现代。警惕对‘原始母性’神圣化话语带来的新桎梏。", score: { postmodern: 8, ind: 2 } },
-                { text: "物质演化：变革在于当下劳动关系的重塑，而非对生产力阶段的怀旧", ref: "马克思主义。唯物主义地看待阶段演化。", score: { marxist: 8, str: 8 } },
-                { text: "跨文化视野：这不仅是过去，更是某些文化中至今存在的多元生活可能", ref: "全球/多文化视角。尊重生存样态的多样性。", score: { global: 5, multicultural: 5 } }
-            ]},
-            { text: "你认为实现真正的“解放”，其终点图像应该是：", context: "考察对“最终愿景”的哲学定格。", type: "multiple", options: [
+            { text: "你认为实现真正的解放，终点图像应该是：", context: "辨析：是性别的消逝，还是差异的狂欢？", type: "single", options: [
                 { text: "性别盲视：性别不再成为一个有意义的标签，权利在法治中彻底均等", ref: "自由主义终点。性别彻底退回为生物背景。", score: { liberal: 8, ref: 8 } },
-                { text: "差异共存：每一种流动的身份都被庆祝，权力中心在多元中瓦解", ref: "后现代差异共和。拥抱无限边缘的盛放。", score: { postmodern: 8, rad: 8 } },
-                { text: "秩序重塑：基于生命关怀与和谐共生建立的新秩序，取代了征服逻辑", ref: "生态/关怀派。用温润的秩序取代压迫文明。", score: { care: 8, ecofem: 8 } },
-                { text: "剥削终结：全人类共同掌握资料，消灭了基于身份产生的阶级分工", ref: "马克思主义终局。再无受难者的物质宁静。", score: { marxist: 8, str: 8 } },
-                { text: "主体归位：不再存在所谓的‘第二性’，每个人都作为唯一的主体而存在", ref: "存在主义。确立主体的绝对超越性。", score: { existential: 8, ind: 8 } }
+                { text: "差异共存：每一种流动的身份都被庆祝，权力中心在多元中瓦解", ref: "后现代。拒绝任何中心，拥抱无限边缘。", score: { postmodern: 8, rad: 8 } },
+                { text: "秩序重塑：基于生命关怀建立的新秩序，取代了冰冷的效率逻辑", ref: "生态/关怀。用温润的秩序取代压迫文明。", score: { care: 8, ecofem: 8 } },
+                { text: "剥削终结：全人类共同掌握资料，彻底消灭阶级分工压迫", ref: "马克思主义。再无压迫者与受难者的物质宁静。", score: { marxist: 8, str: 8 } }
+            ]},
+            { text: "关于西方理论对全球女性境遇的阐释，存在的风险是：", context: "辨析地缘格局：是权利的扩张，还是话语的霸权？", type: "multiple", options: [
+                { text: "霸权：它往往用中产白人的经验强行代替全世界，遮蔽了交叉压迫", ref: "多文化/交织性。看见多重锁链的缠绕。", score: { multicultural: 8, str: 8 } },
+                { text: "移植：真正的解放应生长在具体的本土土壤中，而非从外部移植话语", ref: "全球/后殖民。关注具体的生存纹理与地缘特殊性。", score: { global: 8, str: 5 } },
+                { text: "坐标：它提供了人权、自由等基本准则，是共有且普世的权利利器", ref: "自由主义。相信理性权利框架的有效性。", score: { liberal: 5, ref: 8 } }
+            ]},
+            { text: "在公共讨论中，哪种现象最让你感到女性主义的风险？", context: "辨析：是丧失革命性，还是陷入新的极权？", type: "multiple", options: [
+                { text: "丧失锋芒：由于过度追求理性和程序改良，导致对压迫结构的默许", ref: "激进/社会主义。警惕被收编后的平庸。", score: { radical: 5, socialist: 5, rad: 8 } },
+                { text: "陷入教条：再次陷入非黑即白的立场审查，制造了新的精神牢笼", ref: "后现代。警惕话语中心化产生的专制。", score: { postmodern: 8, rad: 8 } },
+                { text: "脱离底层：精英在象牙塔里的理论清谈，漠视了底层具体的呼救", ref: "马克思/交织性。主张回到底层，回归肉身。", score: { marxist: 5, intersectional: 8, str: 8 } }
+            ]},
+            { text: "你如何看待“跨性别权益”对传统女性空间的重构？", context: "辨析：生理基座重要，还是主体的自决权重要？", type: "single", options: [
+                { text: "自决：每个人都有定义自我的绝对自由，灵魂主宰权应归还个体", ref: "自由主义/存在主义。个体权利大于群体标签。", score: { liberal: 5, existential: 8, ind: 8 } },
+                { text: "解构：‘女性’本身就是一个该被扔掉的标签，模糊它有助于瓦解权力", ref: "后现代。解构核心范畴，主张流动的身份表达。", score: { postmodern: 8, rad: 8 } },
+                { text: "联合：我们都是边缘的他者，应在复杂的交叉压迫中并肩作战", ref: "交织性。边缘者的联合是唯一有效的威胁。", score: { intersectional: 8, str: 8 } },
+                { text: "守护：生理经验（如生育）是抗争的物理支点，必须保卫边界", ref: "激进派局部。强调生理独特性作为不可置换的阵地。", score: { radical: 3, rad: 3 } }
+            ]},
+            { text: "关于“全职主妇”，你认为真正的自由抉择建立在：", context: "辨析：探讨自主性的必要物质与心理前提。", type: "multiple", options: [
+                { text: "财产法权：拥有受法律绝对保护的、不可分割的共有权", ref: "自由主义。通过法权将私域劳动契约化。", score: { liberal: 8, ref: 8 } },
+                { text: "经济支付：社会承认家务价值并给予经济补偿，打碎无偿剥削", ref: "马克思/社会主义。剥削必须被支付。", score: { marxist: 8, str: 8 } },
+                { text: "心理清零：个人已完全清除了父权角色的潜意识暗示与奉献程序", ref: "精分/激进。对潜意识枷锁的深度清理。", score: { psycho: 8, rad: 8 } },
+                { text: "主体承诺：主体在充分认清代价后愿意承担的、自定的主观承诺", ref: "存在主义。评价意志而非评价身份标签。", score: { existential: 8, ind: 8 } }
+            ]},
+            { text: "当你听到“母系社会”的传说，你的态度倾向于：", context: "辨析：是历史的真实，还是当下的精神避难所？", type: "single", options: [
+                { text: "原型：那是关怀战胜征服的黄金时代，证明了和平秩序的可行性", ref: "生态/关怀派。寻找被历史遮蔽的文明母版。", score: { ecofem: 8, care: 5 } },
+                { text: "工具：它证明了父权并非天然，而是可以被颠覆的历史性构建", ref: "激进主义。利用历史追溯剥夺父权合法性。", score: { radical: 8, rad: 5 } },
+                { text: "话语：这些叙事本身也在利用过去编排欲望，应受解构", ref: "后现代。警惕对‘原始母性’神圣化产生的新桎梏。", score: { postmodern: 8, ind: 2 } },
+                { text: "物质：变革在于当下劳动关系的重构，而非对原始生产力阶段的怀旧", ref: "马克思主义。唯物主义地看待阶段演化。", score: { marxist: 8, str: 8 } }
+            ]},
+            { text: "关于“计薪家务”提议（Wages for Housework）：", context: "辨析：是摧毁剥削的武器，还是加固私域牢笼的陷阱？", type: "single", options: [
+                { text: "解放：它通过明码标价，将无形的剥削具象化，摧毁了资本的无偿占有", ref: "马克思/社会主义。剥削必须被看见，劳动必须被支付。", score: { marxist: 8, socialist: 8, str: 8 } },
+                { text: "陷阱：这会将女性更深地禁锢在家庭里，应追求全面走出私域", ref: "自由主义/激进。主张彻底切断家庭捆绑，而非领取劳役工资。", score: { liberal: 5, radical: 5, ref: 5 } },
+                { text: "契约进步：这是法理化的进步，将家庭内部贡献通过法权予以确认", ref: "自由主义。通过法权将非市场化贡献合法化。", score: { liberal: 8, ref: 8 } },
+                { text: "解构：应反思“家”与“工场”的话语划分，质疑价值的单一定义权", ref: "后现代。打破空间与价值的话语垄断。", score: { postmodern: 8, rad: 3 } }
+            ]},
+            { text: "关于亲密关系中的暴力，你的深层逻辑判定是：", context: "辨析：是病态个案，还是性别阶级统治的基座？", type: "multiple", options: [
+                { text: "结构延伸：它是父权阶级统治在私人生活中的微缩执行，是权力展示", ref: "激进主义。认为暴力是性别统治的最基本手段。", score: { radical: 8, rad: 8, str: 5 } },
+                { text: "心理重复：它是幼年期受挫认同在成年后的病态折射与破坏性代偿", ref: "精神分析。探寻暴力行为背后的心理成因。", score: { psycho: 8, str: 2 } },
+                { text: "契约失效：它是法治威慑缺失导致的、对个体权利的非理性侵犯", ref: "自由主义。主张通过法治刚性解决，保护契约主体。", score: { liberal: 5, ref: 8 } },
+                { text: "文化教义：它是‘支配’逻辑在文化中的内化，需要进行全方位的文化脱殖", ref: "生态/后现代。质疑整个文明的征服范式。", score: { ecofem: 5, postmodern: 3 } }
+            ]},
+            { text: "在评价“女哲学家”被历史遗忘时，你最难以忍受的是：", context: "辨析：排斥来自话语权，还是来自生产资料的匮乏？", type: "multiple", options: [
+                { text: "话语排斥：理性被定义为“男性领地”，将女性智慧归类为琐碎与次等", ref: "自由主义。捍卫智力主权，追求在真理定义权的门票。", score: { liberal: 8, ref: 5 } },
+                { text: "物质匮乏：女性长期被剥夺了生产资料、独立书桌与受教育的机会", ref: "马克思主义。物质基础决定了谁拥有思考和发声的机会。", score: { marxist: 8, str: 8 } },
+                { text: "视角缺失：连接与关怀的智慧，在崇尚战争与竞争的叙事里被贬低了", ref: "生态/关怀。由于核心视角缺失导致了人类文明的单向偏执。", score: { ecofem: 5, care: 8 } },
+                { text: "叙事修剪：史学书写者通过权力的拼贴，将她们作为非主体内容过滤了", ref: "后现代。解构历史书写本身的权力运作。", score: { postmodern: 8, rad: 5 } }
+            ]},
+            { text: "如果选择一种“核心伦理”作为社会重构的基石，你会选：", context: "辨析：文明底层架构的替代方案。", type: "single", options: [
+                { text: "正义与权利：每个人在法律面前的绝对对等与契约执行", ref: "自由主义。正义即公平，程序高于一切。", score: { liberal: 8, ref: 8 } },
+                { text: "关怀与责任：建立温热且互惠的关系连接，而非冰冷的竞争", ref: "关怀伦理。认为关系比规则更重要，人类应互相照料。", score: { care: 8, ind: 4 } },
+                { text: "主体自决：每个人对生命本质的自主定义与自我超越", ref: "存在主义。生命即创造，主体性是最终的自由边界。", score: { existential: 8, ind: 8 } },
+                { text: "共生与平衡：人类与万物自然在生态网络中的和谐共存", ref: "生态主义。打破人类中心主义的傲慢范式。", score: { ecofem: 8, str: 5 } }
+            ]},
+            { text: "关于“色情工业”，你的立场支点倾向于：", context: "辨析：主张保护表达自由，还是消灭人性的客体化？", type: "multiple", options: [
+                { text: "抵制物化：它将女性削减为局部性征，是父权对人格的系统性谋杀", ref: "激进女性主义。认为这本质上是伤害而非自由。", score: { radical: 8, rad: 8 } },
+                { text: "契约自由：只要是在成年人自愿基础上，就是一种受法律保护的劳动", ref: "自由主义/自由意志。强调选择的程序正义。", score: { liberal: 8, ref: 8 } },
+                { text: "剥削审视：本质是由于阶级贫困导致的身体资源在资本逻辑下的变现", ref: "马克思/社会主义。关注底层女性由于经济依附而进行的劳务化。", score: { marxist: 8, socialist: 8, str: 8 } },
+                { text: "欲望解构：应反思谁编排了这些视角，解构‘快感’背后的权力脚本", ref: "后现代。探讨欲望是如何被话语反复排演的。", score: { postmodern: 8, rad: 3 } }
+            ]},
+            { text: "你如何看待职场中的“女强人”叙事？", context: "辨析：是成功的范本，还是同质化的权力陷阱？", type: "multiple", options: [
+                { text: "榜样力量：她们通过卓越理性打破了偏见，是改良规则赛道的先锋", ref: "自由主义。相信通过个体突围可以拉动体制纠偏。", score: { liberal: 8, ref: 8 } },
+                { text: "规则收编：她们在被迫模仿男性统治者的动作，以换取在该系统中的生存", ref: "激进主义/精分。警惕主体为了权力而进行的心理阉割。", score: { radical: 8, psycho: 5, rad: 8 } },
+                { text: "幸存者偏差：这种叙事遮蔽了阶级特权，暗示底层的受困只是因为不努力", ref: "社会主义/交织性。警惕精英主义对系统性压迫结构的掩护。", score: { socialist: 8, intersectional: 8, str: 8 } },
+                { text: "话语工具：这是权利用来证明‘系统已经公平’的一种粉饰性的叙事标签", ref: "后现代。解构成功学话语背后的规训逻辑。", score: { postmodern: 5 } }
+            ]},
+            { text: "关于“婚姻”，你内心深处最冷峻的判定倾向于：", context: "辨析：是互惠契约，还是性别阶级的领地合并？", type: "single", options: [
+                { text: "合法的资产博弈：法治应介入以平衡内部的生产资料与劳务分配", ref: "自由主义。主张将婚姻契约化，消除法律上的依附阴影。", score: { liberal: 8, ref: 8 } },
+                { text: "性别阶级的契约：是男性获取廉价照料与血缘确认的最基本统治单元", ref: "激进主义。认为婚姻是父权统治的根基。", score: { radical: 8, rad: 8 } },
+                { text: "劳动力后勤补给：维持了劳动阶级在私域中低成本、无偿的再生产循环", ref: "马克思主义。关注资本如何通过婚姻降低运营成本。", score: { marxist: 8, str: 8 } },
+                { text: "关系的表演：一种被传统话语高度神圣化、旨在制造安稳假象的剧场仪式", ref: "后现代。解构家庭神话，主张关系的各种流动形态。", score: { postmodern: 8 } }
+            ]},
+            { text: "你认为“女性写作”最真实的力量源泉应该是：", context: "辨析：是理性的证明，还是对身体话语权的夺取？", type: "multiple", options: [
+                { text: "理性的证明：向世界展示女性同样可以驾驭严密的逻辑与宏大叙事", ref: "自由主义。追求在主流评价体系中的智力对等。", score: { liberal: 8, ref: 5 } },
+                { text: "身体的夺权：用真实的血肉痛感，去冲撞冰冷且具备霸权的父权语言", ref: "激进主义。主张‘书写身体’以夺回第一手的话语权。", score: { radical: 8, rad: 8 } },
+                { text: "碎裂的拼贴：拒绝单一逻辑，拥抱多变、模糊且流动的非线性异质表达", ref: "后现代。通过文风的解构来实现认知的自由。", score: { postmodern: 8, rad: 5 } },
+                { text: "边缘的发声：将光投向那些被多重交叉压迫掩埋的底层、少数群体经验", ref: "交织性/全球。关注沉默者的可见性。", score: { intersectional: 8, global: 5 } }
+            ]},
+            { text: "当科技能模拟人类情书，并能准确击中人类泪点时：", context: "辨析：灵魂产生于理式，还是具体的生存脆弱性？", type: "single", options: [
+                { text: "它没有灵魂：它缺乏生殖的痛感与必死的恐惧，文字中没有血肉成本", ref: "激进/具身认知。主体性源于身体的局限性与有限性。", score: { radical: 8, rad: 8 } },
+                { text: "它是理性的：如果逻辑完美，它就拥有了理性的主权，主体不应分生物", ref: "自由主义理式。个体主权在于理性的高度，而非肉身形式。", score: { liberal: 8, ind: 8 } },
+                { text: "它拆穿了神话：证明所谓的‘人类深情’也不过是一套编排好的修辞模板", ref: "后现代。解构情感的话语神话，直击建构主义本质。", score: { postmodern: 8, ind: 2 } },
+                { text: "它是剥削工具：科技模拟情感是为了更好地将情绪劳动商品化，服务利润", ref: "马克思主义。关注资本对人性深层剩余价值的榨取。", score: { marxist: 5, str: 8 } }
+            ]},
+            { text: "面对“单身税”或“生育补贴”等人口调控政策，你的反应倾向于：", context: "辨析：对生命资料主权与国家规训的捍卫。", type: "multiple", options: [
+                { text: "极度冒犯：这是权力将子宫视为社会资产，是对身体主权的野蛮侵蚀", ref: "激进主义。坚守身体与意志的绝对公私界限。", score: { radical: 8, rad: 8 } },
+                { text: "成本博弈：系统正在核算劳动力补给的成本分配，是阶级层面的套利算计", ref: "马克思主义。看穿政策背后的经济剥削本质。", score: { marxist: 8, str: 8 } },
+                { text: "规训陷阱：强行把‘生育’与‘公民价值’绑定，制造了新的微观权力枷锁", ref: "后现代。解构人口政策背后的规训逻辑。", score: { postmodern: 8, rad: 5 } },
+                { text: "权利漏损：应警惕补贴变成‘购买’，损害了底层女性真实的法权选择权", ref: "自由主义。关注契约的公平性与真实意愿的损耗。", score: { liberal: 5, ref: 8 } }
+            ]},
+            { text: "关于“关怀伦理”，你认为它在社会重组中的位置应该是：", context: "辨析：是私人领域的微小美德，还是重构公共正义的母版？", type: "single", options: [
+                { text: "最高伦理：它应取代竞争逻辑，作为重构社会分配与正义的最高价值", ref: "关怀女性主义核心。主张伦理的公共化与感性升维。", score: { care: 8, ind: 4 } },
+                { text: "辅助逻辑：它是法治公正的必要补充，用于平衡契约逻辑中的冰冷死角", ref: "改良派视角。在权利框架内引入情感关照。", score: { liberal: 5, ref: 8 } },
+                { text: "本质陷阱：应警惕这种提倡，因为它极易让女性再次被锁定在照料者的角色里", ref: "激进/自由派警惕。防止差异被用来作为劳务固化的借口。", score: { radical: 5, liberal: 3, rad: 5 } }
+            ]},
+            { text: "面对运动内部的分歧，你认为最令你担忧的危机是：", context: "辨析：是追求统一性而导致的专制，还是追求差异而导致的无力？", type: "multiple", options: [
+                { text: "共识断裂：由于缺乏基本的法治共识，导致讨论流于情绪化而无法转化为权利", ref: "自由主义。呼吁建立法理契约，确保诉求能落地为钢印。", score: { liberal: 5, ref: 8 } },
+                { text: "身份碎片：过度的差异解构削解了共同的政治身份，导致集体抗争力的瘫痪", ref: "马克思/激进派对后现代的质询。主张守住身份底座。", score: { marxist: 5, radical: 5, str: 8 } },
+                { text: "立场审查：陷入非黑即白的审查逻辑，建立了一套新的、基于话语的权力极权", ref: "后现代对权力的敏锐。警惕任何形式的中心化霸权。", score: { postmodern: 8, rad: 8 } }
+            ]},
+            { text: "在评价“科学研究”的所谓客观性时，你的直觉判定是：", context: "辨析：真理是中立的，还是权力叙事的投影？", type: "multiple", options: [
+                { text: "范式批判：科学长期排斥了感性逻辑，其核心范式本质上是男性化的统治视角", ref: "生态/关怀。质疑所谓‘客观性’背后的征服属性。", score: { ecofem: 8, care: 5, str: 5 } },
+                { text: "程序纠偏：科学界并无原罪，只需通过消除机制中根深蒂固的男性隐形偏见", ref: "自由主义。通过制度修补实现真正的智力平权。", score: { liberal: 8, ref: 8 } },
+                { text: "真理神话：所谓的客观真理本质上是一套为了进行人群分类与规训的话语系统", ref: "后现代。解构真理，主张认知的多元性与流动性。", score: { postmodern: 8, rad: 5 } }
+            ]},
+            { text: "当你看到关于“底层贫困女性”的互助报道，你的共情点在于：", context: "辨析：压迫的交叉性如何被看见？", type: "multiple", options: [
+                { text: "多重身份：她们承受着种族、阶级与性别的多重叠压，受难是不可分割的整体", ref: "交织性/多文化。反对单一维度的受害者叙事。", score: { multicultural: 8, intersectional: 8, str: 8 } },
+                { text: "润滑剂：她们是这个繁华世界最沉默且被压榨得最狠的无名劳动力补给", ref: "社会主义。关注剩余价值的最底层收割。", score: { socialist: 8, str: 8 } },
+                { text: "法治死角：她们理应拥有受法律保护的资源权，这说明了当前法治契约的失能", ref: "自由主义。追求权利普世性的空缺补漏。", score: { liberal: 5, ref: 8 } },
+                { text: "本土抗争：她们在这些具体的博弈中，展现了比西方理论更真实、带痛的生存哲学", ref: "全球/后殖民视角。尊重本土经验的革命性。", score: { global: 8, str: 5 } }
+            ]},
+            { text: "你如何看待那些为了抗议不公而进行的“激进艺术或动作”？", context: "辨析：是策略的失误，还是觉醒的必要震荡？", type: "single", options: [
+                { text: "火种：它刺穿了温情的幻象，直抵权力无法被改良的腐烂根部，不破不立", ref: "激进主义。认为极端动作是必要的唤醒与破坏。", score: { radical: 8, rad: 8 } },
+                { text: "失策：真正的进步必须在法治框架内通过理性协商达成，而非破坏程序逻辑", ref: "自由主义。坚守程序正义，警惕非理性带来的反噬。", score: { liberal: 8, ref: 8 } },
+                { text: "符号：它是对固化秩序的一次生命力解构，打破了平庸且稳固的话语垄断", ref: "后现代。视抗议为一种流动的、打破单一意义的行为艺术。", score: { postmodern: 8, rad: 5 } }
+            ]},
+            { text: "你毕生所求的思想终点，最接近哪一种理想图景？", context: "辨析：思想彼岸的终极定格。", type: "single", options: [
+                { text: "做一个绝对自由、理性且独立于任何标签之外的、清醒的个体灵魂", ref: "存在/自由主义。追求主体的绝对超越性。", score: { liberal: 5, existential: 8, ind: 8 } },
+                { text: "彻底炸掉性别这一古老且残忍的阶级制度，让人性像海水一样交融", ref: "激进主义。瓦解性阶级，恢复被异化前的本真。", score: { radical: 8, rad: 8 } },
+                { text: "在差异的狂欢中变幻，成为一个拒绝被任何人定义、捕捉的流动者", ref: "后现代。逃离身份的定居，在流动中享受自由。", score: { postmodern: 8, rad: 8, ind: 5 } },
+                { text: "建立一个互惠共生、充满关怀能量且彻底终结物质剥削的新文明秩序", ref: "生态/社会主义愿景。追求结构的彻底正义。", score: { care: 8, ecofem: 8, socialist: 8, str: 8 } }
             ]}
         ];
 
-        // 补足30道题目... (此处循环扩展逻辑以确保题量，每题均通过多视角拆解实现3个以上选项)
-        const extendTopics = [
-            "全职主妇的抉择", "跨性别权益的博弈", "色情工业的判定", "职场女强人叙事", "科学研究的客观性",
-            "生育激励的人口政策", "女性写作的力量源泉", "关怀伦理的地位", "抗议动作的激进度", "底层互助的共情点",
-            "亲密关系中的博弈", "女哲学家被遗忘", "全球化下的交叉压迫", "主体自决的前提", "运动内部的分歧",
-            "审美标准的定义权", "婚恋与事业的冲突", "土地开发的逻辑", "教育资源的分配", "最终愿景的蓝图"
-        ];
-        
-        extendTopics.forEach((topic, i) => {
-            questions.push({
-                text: `关于“${topic}”，你认为最具解释力的底层逻辑是：`,
-                context: "深度思辨：涉及权利、结构、话语与生态的多重博弈。",
-                type: i % 2 === 0 ? "multiple" : "single",
-                options: [
-                    { text: "侧重法权契约、规则公平与个体主权", score: { liberal: 5, ref: 5, ind: 5 }, ref: "相信理性与程序的力量。" },
-                    { text: "侧重结构性颠覆、权力夺取与阶级对抗", score: { radical: 5, rad: 5, str: 5 }, ref: "直击权力根部的暴力重构。" },
-                    { text: "侧重解构范畴、差异共存与话语颠覆", score: { postmodern: 5, rad: 8 }, ref: "反对任何形式的本质化定义。" },
-                    { text: "侧重关系网络、感性伦理与生态共生", score: { care: 5, ecofem: 5 }, ref: "追求一种温润的整体性重塑。" },
-                    { text: "侧重物质基础、生产关系与剥削分析", score: { marxist: 5, str: 8 }, ref: "关注资本逻辑下的必然性。" }
-                ]
-            });
-        });
-
-        // 结果数据与逻辑 (11流派全覆盖)
         const mentorData = {
             liberal: { name: "玛丽·伍尔斯通克拉夫特", quote: "“我不希望女性拥有支配男性的权力，而是拥有支配她们自身的权力。”", work: "《为女权辩护》", books: ["《为女权辩护》", "《女性的奥秘》"] },
             radical: { name: "舒拉姆斯·费尔斯通", quote: "“解放的目标不仅是消除特权，而是消除性别歧视本身。”", work: "《性的辩证法》", books: ["《性的辩证法》", "《性政治》"] },
             marxist: { name: "亚历山德拉·柯伦泰", quote: "“没有经济上的独立，任何平等都只是镜中花。”", work: "《新道德与劳动阶级》", books: ["《柯伦泰选集》", "《家庭与社会》"] },
             socialist: { name: "西尔维娅·费德里奇", quote: "“他们说这是爱，我们说这是无偿劳动。”", work: "《卡利班与女巫》", books: ["《卡利班与女巫》", "《不幸的婚姻》"] },
             existential: { name: "西蒙娜·德·波伏娃", quote: "“女人不是天生的，而是变成的。”", work: "《第二性》", books: ["《第二性》", "《厌女》"] },
-            postmodern: { name: "朱迪斯·巴特勒", quote: "“性别不是我们‘是’什么，而是我们‘做’什么，它是一场反复的表演。”", work: "《性别麻烦》", books: ["《性别麻烦》", "《解构女性主义》"] },
+            postmodern: { name: "朱迪斯·巴特勒", quote: "“性别不是我们‘是’什么，而是我们‘做’什么，它是一场表演。”", work: "《性别麻烦》", books: ["《性别麻烦》", "《解构女性主义》"] },
             ecofem: { name: "范达娜·席娃", quote: "“我们要么拥有一个由女性引领的未来，要么就完全没有未来。”", work: "《生存》", books: ["《生存》", "《自然之死》"] },
             psycho: { name: "卡罗尔·吉利根", quote: "“拥有声音就是拥有人性。”", work: "《不同的声音》", books: ["《不同的声音》", "《此性非一》"] },
             multicultural: { name: "贝尔·胡克斯", quote: "“女性主义是为了每一个人。”", work: "《激情的政治》", books: ["《激情的政治》", "《所有人的女性主义》"] },
@@ -346,7 +428,7 @@
             marxist: { title: "马克思主义倾向", desc: "你敏锐察觉到了经济基础的决定作用。认为受压迫是私有制与阶级社会最隐秘的利益分成。" },
             socialist: { title: "社会主义倾向", desc: "你关注“再生产劳动”的价值抹杀。主张重组结构，打通公共领域与私人领域的壁垒。" },
             postmodern: { title: "后现代倾向", desc: "你厌恶固化标签。认为‘女性’是一场表演。你在差异中寻找自由，拒绝被任何定义定格。" },
-            existential: { title: "存在主义倾向", desc: "你极其珍视主体的绝对自由。拒绝接受预设的天职，认为每个人都必须通过自我的创造确立本质。" },
+            existential: { title: "存在主义倾向", desc: "你极其珍视主体的绝对自由。拒绝接受任何预设的天职，认为每个人都必须通过自我的创造确立本质。" },
             ecofem: { title: "生态女性倾向", desc: "你感知到了自然之死与女性之困的共振。主张建立温热的关怀伦理，反抗冷酷的主宰逻辑。" },
             psycho: { title: "精神分析倾向", desc: "你深入潜意识迷宫。认为不平等源于幼年的人格镜像，致力于重构那些被内化的枷锁。" },
             multicultural: { title: "多文化倾向", desc: "你关注身份的交叉性。拒绝单一叙事，在多重边缘中寻找最真实、最带痛的生命经验。" },
@@ -390,7 +472,7 @@
             selectedIndices = [];
             document.getElementById('confirm-container').classList.add('hidden');
             document.getElementById('question-number').innerText = `STEP ${String(currentQuestion + 1).padStart(2, '0')} / 30`;
-            document.getElementById('question-context').innerText = `背景解析：${q.context}`;
+            document.getElementById('question-context').innerText = `解析：${q.context}`;
             
             const multiTag = document.getElementById('multi-tag');
             if (q.type === 'multiple') multiTag.classList.remove('hidden');
@@ -411,6 +493,7 @@
                 const isSelected = selectedIndices.includes(idx);
                 const btn = document.createElement('div');
                 btn.className = `option-btn w-full p-5 md:p-6 text-left rounded-[1.25rem] shadow-sm flex flex-col gap-2 ${isSelected ? 'selected' : ''}`;
+                
                 let content = `<p class="text-[14px] font-medium leading-relaxed">${opt.text}</p>`;
                 if (q.type === 'multiple') content += `<div class="multi-indicator"></div>`;
                 if (isSelected) {
@@ -483,7 +566,7 @@
             document.getElementById('result-tertiary-title').innerText = resultsDesc[t].title;
             document.getElementById('result-tertiary-desc').innerText = resultsDesc[t].desc;
 
-            document.getElementById('result-combined').innerText = `你的倾向在 ${resultsDesc[p].title} 中找到了最强的锚点。这表明你在复杂的博弈中，倾向于守住 ${p === 'liberal' ? '理性个体' : '重构结构'} 的支点。这不是终点，而是一次对自我逻辑的清醒叩问。`;
+            document.getElementById('result-combined').innerText = `你的倾向表现出对 ${resultsDesc[p].title} 的强力锚定。这表明你在复杂的议题丛林中，倾向于守住 ${p === 'liberal' ? '理性个体' : '重构结构'} 的支点。这不是终点，而是在时代的声浪中对自我逻辑的一次清醒叩问。`;
 
             const bookContainer = document.getElementById('book-list');
             bookContainer.innerHTML = (mentor.books || []).map(b => `<div class="border-l-2 border-purple-400 pl-4 py-1 font-bold text-xs">· ${b}</div>`).join('');
@@ -525,7 +608,7 @@
             if (chartInstanceLocal) chartInstanceLocal.update('none');
             try {
                 const canvas = await html2canvas(document.getElementById('capture-area'), { scale: 3, backgroundColor: "#FDFBF7", logging: false, useCORS: true, allowTaint: true });
-                const link = document.createElement('a'); link.download = '女性主义报告_cloudtree.png'; link.href = canvas.toDataURL('image/png'); link.click();
+                const link = document.createElement('a'); link.download = '倾向报告_cloudtree.png'; link.href = canvas.toDataURL('image/png'); link.click();
             } catch (err) { console.error("存档失败:", err); } finally { btn.innerText = originalText; }
         };
     </script>
